@@ -4,8 +4,8 @@
 ##NPOINTS= 4	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= yaroslav
-$$ 2017-05-18 12:58:40.313 +0200  yar@yarmbp2.mol.dbiol.d.ethz.ch
-$$ /Volumes/Data/yar/_eth2/data_NMR/spectra/170515_IN75b_EV2_co-UP1_303K_600/6013/pdata/1/proc
+$$ 2018-08-07 16:18:47.035 +0200  yar@yarmbp2.mol.dbiol.d.ethz.ch
+$$ /Volumes/Data/yar/_eth2/data_NMR/spectra/180314_IN72b_SMN214_co-NUP1_303K_600/6013/pdata/1/proc
 $$ process /opt/topspin3.2/prog/mod/dataserver
 ##$ABSF1= 15.5
 ##$ABSF2= 10
@@ -82,7 +82,7 @@ $$ process /opt/topspin3.2/prog/mod/dataserver
 ##$NZP= 0
 ##$OFFSET= 16.71894
 ##$PC= 1
-##$PHC0= -50
+##$PHC0= -33.604
 ##$PHC1= 0
 ##$PH_mod= 1
 ##$PKNL= yes

@@ -1,11 +1,11 @@
 ##TITLE= Parameter file, TOPSPIN		Version 3.2
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 2	$$ modification sequence number
+##NPOINTS= 1	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= yaroslav
-$$ 2017-05-15 20:48:17.002 +0200  yaroslav@six
-$$ /opt/topspin/data/yaroslav/nmr/170515_IN75b_EV2_co-UP1_303K_600/83/scon2
+$$ 2018-03-15 02:06:24.380 +0100  yaroslav@six
+$$ /opt/topspin/data/yaroslav/nmr/180314_IN72b_SMN214_co-NUP1_303K_600/83/scon2
 $$ process /opt/topspin/prog/mod/go
 ##$BLKTR= (0..19)
 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3

@@ -4,7 +4,7 @@
 ##NPOINTS= 1	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= yaroslav
-$$ 2017-03-14 11:18:19.501 +0100  yaroslav@six
+$$ 2017-06-09 12:44:18.087 +0200  yaroslav@six
 $$ /opt/topspin/data/yaroslav/nmr/IVTNMR_template/16/acqum
 $$ process /opt/topspin/prog/mod/edparproc
 ##$COMMENT= <>

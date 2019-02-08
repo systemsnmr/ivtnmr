@@ -2,13 +2,13 @@ CONFIGURATION INFORMATION
 =========================
 
 Path         : /opt/topspin/conf/instr/spect/uxnmr.info
-Date         : Thu Jul 14 12:12:39 2016
+Date         : Tue Jun 27 13:49:28 2017
 Release      : TOPSPIN Version 3.2-pl3
 Installed in : /opt/topspin
 Host         : six
 OS           : CentOS release 5.11 (Final)
-CPU          : Intel(R) Xeon(R) CPU W3505 @ 2.53GHz (2 cores at 1596 MHz)
-User         : salmonl (Loic Salmon)
+CPU          : Intel(R) Xeon(R) CPU W3505 @ 2.53GHz (2 cores at 2527 MHz)
+User         : yaroslav (Yaroslav Nikolaev)
 Description  : Avance III 600
 Location     : ETHZ HPM
 System       : Avance III NMR spectrometer

@@ -14,7 +14,7 @@ if nargin == 0
         '170322_IN75a_EV2_co-UP1_303K_600'
         '180314_IN72b_SMN214_co-NUP1_303K_600'
     };
-    imino_ppms = [14.033, 13.518, 13.197, 11.937, 11.623];        
+    imino_ppms = [13.18, 14.033, 13.518, 13.197, 11.937, 11.623];        
 end;
 
 % Defaults for optional parameters (are set all together at the moment)
@@ -188,6 +188,7 @@ for ds=1:n_sets
         var_T = S{1}.Acqus.TE;
     end;
     
+    FWHM(imag(FWHM)~=0) = nan; % replace all complex numbers with NaNs
     lw{ds} = FWHM.*BF;
     kex{ds} = lw{ds}*pi; % k = LW*pi = (FWHM*B0 field)*pi
     kex_base_flip_plus_R2 = 61.4; % Hz: STSL1 TTD 28mM Mg 303K (see lorentzian_v04a_SMN.m)
@@ -323,7 +324,7 @@ if optns.display_lw
     sb(SB);
 
     data_to_plot = lw;
-
+    
     plot(time{1}(1:end)./60,data_to_plot{1}(1:end), optns.plotSym, 'LineWidth', plotLW_list(1), 'Color', colors(1,:));
 
     hold on;
