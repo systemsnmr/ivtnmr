@@ -1,6 +1,4 @@
 # Automatically create series of repeating datasets for time-resolved NMR.
-# For example if you have [1D-31P, tocsy, 1D-1H] and want to run this set of experiments for 5 hours, 
-# but do not want to manually do 'edc' few dozen times.
 # Required settings/parameters:
 # 1) Reference set of experiments to be repeated (time=0): list of exp numbers in certain order.
 # 2) Set of experiment numbers for the time-point #1: list of experiments (will duplicate Reference set & blank the expt titles). 
@@ -12,8 +10,6 @@
 # v002 (2015-06-23): included flag/option to also copy initial set of expts + cleanup their titles
 # (2018-06-20): modified to use "setup_case" switching, instead of many if-elses.
 
-#### TODO ####
-# - Include a warning-check to tell in which dataset the series are going to be created! (often doing in wrong set :)
 from TopCmds import *
 from subprocess import call
 #import sys, os, time, shutil, commands, collections
@@ -30,19 +26,18 @@ setup_case_list = [
 	'SNIC_with_15Nprot', 											 #5
 	'5Pz', 																		 #6   # HSQCs a bit more frequent than other
 	'HN_31P_every_second_1D1H',							   #7   # HN-P-H-HN-P (for 20-30uM protein)
-	'HN_31P_every_second_1D1H_or_sofast',		   #8   # HN-P-H-HN-P-SF (for 50uM protein)
 	]
 	
 setup_case = setup_case_list[1] # INDEXING STARTS FROM 0!! select item from above list
-flag_post_series_addon = 0 # works only with IVTNMR. increases expset ## to 3xx	
+flag_post_series_addon = 0 # works only with IVTNMR. increases expset ## to 3xx. ASSUMES experiment 3xx-.. ARE FREE (i.e. were not recorded before the POST-part).
 
-timeToRun = 24*60 # minutes (24h = 1440 min)
+timeToRun = 24*60 # minutes
 
 ### Setup cases specification
+### The times here need not be SUPER precise - but the closer they are - the more precise the estimate :-)
 if setup_case == 'HN_31P_iminos_1H_tocsy_HN_31P_iminos_1H':
 	referenceExpts = [15, 14, 16, 12, 13, 15, 14, 16, 12] # should match the number in expSet!
 	expSet =         [22, 23, 24, 25, 26, 27, 28, 29, 30] # 15N, 31P, ZGSOFAST, zgwg, TOCSY, 15N, 31P, ZGSOFAST, zgwg
-	#expTimes =       [12, 6.5, 7, 3.7, 10.5, 12, 6.5, 7, 3.7] # 10.5 <> 61' TOCSY, if want to increase time-spacing
 	expTimes =       [13, 6.5, 7, 3.7, 10.5, 13, 6.5, 7, 3.7] # 10.5 <> 61' TOCSY, if want to increase time-spacing
 	if flag_post_series_addon:
 		expSet = [x+300 for x in expSet]
@@ -83,11 +78,6 @@ elif setup_case == 'HN_31P_every_second_1D1H':
 	referenceExpts = [15, 14, 12, 15, 14] # should match the number in expSet!
 	expSet =         [22, 23, 24, 25, 26] # HN, 31P, 1H, HN, 31P
 	expTimes =       [900, 6.5, 3.7, 900, 6.5]
-
-elif setup_case == 'HN_31P_every_second_1D1H_or_sofast':
-	referenceExpts = [15, 14, 12, 15, 14, 16] # should match the number in expSet!
-	expSet =         [22, 23, 24, 25, 26, 27] # HN, 31P, 1H, HN, 31P, SF
-	expTimes =       [70, 6.5, 3.7, 70, 6.5, 10]
 
 	#elif setup_case == '':
 #	referenceExpts = []

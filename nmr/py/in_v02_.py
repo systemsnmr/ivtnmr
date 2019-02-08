@@ -1,94 +1,24 @@
-'''
-- re-enable: 	####XXX####
-(after console updates - pulsecal d n work as expected - 
-have to set manually)
+# Disclaimer: Limitations of Liability for this code
+# This script is provided "as is" - merely as a guideline for automated setup. Its working on our 600 AVANCEIII / NEO consoles. But it was not thoroughly tested on different spectrometers and may contain bugs and incompatibilities with TopSpin versions. Authors assume no responsibility, and shall not be liable to you or to any third party for any direct, indirect, special, consequential, indirect or incidental losses, damages, or expenses, directly or indirectly relating to the use or misuse of the code and pulseprograms provided here.
 
-Modify:
-- add "save" option to:
-XCPR("xau pulsecal quiet same", WAIT_TILL_DONE)
-
-- add re-read of expt after pulsecal:
-readExpt(targetSet,calibrExpt,"1",CURDIR)
-
-EXIT()
-#'''
-
-# DO NOT USE THIS W/O CONSULTING WITH Yaroslav!
 # Better DO NOT SWITCH AROUND in TOPSPIN while script is running!
 
-# see SKIP_SLOW & UNEXACT_TUNE_MATCH variables below
+# See SKIP_SLOW & UNEXACT_TUNE_MATCH variables below - to tweak how fast the script will run
 
 # ERRORS
-# - Check - seems script sometimes is waiting until smth happened with notes.txt (in 170627_IN73k3 dataset)
+# - Check - seems script sometimes is waiting until smth happened with notes.txt - then just close the notes.txt file!
 # > If TS shell is hanging on the "=== Log - creating new IVTNMR setup and basic calibrations"
 # > Close GEDIT with notes.txt - should proceed.
-
-###############
-# When running in non-debug mode - rename notes2.txt to notes.txt!
-###############
 
 # This script expects:
 # - User to do temperature calibration
 # - Correct P90N set in the IVTNMR_template (script d n do 15N calibration)
 
 # TODO:
-# - !!!!!!!!!!!!!!!! Add copying 15N pulse from hmqc to sofast !!!!!!!!!!!!	
-	
-# - Add an option to START experiments after automatic setup!
-##### The below seems largely solved by using tunematch2 function with "unexact" option
-# store_wobb not working well (yet)!! since XCPR cannot run atmm, 
-### TUNE-MATCH (storeWobb) - when done just for stability checks:
-# Problem: atmm can only run with XCMD, not XCPR - so dissinchronizes when saving wbwr
-# Options:
-	# 1. just do ATMA UNEXACT - if its close enough - will not optimize!
-	# 2. include long SLEEP(X)
-# - !!! MAYBE JUST DO UNEXACT ATMA? Then if its close enough - it will just store it!
-# - check 31P/15N tune stability (just save curve)
-# store_wobb not working well (yet), since XCPR cannot run atmm, 
-# and if using XCMD - it dis-synchronizes with main thread
-#########################
-
+# - Add copying 15N pulse from hmqc to sofast (decoupling)
 # - Add an option to NOT DO TUNE-MATCH
 #   (e.g. if already done manually! could save some time for 1H)
-# - Add an option to SKIP 31P paropt (saving time!)
-
-#--------------------
-# - Create a script for after-T7-add? Lock, tune/match, shim, start 5 min after time0 (use SLEEP(deltaT))
-
-### 31P Calibration
-# + set F1P -2.88006 F2P -7.26275 for paropt region
-# - record 31P with 45 us > set ABSF1/2 > autophase on that region > before PAROPT!
-
-## nice to hv, b n necessary
-# - a variable to specify experiment list (not to have it hard-coded)?
-# - a variable which specifies calibration 31P experiment?
-
-# - could add also two additional quality expts p1-360 +/- 0.2us - to see if p1 is indeed optimal
-# - check if any of target expts exist (i.e. list dirs in IVTNMR template from 2 to 20) - compare to current
-# - add a setup file - like slist - where store: H_Hz (o1), 15N pulse
-# - check pulprog name - when setting calibrated P90H, O1 (instead of just defined expno 14)
-
-############################
-## Script expects
-# - in ANY script - need to have CALIBRATION/ref expt first!! (to avoid over-writing!)
-
-## Helper scripts
-# - autolog.py - view automation log
-
-## Versions:
-# in_v02
-#  - autoshim ON -- later (2017-07-10) turned it OFF
-#    (it d n ra well - see recent test on six2 (m/b especially bad for LW measurements)
-#  - copy notes_template - also from IVTNMR_template
-#  + set 1H calibrations in all expts
-#  + run paropt f 31P
-#  - Include wbwr for the 1H tune/match too!
-
-# ivtnmr_v01
-#  - based on nc_v008.yn.py - removed all multi-sample related parts
-#  - removed o1calib (t introduces more variability - phase differences)
-#  - lock on H2O - try ~10 times - then abort automation
-#  - added tunematch() - to run 31P and 15N tuning
+#########################
 
 from __future__ import division # to avoid errors in float division
 from __future__ import with_statement # for writing files
@@ -100,7 +30,8 @@ import math
 import logging as log
 #import shutil
 
-MSG('pulsecal doesnt work, calibrate p1 manually before starting this script')
+MSG('pulsecal doesnt work as expected on the NEO, calibrate p1 manually, and set it to correct value in IVTNMR_template/3 before starting this script').
+## - Calibration of P90H is currently commented out - find this section - ####XXX####
 
 ### "TOP-LEVEL" variables (technically NOT GLOBAL)
 

@@ -1,0 +1,427 @@
+/*** ^^A -*-C++-*- **********************************************/
+/*	paropt		03.01.1991				*/
+/****************************************************************/
+/*	Short Description :					*/
+/*	Parameter optimization au program.			*/
+/****************************************************************/
+/*	Keywords :						*/
+/*	optimization, parray, paropt				*/
+/****************************************************************/
+/*	Description/Usage :					*/
+/*								*/
+/*	The program starts with the current data set (which	*/
+/*	must not have PROCNO=999) and asks for the parameter to	*/
+/*	be optimized (type for instance D 1, or P 1, etc.), its	*/
+/*	initial value, its increment and the number of		*/
+/*	experiments. The program performs the first experiment	*/
+/*	with the initial value of the parameter, and changes	*/
+/*	the parameter according to the entered increment for	*/
+/*	the next cycle. Before the AU program is started, the	*/
+/*	current plot region must be defined to the spectrum	*/
+/*	region that is to be displayed after each experiment.	*/
+/*	This region is stored after each experiment under	*/
+/*	PROCNO=999 in the same file, so that the results of the	*/
+/*	experiments can be viewed simultaneously. This data set	*/
+/*	is displayed while the experiments are going on. The	*/
+/*	horizontal scaling should be reset (using the mouse) to	*/
+/*	see the entire result .					*/
+/****************************************************************/
+/*	Author(s) :						*/
+/*	Name		: Bruno Guigas				*/
+/*	Organisation    : Bruker BioSpin GmbH			*/
+/*	Email		: bruno.guigas@bruker.de		*/
+/****************************************************************/
+/*	Name		Date	Modification:			*/
+/*	bg		921001	changed "2 parname" in		*/
+/*				"0 parname"			*/
+/*	bg		940609	"ft_mod handling inserted	*/
+/*	bg		940914	parameter increments were	*/
+/*				limited to 10e-6. Fixed.	*/
+/*	bg		950302	handling of u/m units inserted:	*/
+/*				m=1.0e-3, u=1.0e-6, e.g.	*/
+/*				d1=100m=100millisec.		*/
+/*	bg		950817	status si parameter of 999 file	*/
+/*				set correctly.			*/
+/*	bg		950817	removed last change, set DATMOD	*/
+/*	bg		960409	added ZGSAFETY handling,	*/
+/*				made SPECSIZ larger.		*/
+/*	bg		960916	check total file size,		*/
+/*				re-calculate offset1.		*/
+/*	bg		970910	ZGSAFETY handling corrected	*/
+/*	bg		971126	no VIEWDATA if started with	*/
+/*				option no			*/
+/*  Yar Nikolaev   20170313
+ 	  - fixed command-line definition of params 
+ 	  - removed confirmation dialog about max value */
+/****************************************************************/
+/*
+$Id: paropt,v 1.22 2009/01/20 13:50:43 wem Exp $
+*/
+
+AUERR = paropt(curdat);
+QUIT
+
+
+static int storeregion(int*, int, int, int, int, int, int,
+		       const char*, const char*);
+static int getmaximum(const int*, int);
+static int paropt2(const char*);
+static double paramtod(const char*);
+
+static char stopau[PATH_MAX];
+
+
+int paropt(const char* curdat)
+{
+  int ret = paropt2(curdat);
+
+  if (stopau[0])
+    unlink(stopau);
+
+  return ret;
+}
+
+static int paropt2(const char* curdat)
+{
+  char path[PATH_MAX], src1r[PATH_MAX], src1i[PATH_MAX], audittext[512],
+       cmdtext[256], par_nam[64], par_val[64], par_inc[64];
+  const char* parnam = par_nam;
+  const char* parval = par_val;
+  const char* parinc = par_inc;
+  char* hashbuf;
+  int*  specbuf;
+  float offset;
+  double f1p, f2p, swp, sf, p1, p1inc, ymin, ymax;
+  int si, offset1, offset2, npoints, lmax, bytorder, ncproc;
+  int fdr, fdi, fds;
+  int refreshflag = 1;
+  int ftmod = 0;
+  int maxpos = 0;
+  int totmax = -MAXINT;
+  int sprocno = procno;		/* save current procno		*/
+  int mprocno = 999;		/* procno of region file	*/
+  int ne = 21;
+  int i  = 1;
+  char text[256]; // YN. testing
+
+  if (procno == mprocno)
+    STOPMSG("paropt must not be started on PROCNO 999.")
+
+  while (++i < i_argc)
+    if (strcmp(i_argv[i], "no") == 0)
+    {
+      refreshflag = 0;
+      break;
+    }
+
+  if (refreshflag  ||  i > 2)
+    i = 1;
+
+// @YN. Testing
+/*
+sprintf (text, "refreshflag / i / i_argc = %i / %i / %i / %s", refreshflag, i, i_argc, i_argv[2]);
+STOPMSG(text)
+//*/
+
+// @YN, 170313, changed so that can run from cmd line (both with "no" and w/o "no")
+//  if (i_argc > i + 5)
+  if (i_argc == i + 5)
+  {
+    parnam = i_argv[++i];
+    parval = i_argv[++i];
+    parinc = i_argv[++i];
+    ne     = atoi(i_argv[++i]);
+  }
+  else
+  {
+    strcpy(par_nam, "P 1");
+    par_val[0] = 0;
+    par_inc[0] = 0;
+    GETSTRING("Enter parameter to modify:", par_nam)
+    GETSTRING("Enter initial parameter value:", par_val)
+    GETSTRING("Enter parameter increment:", par_inc)
+    GETINT("Enter # of experiments:", ne)
+  }
+
+  if (ne < 1)
+    STOPMSG("# of experiments must be > 1")
+
+  p1    = paramtod(parval);
+  p1inc = paramtod(parinc);
+
+  /* get some required parameters */
+  FETCHPARS("OFFSET", &offset)
+  FETCHPARS("SI", &si)
+  FETCHPARS("SF", &sf)
+  FETCHPARS("SW_p", &swp)
+  FETCHPAR("F1P", &f1p)
+  FETCHPAR("F2P", &f2p)
+
+  /* calculate file offsets of plot region */
+  sf *= si / swp;
+  offset1 = (int)((offset - f1p) * sf + 0.5);
+  offset2 = (int)((offset - f2p) * sf + 0.5);
+  npoints = offset2 - offset1;	/* number of points in region	*/
+
+  if (offset1 < 0  ||  offset1 >= si)
+    STOPMSG("parameter F1P out of range")
+
+  if (npoints <= 0  ||  npoints > si)
+    STOPMSG("parameter F2P out of range")
+
+  if ((double)ne * (double)npoints > 256 * 1024 * 1024)
+    STOPMSG("Cannot handle destination spectrum > 256 MB")
+
+  specbuf = (int*)malloc(npoints * sizeof(int));
+  if (specbuf == 0)
+    STOPMSG("Cannot get memory for input data")
+
+  strcpy(src1r, PROCPATH("1r"));/* build source file name	*/
+  strcpy(src1i, PROCPATH("1i"));
+  strcpy(path,  PROCPATH("title"));
+
+  DATASET(name, expno, mprocno, disk, user)	/* region file	*/
+
+  dircp(path, PROCPATH("title"));
+  si = ((ne * npoints + 3) / 4) * 4;
+  sprintf(cmdtext, "1 SI %dW", si);
+  XCMD(cmdtext)			/* total size of region file	*/
+  STOREPAR("DATMOD", 0)		/* set DATMOD to raw		*/
+  ZF				/* zero spectrum to full size	*/
+  ERRORABORT
+  STOREPARS("SW_p", swp)	/* insert meaningful sw		*/
+
+  fdr = open(PROCPATH("1r"), O_RDWR, 0666);
+  if (fdr == -1)
+  {
+    Proc_err(DEF_ERR_OPT, "Cannot open file for writing\n%s\n%s",
+	     PROCPATH("1r"), strerror(errno));
+    return -1;
+  }
+
+  fdi = open(PROCPATH("1i"), O_RDWR, 0666);
+  if (fdi == -1)
+  {
+    Proc_err(DEF_ERR_OPT, "Cannot open file for writing\n%s\n%s",
+	     PROCPATH("1i"), strerror(errno));
+    return -1;
+  }
+
+  sprintf(stopau, "%s/%s/%s",
+	  PathXWinNMRProg(), PathXWinNMRCurDir(), "poptaustop.acq");
+  fds = open(stopau, O_CREAT | O_RDWR, 0666);
+  if (fds != -1)
+    close(fds);
+				/* now perform the experiments  */
+  for (i = 0; i < ne; i++, p1 += p1inc)
+  {
+    if (fds != -1  &&  access(stopau, F_OK))
+    {
+      sprintf(audittext,
+	"created by paropt of parameter: %s  start value: %s  increment: %s\n"
+	"       from %d experiments in PROCNO %d\n"
+	"       stopped after %d experiments",
+	parnam, parval, parinc, ne, sprocno, i);
+      AuditCreate(PROCPATH("auditp.txt"), audittext);
+      return 0;
+    }
+
+    DATASET(name, expno, sprocno, disk, user)	/* to acqu data	*/
+    snprintf(cmdtext, sizeof(cmdtext), "0 %s %13.10f", parnam, p1);
+    XCMD(cmdtext)				/* set parameter*/
+    ERRORABORT
+
+    ZG_OVERWRITE				/* acquire data */
+    ERRORABORT
+						/* process data	*/
+    EFP
+    ERRORABORT
+
+    FETCHPARS("NC_proc", &ncproc)/* get NC_proc of new spectrum */
+    FETCHPARS("FT_mod",  &ftmod)
+    FETCHPARS("BYTORDP", &bytorder)
+
+    /* re-calculate offset1 in case a parameter was varied	*/
+    /* which changes the OFFSET of the spectrum.		*/
+    FETCHPARS("OFFSET", &offset)
+    offset1 = (int)((offset - f1p) * sf + 0.5);
+
+    if (storeregion(specbuf, offset1, npoints, bytorder, ncproc,
+		    fdr, fdi, src1r, src1i) < 0)
+      return -1;
+
+    lmax = getmaximum(specbuf, npoints);
+    if (lmax > totmax)
+    {
+      totmax = lmax;
+      maxpos = i;
+    }
+
+    DATASET(name, expno, mprocno, disk, user) /* switch to 999	*/
+
+    if (refreshflag)
+    {
+      VIEWDATA
+      sleep(1);
+    }
+  }
+
+  free(specbuf);
+  close(fdr);
+  close(fdi);
+
+  bytorder = local_endian();
+  STOREPARS("BYTORDP", bytorder)
+  STOREPARS("FT_mod",  ftmod)
+  STOREPARS("NC_proc", 0)
+  hashbuf = audittext + sprintf(audittext,
+	"created by paropt of parameter: %s  start value: %s  increment: %s\n"
+	"       from %d experiments in PROCNO %d\n"
+	"       using %d points per experiment between %.7g and %.7g ppm\n"
+	"       maximum intensity found in experiment %d",
+	parnam, parval, parinc, ne, sprocno, npoints, f1p, f2p, ++maxpos);
+
+  if (CheckSumFileMax(PROCPATH("1r"), 0, hashbuf, 0, 0, bytorder, 0, 1,
+		      si, &si, &si, &ymin, &ymax) > 0)
+  {
+    AuditCreate(PROCPATH("auditp.txt"), audittext);
+    STOREPARS("YMIN_p", (int)ymin)
+    STOREPARS("YMAX_p", (int)ymax)
+  }
+
+  Show_meta(SM_PROC | SM_PROCP);
+
+// @YN 20170313
+/*
+  Proc_err(DEF_ERR_OPT, "paropt performed %d experiments.\n"
+			"Max. intensity found at experiment %d.", ne, maxpos);
+//*/
+  return 0;
+}
+
+static double paramtod(const char* param)
+{
+  char* eval;
+  double value = strtod(param, &eval);
+
+  while (*eval  &&  isspace((int)*eval))
+    eval++;
+
+  if (*eval == 'm'  ||  *eval == 'D')	value *= 1.0e-3;
+  if (*eval == 'u'  ||  *eval == 'U')	value *= 1.0e-6;
+
+  return value;
+}
+
+
+/********* store the plot region in separate file **********/
+static int storeregion(int* specbuf, int offset1, int npoints,
+		       int bytorder, int ncproc, int fdr, int fdi,
+		       const char* src1r,  const char* src1i)
+{
+  int ret, reim;
+  int i = ncproc;
+  int scale = 1;
+  int fdo = fdi;
+  const char* src = src1i;
+
+  if (ncproc < 0)
+    do					/* must scale down	     */
+      scale *= 2;
+    while (++i);
+
+  if (ncproc > 0)
+    do					/* must scale up	     */
+      scale *= 2;
+    while (--i);
+
+  /**************** read plot region in buffer ***********************/
+  for (reim = 0; reim <= 1; reim++)
+  {
+    if (fdo != -1)
+    {
+      int fd = open(src, O_RDONLY);	/* open source file for read */
+
+      if (fd == -1)
+      {
+	Perror(DEF_ERR_OPT, src);
+	return -1;
+      }
+					/* position of plot region   */
+      if (lseek(fd, offset1 * sizeof(int), SEEK_SET) < 0)
+      {
+	Proc_err(DEF_ERR_OPT, "%s\nlseek error: %s", src, strerror(errno));
+	close(fd);
+	return -1;
+      }
+
+      if (read(fd, specbuf, npoints * sizeof(int)) < 0)
+      {
+	Proc_err(DEF_ERR_OPT, "%s\nfile read error: %s", src, strerror(errno));
+	close(fd);
+	return -1;
+      }
+
+      close(fd);
+      local_swap4(specbuf, npoints * sizeof(int), bytorder);
+
+      /******************* scale to ncproc 0 *************************/
+      i = 0;
+
+      if (ncproc < 0)
+	do				/* scale down		     */
+	  specbuf[i] /= scale;
+	while (++i < npoints);
+
+      if (ncproc > 0)
+	do				/* scale up		     */
+	{
+	  int ival = specbuf[i];
+	  double dval = (double)ival * (double)scale;
+
+	  if (dval > MAXINT)
+	    ival = MAXINT;
+	  else if (-dval > MAXINT)
+	    ival = -MAXINT;
+	  else
+	    ival *= scale;
+
+	  specbuf[i] = ival;
+	}
+	while (++i < npoints);
+
+      /*********** append buffer to destination file *****************/
+      ret = write(fdo, specbuf, npoints * sizeof(int));
+      if (ret != npoints * (int)sizeof(int))
+      {
+	if (ret < 0)
+	  Perror(DEF_ERR_OPT, "output file write error");
+	else
+	  Proc_err(DEF_ERR_OPT, "output file truncated\n%d bytes written", ret);
+	return -1;
+      }
+    }
+
+    fdo = fdr;
+    src = src1r;
+  } /* end re-im-loop */
+
+  return 0;
+}
+
+/*********************************************************************/
+/* search for maximum */
+static int getmaximum(const int* buf, int size)
+{
+  int imax = buf[0];
+
+  while (size)
+  {
+    int ival = buf[--size];
+
+    if (ival > imax)
+      imax = ival;
+  }
+
+  return imax;
+}

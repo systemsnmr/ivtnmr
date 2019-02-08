@@ -4,4 +4,4 @@
 # except foo.html which is maintained by hand
 # !foo.html
 .cp_files_and_git_sync.sh
-
+*original_source
