@@ -21,11 +21,11 @@ if nargin == 0
     dataFile = fullfile('..', modelSubFolder, data_files{dataset} );
     
     d = load(dataFile); % for data generation see create_data_str.m
-    data = d.dsel; % Get data matrix from the structure: {'PO4','NTP','SMNtotal','SMNfolded','Abortives','NDP','MgPO4','HSQC';}
+    data = d.dsel; % Get data matrix from the structure: {'PO4','NTP','RNAtotal','RNAfolded','Abortives','NDP','MgPO4','HSQC';}
     
     %%% SETTINGS    
     source_name = 'NTP'; % what to extract - need to be an argument
-    target_name = 'SMNtotal';
+    target_name = 'RNAtotal';
     target_new_name = 'RNA_from_NTP';
     init_NTP_conc = 20; % mM
 else
@@ -42,7 +42,7 @@ end
 
     %%% Calc RNA conc from NTPs. Adjust obs names
     %==============================================
-    % Get data matrix from the structure: {'PO4','NTP','SMNtotal','SMNfolded','Abortives','NDP','MgPO4','HSQC';}    
+    % Get data matrix from the structure: {'PO4','NTP','RNAtotal','RNAfolded','Abortives','NDP','MgPO4','HSQC';}    
     NTP_idx = strcmp(data.names, source_name);
     RNA_idx = strcmp(data.names, target_name);
     

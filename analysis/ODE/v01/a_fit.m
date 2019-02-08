@@ -254,7 +254,7 @@ end
 %%% how much RNA was synthesized.
 % convert_RNA_from_NTP(data, source_name, target_name, target_new_name, init_NTP_conc)
 data0 = data;
-data = convert_RNA_from_NTP(data, 'NTP', 'SMNtotal', 'RNAfromNTP', optns.NTP_initial_conc);
+data = convert_RNA_from_NTP(data, 'NTP', 'RNAtotal', 'RNAfromNTP', optns.NTP_initial_conc);
 
 % Correct MgPO4 observable after the above RNA conc change
 %=======================

@@ -501,11 +501,11 @@ MgP_std = p31.std(:,end-1);
 RNA     = p31.mean(:,end);
 RNA_std = p31.std(:,end);
 
-% SMN as fraction of total RNA - now moved to the main script!
-SMNtotal = RNA; % RNA.*smn_fraction;
-SMNtotal_std = RNA_std; % RNA_std.*smn_fraction;
-Abortives = RNA; % RNA-SMNtotal;
-Abortives_std = RNA_std; % RNA_std-SMNtotal_std;
+% RNA as fraction of total RNA - now moved to the main script!
+RNAtotal = RNA; % was: RNA.*smn_fraction;
+RNAtotal_std = RNA_std; % was: RNA_std.*smn_fraction;
+Abortives = RNA; % was: RNA-RNAtotal;
+Abortives_std = RNA_std; % was: RNA_std-RNAtotal_std;
 
 % ===== Protein =====
 if include_hsqc
@@ -528,22 +528,22 @@ dsel.t = targetTime;
 
 if include_hsqc
     hsqc_points = numel(hsqc.time);
-    dsel.names = {'PO4', 'NTP', 'SMNtotal', 'Abortives', 'NDP', 'MgPO4', PROT_name};
+    dsel.names = {'PO4', 'NTP', 'RNAtotal', 'Abortives', 'NDP', 'MgPO4', PROT_name};
     if hsqc_points == numel(targetTime)
-        dsel.y = [PO4 NTP SMNtotal Abortives NDP MgP PROT];
-        dsel.s = [PO4_std NTP_std SMNtotal_std Abortives_std NDP_std MgP_std PROT_std];
+        dsel.y = [PO4 NTP RNAtotal Abortives NDP MgP PROT];
+        dsel.s = [PO4_std NTP_std RNAtotal_std Abortives_std NDP_std MgP_std PROT_std];
     else
         % make full vector w/o protein
-        dsel.y = [PO4 NTP SMNtotal Abortives NDP MgP];
-        dsel.s = [PO4_std NTP_std SMNtotal_std Abortives_std NDP_std MgP_std];    
+        dsel.y = [PO4 NTP RNAtotal Abortives NDP MgP];
+        dsel.s = [PO4_std NTP_std RNAtotal_std Abortives_std NDP_std MgP_std];    
         % cut it down to hsqc size, and add the protein:    
         dsel.y = [dsel.y(1:hsqc_points,:) PROT];
         dsel.s = [dsel.s(1:hsqc_points,:) PROT_std];    
     end
 else
-    dsel.names = {'PO4', 'NTP', 'SMNtotal', 'Abortives', 'NDP', 'MgPO4'};
-    dsel.y = [PO4 NTP SMNtotal Abortives NDP MgP];
-    dsel.s = [PO4_std NTP_std SMNtotal_std Abortives_std NDP_std MgP_std];    
+    dsel.names = {'PO4', 'NTP', 'RNAtotal', 'Abortives', 'NDP', 'MgPO4'};
+    dsel.y = [PO4 NTP RNAtotal Abortives NDP MgP];
+    dsel.s = [PO4_std NTP_std RNAtotal_std Abortives_std NDP_std MgP_std];    
 end; % include_hsqc
 
 % Have to transpose the DATA vectors for the main modeling script;

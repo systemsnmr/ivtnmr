@@ -122,7 +122,7 @@ for i=1:n_sets
 %         sprintf('data_nmr_selected_%s_%s.mat', dset_snames{i}, dsel_suffixes{subs}));
         
 %         d = load(dsel_file); % for data generation see create_data_str.m
-%         data = d.dsel; % Get data matrix from the structure: {'PO4', 'NTP', 'SMNtotal', 'SMNfolded', 'Abortives', 'NDP', 'MgPO4', 'HSQC';}
+%         data = d.dsel; % Get data matrix from the structure: {'PO4', 'NTP', 'RNAtotal', 'RNAfolded', 'Abortives', 'NDP', 'MgPO4', 'HSQC';}
         
 %     end
 
