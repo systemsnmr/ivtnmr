@@ -1,0 +1,1675 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<repository version='37' sub='0' creator='CARA 1.8.4' modified='Mon Sep 17 19:54:54 2018' author='' 
+template-by='Fred Damberger, , , , , Fred Damberger' orig-template-by='' template-name='/Volumes/Data/yar/_eth2/data_NMR/Start1.3v8.cara'>
+<odef class='Repository'>
+<fld name='Author' type='String' desc=''/>
+<fld name='Creation Date' type='Date' desc=''/>
+<fld name='Description' type='Memo' desc=''/>
+<fld name='TemplateName' type='String' desc=''/>
+<fld name='TemplateAuthors' type='String' desc=''/>
+<fld name='OrigTemplateAuthor' type='String' desc=''/>
+<fld name='OrigTemplateDesc' type='Memo' desc=''/>
+<fld name='OrigTemplateDate' type='Date' desc=''/>
+<fld name='TemplateDate' type='Date' desc=''/>
+<fld name='TemplateDesc' type='Memo' desc=''/>
+</odef>
+<odef class='SpectrumType'>
+<fld name='ExperimentType' type='Memo' desc='2D Homonuclear, 2D Heteronuclear, 3D Double Resonance, 3D Triple Resonance'/>
+<fld name='reference' type='Memo' desc='Procedure is based on experiment in this paper'/>
+<fld name='comment' type='Memo' desc='special instructions on CARA usage'/>
+</odef>
+<odef class='ResidueType'>
+<fld name='Updated-MM-DD-YYYY' type='String' desc='DateStamp of the BMRB statistics file that the ave,dev values are derived from.'/>
+<fld name='SDmult' type='Double' desc='dev = SD(BMRB) * SDmult'/>
+</odef>
+<odef class='Project'>
+<fld name='Entry Title' type='Memo' desc=''/>
+<fld name='BMRB Accession Number' type='String' desc=''/>
+<fld name='BMRB Flat File Name' type='String' desc=''/>
+<fld name='Submission Date' type='String' desc=''/>
+<fld name='Accession Date' type='String' desc=''/>
+<fld name='Citation Full' type='Memo' desc=''/>
+</odef>
+<odef class='Spectrum'>
+<fld name='sample' type='Memo' desc='name of sample and content'/>
+<fld name='reference' type='Memo' desc='original reference to pulse sequence'/>
+<fld name='Spectrometer' type='Memo' desc='Name (e.g. DRX900)'/>
+<fld name='DateTime' type='DateTime' desc='Date &amp; Time: (e.g.  2003-10-21 22:00)'/>
+<fld name='pH' type='Float' desc='pH (note pD=pDread+0.4)'/>
+<fld name='solvent' type='Memo' desc='(e.g. H2O, D2O)'/>
+<fld name='ParameterSet' type='Memo' desc='ParameterSetName: (e.g. hsqc15N.eth)'/>
+<fld name='Probehead' type='Memo' desc='Probehead used (e.g. cryoprobe, TXI probe, BB probe)'/>
+<fld name='Temp' type='Float' desc='Temperature in Kelvin'/>
+<fld name='DataLocation' type='Memo' desc='location of raw data'/>
+<fld name='SampleConc' type='Float' desc='concentration in mM of the main sample component.'/>
+<fld name='LigandConc' type='Float' desc='concentration in mM of the Ligand component.'/>
+</odef>
+<odef class='Peaklist'>
+<fld name='owner' type='Short' desc=''/>
+</odef>
+<odef class='Peak'>
+<fld name='ManualVol' type='Float' desc=''/>
+</odef>
+<odef class='SpinSystem'>
+<fld name='ExtraSignal' type='Boolean' desc=''/>
+</odef>
+<odef class='Script'>
+<fld name='Author' type='String' desc=''/>
+<fld name='Creation Date' type='Date' desc=''/>
+<fld name='Description' type='Memo' desc=''/>
+<fld name='Version' type='Short' desc=''/>
+</odef>
+<library nterm='N' cterm='C' gensys='BB'>
+<spectrum-type name='2D TOCSY'>
+<dim name='Hacq' atom='H1' width='0.000000'/>
+<dim name='Htocsy' atom='H1' width='0.000000'/>
+<step text='Htocsy' atom='H1' dim='1' hops='0' rep='0'/>
+<step text='Hacq' atom='H1' dim='0' hops='3' rep='1'/>
+<fld name='ExperimentType' type='Memo'>2D Homonuclear</fld>
+<fld name='reference' type='Memo'>Braunschweiler L, Ernst RR, J Magn Reson, 53, 521-528 (1983)</fld>
+</spectrum-type>
+<spectrum-type name='3D N15-TOCSY'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Htocsy' atom='H1' width='0.000000'/>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='N' atom='N15' dim='2' hops='0' rep='0'/>
+<step text='HN' atom='H1' dim='0' hops='1' rep='0'/>
+<step text='Htocsy' atom='H1' dim='1' hops='3' rep='1'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'>Marion D, Kay LE, Sparks SW, Torchia DA, Bax, A, 111, 1515-1517 (1989)</fld>
+</spectrum-type>
+<spectrum-type name='2D COSY'>
+<dim name='Hacq' atom='H1' width='0.000000'/>
+<dim name='Hcosy' atom='H1' width='0.000000'/>
+<step text='Hcosy' atom='H1' dim='1' hops='0' rep='0'/>
+<step text='Hacq' atom='H1' dim='0' hops='3' rep='0'/>
+<fld name='ExperimentType' type='Memo'>2D Homonuclear</fld>
+<fld name='reference' type='Memo'>Aue WP, Bartholdi E, Ernst, J Chem Phys, 64, 2229-2246 (1976)</fld>
+</spectrum-type>
+<spectrum-type name='2D NOESY'>
+<dim name='Hacq' atom='H1' width='0.000000'/>
+<dim name='Hnoe' atom='H1' width='0.000000'/>
+<step text='Hnoe' atom='H1' dim='1' hops='0' rep='0'/>
+<step text='Hacq' atom='H1' dim='0' hops='-1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>2D Homonuclear</fld>
+<fld name='reference' type='Memo'>Anil-Kumar, Ernst RR, Wuthrich K, Biochem Biophys Res Commun, 95, 1-6 (1980)</fld>
+</spectrum-type>
+<spectrum-type name='2D N15-NOESY'>
+<dim name='Hnoe' atom='H1' width='0.000000'/>
+<dim name='N' atom='N15' width='0.000000'/>
+<step text='N' atom='N15' dim='1' hops='0' rep='0'/>
+<step text='HN' atom='H1' dim='-1' hops='1' rep='0'/>
+<step text='Hnoe' atom='H1' dim='0' hops='-1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>2D Double Resonance</fld>
+<fld name='comment' type='Memo'>2D version of the 3D15N-resolved [1H,1H]-NOESY where the D1=N, D2(acq)=Hnoe.</fld>
+</spectrum-type>
+<spectrum-type name='3D N15-NOESY'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Hnoe' atom='H1' width='0.000000'/>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='N' atom='N15' dim='2' hops='0' rep='0'/>
+<step text='HN' atom='H1' dim='0' hops='1' rep='0'/>
+<step text='Hnoe' atom='H1' dim='1' hops='-1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'>Talluri S, Wagner G. J Magn Reson B, 112, 200-205 (1996)</fld>
+</spectrum-type>
+<spectrum-type name='3D C13ali-NOESY'>
+<dim name='Hinept' atom='H1' width='0.000000'/>
+<dim name='Hnoe' atom='H1' width='0.000000'/>
+<dim name='Cali' atom='C13' width='0.000000'/>
+<step text='Cali' atom='C13' dim='2' hops='0' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='Hinept' atom='H1' dim='0' hops='1' rep='0'/>
+<step text='Hnoe' atom='H1' dim='1' hops='-1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'>Ikura M, Kay LE, Tschudin R, Bax A, J Magn Reson 86, 204-209 (1990)</fld>
+</spectrum-type>
+<spectrum-type name='3D C13aro-NOESY'>
+<dim name='Hinept' atom='H1' width='0.000000'/>
+<dim name='Hnoe' atom='H1' width='0.000000'/>
+<dim name='Caro' atom='C13' width='0.000000'/>
+<step text='Caro' atom='C13' dim='2' hops='0' rep='0' mean='125.000000' dev='25.000000'/>
+<step text='Hinept' atom='H1' dim='0' hops='1' rep='0'/>
+<step text='Hnoe' atom='H1' dim='1' hops='-1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'>Ikura M, Kay LE, Tschudin R, Bax A, J Magn Reson 86, 204-209 (1990)</fld>
+</spectrum-type>
+<spectrum-type name='2D CBHD'>
+<dim name='Hd' atom='H1' width='0.000000'>
+<label tag='HD1' off='0' final='1'/>
+<label tag='HD2' off='0' final='1'/>
+<label tag='HD' off='0' final='1'/>
+</dim>
+<dim name='Cb' atom='C13' width='0.000000'>
+<label tag='CB' off='0' final='1'/>
+</dim>
+<step text='Hb' atom='H1' dim='-1' hops='0' rep='0'/>
+<step text='Cb' atom='C13' dim='1' hops='1' rep='0' mean='35.000000' dev='20.000000'/>
+<step text='Cg' atom='C13' dim='-1' hops='1' rep='0' mean='125.000000' dev='20.000000'/>
+<step text='Cd' atom='C13' dim='-1' hops='1' rep='0' mean='125.000000' dev='20.000000'/>
+<step text='Hd' atom='H1' dim='0' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>2D Double Resonance</fld>
+<fld name='reference' type='Memo'>Yamazaki T,Forman-Kay JD, Kay LE, J Amer Chem Soc,115,11054-11055 (1993)</fld>
+</spectrum-type>
+<spectrum-type name=' 1D 1H'>
+<dim name='H' atom='H1' width='0.000000'/>
+<step text='H' atom='H1' dim='0' hops='0' rep='0'/>
+<fld name='ExperimentType' type='Memo'>1D Homonuclear</fld>
+</spectrum-type>
+<spectrum-type name='3D HBHA(CBCACO)NH'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Hab' atom='H1' width='0.000000'>
+<label tag='HB' off='0' final='1'/>
+<label tag='HB2' off='0' final='1'/>
+<label tag='HB3' off='0' final='1'/>
+<label tag='HA' off='0' final='1'/>
+<label tag='HA2' off='0' final='1'/>
+<label tag='HA3' off='0' final='1'/>
+</dim>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='2' hops='1' rep='0'/>
+<step text='Co' atom='C13' dim='-1' hops='1' rep='0' mean='175.000000' dev='25.000000'/>
+<step text='Ca' atom='C13' dim='-1' hops='1' rep='0' mean='54.000000' dev='10.000000'/>
+<step text='Cab' atom='C13' dim='-1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='Hab' atom='H1' dim='1' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Triple Resonance</fld>
+<fld name='reference' type='Memo'>Dellwo MJ, Schneider DM, Wand AJ, J Magn Reson B, 103, 1-9 (1994)</fld>
+</spectrum-type>
+<spectrum-type name='3D HCACO'>
+<dim name='Ha' atom='H1' width='0.000000'>
+<label tag='HA' off='0' final='1'/>
+</dim>
+<dim name='Co' atom='C13' width='0.000000'>
+<label tag='C' off='0' final='1'/>
+</dim>
+<dim name='Ca' atom='C13' width='0.000000'>
+<label tag='CA' off='0' final='1'/>
+</dim>
+<step text='Ha' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='Ca' atom='C13' dim='2' hops='1' rep='0' mean='54.000000' dev='10.000000'/>
+<step text='Co' atom='C13' dim='1' hops='1' rep='0' mean='175.000000' dev='25.000000'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'>Powers R, Gronenborn AM, Clore GM, Bax A, J Magn Reson, 94, 209-213 (1991)</fld>
+</spectrum-type>
+<spectrum-type name='3D HCcH-TOCSYali'>
+<dim name='Hinept' atom='H1' width='0.000000'/>
+<dim name='Htocsy' atom='H1' width='0.000000'/>
+<dim name='Cinept' atom='C13' width='0.000000'/>
+<step text='Hinept' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='Cinept' atom='C13' dim='2' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='Ctocsy' atom='C13' dim='-1' hops='1' rep='1' mean='40.000000' dev='35.000000'/>
+<step text='Htocsy' atom='H1' dim='1' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'>Bax A, Clore GM, Gronenborn A, J. Magn Reson, 88, 425-431 (1990)</fld>
+<fld name='comment' type='Memo'>swap axes x(H)  &amp; y(H). Hacq is Htocsy in this experiment.</fld>
+</spectrum-type>
+<spectrum-type name='2D HisNtoHaro'>
+<dim name='Hhis' atom='H1' width='0.000000'>
+<label tag='HD2' off='0' final='1'/>
+<label tag='HE1' off='0' final='1'/>
+</dim>
+<dim name='Nhis' atom='N15' width='0.000000'>
+<label tag='NE2' off='0' final='1'/>
+<label tag='ND1' off='0' final='1'/>
+</dim>
+<step text='Nhis' atom='N15' dim='1' hops='0' rep='0' mean='205.000000' dev='50.000000'/>
+<step text='Hhis' atom='H1' dim='0' hops='2' rep='0'/>
+<fld name='ExperimentType' type='Memo'>2D Double resonance</fld>
+<fld name='reference' type='Memo'>Pelton JG,Torchia DA, Meadow ND, Roseman S, Protein Sci,2,543-558 (1993)</fld>
+<fld name='comment' type='Memo'></fld>
+</spectrum-type>
+<spectrum-type name='3D HNCA'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Ca' atom='C13' width='0.000000'>
+<label tag='CA' off='-1' final='1'/>
+<label tag='CA' off='0' final='1'/>
+</dim>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='2' hops='1' rep='0'/>
+<step text='Ca' atom='C13' dim='1' hops='2' rep='0' mean='54.000000' dev='10.000000'/>
+<fld name='ExperimentType' type='Memo'>3D Triple Resonance</fld>
+<fld name='reference' type='Memo'>Grzesiek S, Bax A, J Magn Reson, 96, 432-440 (1992)</fld>
+</spectrum-type>
+<spectrum-type name='3D HNCACB'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Cab' atom='C13' width='0.000000'>
+<label tag='CB' off='-1' final='1'/>
+<label tag='CB' off='0' final='1'/>
+<label tag='CA' off='-1' final='1'/>
+<label tag='CA' off='0' final='1'/>
+</dim>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='2' hops='1' rep='0'/>
+<step text='Ca' atom='C13' dim='-1' hops='2' rep='0' mean='54.000000' dev='10.000000'/>
+<step text='Cab' atom='C13' dim='1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<fld name='ExperimentType' type='Memo'>3D Triple Resonance</fld>
+<fld name='reference' type='Memo'>Wittekind M, Mueller L, J Magn Reson B, 101, 201-205 (1993)</fld>
+</spectrum-type>
+<spectrum-type name='3D HN(CA)CO'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Co' atom='C13' width='0.000000'>
+<label tag='C' off='-1' final='1'/>
+<label tag='C' off='0' final='1'/>
+</dim>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='2' hops='1' rep='0'/>
+<step text='Ca' atom='C13' dim='-1' hops='2' rep='0' mean='54.000000' dev='10.000000'/>
+<step text='Co' atom='C13' dim='1' hops='1' rep='0' mean='175.000000' dev='25.000000'/>
+<fld name='ExperimentType' type='Memo'>3D Triple Resonance</fld>
+<fld name='reference' type='Memo'>Clubb RT, Thanabal V, Wagner G, J Magn Reson, 97, 213-217 (1992)</fld>
+</spectrum-type>
+<spectrum-type name='3D HNCO'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Co' atom='C13' width='0.000000'>
+<label tag='C' off='-1' final='1'/>
+</dim>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='2' hops='1' rep='0'/>
+<step text='Co' atom='C13' dim='1' hops='1' rep='0' mean='175.000000' dev='25.000000'/>
+<fld name='ExperimentType' type='Memo'>3D Triple Resonance</fld>
+<fld name='reference' type='Memo'>Grzesiek S, Bax A, J Magn Reson, 96, 432-440 (1992)</fld>
+</spectrum-type>
+<spectrum-type name='3D HN(CO)CA'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Ca' atom='C13' width='0.000000'>
+<label tag='CA' off='-1' final='1'/>
+</dim>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='2' hops='1' rep='0'/>
+<step text='C' atom='C13' dim='-1' hops='1' rep='0' mean='175.000000' dev='25.000000'/>
+<step text='Ca' atom='C13' dim='1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<fld name='ExperimentType' type='Memo'>3D Triple Resonance</fld>
+<fld name='reference' type='Memo'>Bax A, Ikura M, J Biomol NMR, 1, 99-104 (1991)</fld>
+</spectrum-type>
+<spectrum-type name='3D HNHA'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='HA' atom='H1' width='0.000000'>
+<label tag='HA' off='0' final='1'/>
+<label tag='HA2' off='0' final='1'/>
+<label tag='HA3' off='0' final='1'/>
+</dim>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='N' atom='N15' dim='2' hops='0' rep='0'/>
+<step text='HN' atom='H1' dim='0' hops='1' rep='0'/>
+<step text='HA' atom='H1' dim='1' hops='3' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'>Vuister GW, Bax A, J Am Chem Soc, 115, 7772-7777 (1993)</fld>
+</spectrum-type>
+<spectrum-type name='3D HNHB'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Hb' atom='H1' width='0.000000'>
+<label tag='HB' off='0' final='1'/>
+<label tag='HB2' off='0' final='1'/>
+<label tag='HB3' off='0' final='1'/>
+</dim>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='2' hops='1' rep='0'/>
+<step text='see Object Table' atom='C13' dim='-1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='of SpectrumType' atom='C13' dim='-1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='Hb' atom='H1' dim='1' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'>Archer SJ, Ikura M, Torchia DA, Bax A, J Magn Reson, 95, 636-641 (1991)</fld>
+<fld name='comment' type='Memo'>ExpProc contains STEPS thru CA-CB to avoid seeing HA-1 (real expt uses hops=3 step from N to Hb)</fld>
+</spectrum-type>
+<spectrum-type name='2D HSQC13Cali'>
+<dim name='Hali' atom='H1' width='0.000000'/>
+<dim name='Cali' atom='C13' width='0.000000'/>
+<step text='Cali' atom='C13' dim='1' hops='0' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='Hali' atom='H1' dim='0' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>2D Double Resonance</fld>
+<fld name='reference' type='Memo'>Vuister GW, Bax A, J Magn Reson, 98, 428-435 (1992)</fld>
+<fld name='comment' type='Memo'>[1H,13Cali]-COSY: hmqc13Cali, hsqc13Cali</fld>
+</spectrum-type>
+<spectrum-type name='2D HSQC13Caro'>
+<dim name='Haro' atom='H1' width='0.000000'/>
+<dim name='Caro' atom='C13' width='0.000000'/>
+<step text='Caro' atom='C13' dim='1' hops='0' rep='0' mean='125.000000' dev='25.000000'/>
+<step text='Haro' atom='H1' dim='0' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>2D Double Resonance</fld>
+<fld name='reference' type='Memo'>Vuister GW, Bax A, J Magn Reson, 98, 428-435 (1992)</fld>
+<fld name='comment' type='Memo'>[1H,13Caro]-COSY: hmqc13Caro, hsqc13Caro, [1H,13Caro]-TROSY</fld>
+</spectrum-type>
+<spectrum-type name='2D HSQC15N'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='N' atom='N15' dim='1' hops='0' rep='0'/>
+<step text='HN' atom='H1' dim='0' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>2D Double Resonance</fld>
+<fld name='reference' type='Memo'>Mori S, Abeygunawardana C, Johnson MO, Zijl PCM, J Magn Reson B, 108, 94-98 (1995)</fld>
+<fld name='comment' type='Memo'>[1H,15N]-COSY: hmqc15N, hsqc15N, [1H,15N]-TROSY</fld>
+</spectrum-type>
+<spectrum-type name='2D H(N)CA'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='CA' atom='C13' width='0.000000'>
+<label tag='CA' off='-1' final='1'/>
+<label tag='CA' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='-1' hops='1' rep='0'/>
+<step text='CA' atom='C13' dim='1' hops='2' rep='0' mean='54.000000' dev='10.000000'/>
+<fld name='ExperimentType' type='Memo'>2D Triple Resonance</fld>
+<fld name='comment' type='Memo'>Hn-Ca projection of HNCA</fld>
+</spectrum-type>
+<spectrum-type name='2D H(N)CACB'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Cb' atom='C13' width='0.000000'>
+<label tag='CB' off='-1' final='1'/>
+<label tag='CB' off='0' final='1'/>
+<label tag='CA' off='-1' final='1'/>
+<label tag='CA' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='-1' hops='1' rep='0'/>
+<step text='Ca' atom='C13' dim='-1' hops='2' rep='0' mean='54.000000' dev='10.000000'/>
+<step text='Cb' atom='C13' dim='1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<fld name='ExperimentType' type='Memo'>2D Triple Resonance</fld>
+<fld name='comment' type='Memo'>Hn-Cab projection of HNCACB</fld>
+</spectrum-type>
+<spectrum-type name='2D H(N)CO'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='CO' atom='C13' width='0.000000'>
+<label tag='C' off='-1' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='-1' hops='1' rep='0'/>
+<step text='CO' atom='C13' dim='1' hops='1' rep='0' mean='175.000000' dev='25.000000'/>
+<fld name='ExperimentType' type='Memo'>2D Triple Resonance</fld>
+<fld name='comment' type='Memo'>Hn-CO projection of HNCO</fld>
+</spectrum-type>
+<spectrum-type name='3D (H)C(CCO)NH'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Cali' atom='C13' width='0.000000'>
+<label tag='CB' off='-1' final='1'/>
+<label tag='CA' off='-1' final='1'/>
+</dim>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='2' hops='1' rep='0'/>
+<step text='Co' atom='C13' dim='-1' hops='1' rep='0' mean='175.000000' dev='20.000000'/>
+<step text='Ca' atom='C13' dim='-1' hops='1' rep='0' mean='54.000000' dev='10.000000'/>
+<step text='Cali' atom='C13' dim='1' hops='1' rep='1' mean='40.000000' dev='35.000000'/>
+<fld name='ExperimentType' type='Memo'>3D Triple Resonance</fld>
+<fld name='reference' type='Memo'>Grzesiek S, Anglister J, Bax A, J Magn Reson B, 101, 114-119 (1993)</fld>
+</spectrum-type>
+<spectrum-type name='3D H(CCCO)NH'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Hali' atom='H1' width='0.000000'/>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='2' hops='1' rep='0'/>
+<step text='Co' atom='C13' dim='-1' hops='1' rep='0' mean='175.000000' dev='25.000000'/>
+<step text='Ca' atom='C13' dim='-1' hops='1' rep='0' mean='54.000000' dev='10.000000'/>
+<step text='Cali' atom='C13' dim='-1' hops='1' rep='1' mean='40.000000' dev='35.000000'/>
+<step text='Hali' atom='H1' dim='1' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Triple Resonance</fld>
+<fld name='reference' type='Memo'>Grzesiek S. Anglister J, Bax A, J Magn Reson B, 101, 114-119 (1993)</fld>
+</spectrum-type>
+<spectrum-type name='2D (H)CC(H)-COSYali'>
+<dim name='Cinept' atom='C13' width='0.000000'/>
+<dim name='Ccosy' atom='C13' width='0.000000'/>
+<step text='Hcosy' atom='H1' dim='-1' hops='0' rep='0'/>
+<step text='Ccosy' atom='C13' dim='1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='Cinept' atom='C13' dim='0' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='Hinept' atom='H1' dim='-1' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>2D Double Resonance</fld>
+<fld name='reference' type='Memo'>Gehring K, Ekiel I, J Magn Reson, 135, 185-193 (1998)</fld>
+<fld name='comment' type='Memo'>C-C projection of hCCH-COSYali</fld>
+</spectrum-type>
+<spectrum-type name='3D (H)CCH-COSYali'>
+<dim name='Hinept' atom='H1' width='0.000000'/>
+<dim name='Ccosy' atom='C13' width='0.000000'/>
+<dim name='Cinept' atom='C13' width='0.000000'/>
+<step text='Hcosy' atom='H1' dim='-1' hops='0' rep='0'/>
+<step text='Ccosy' atom='C13' dim='1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='Cinept' atom='C13' dim='2' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='Hinept' atom='H1' dim='0' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'>Gehring K, Ekiel I, J Magn Reson, 135, 185-193 (1998)</fld>
+</spectrum-type>
+<spectrum-type name='3D (H)CC(H)-COSYaro'>
+<dim name='C1' atom='C13' width='0.000000'/>
+<dim name='C2' atom='C13' width='0.000000'/>
+<step text='' atom='H1' dim='-1' hops='0' rep='0'/>
+<step text='C1' atom='C13' dim='0' hops='1' rep='0' mean='125.000000' dev='25.000000'/>
+<step text='C2' atom='C13' dim='1' hops='1' rep='0' mean='125.000000' dev='25.000000'/>
+<step text='' atom='H1' dim='-1' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>2D Double Resonance</fld>
+<fld name='comment' type='Memo'>C-C projection of hCCH-COSYaro</fld>
+</spectrum-type>
+<spectrum-type name='3D (H)CCH-COSYaro'>
+<dim name='Hinept' atom='H1' width='0.000000'/>
+<dim name='Ccosy' atom='C13' width='0.000000'/>
+<dim name='Cinept' atom='C13' width='0.000000'/>
+<step text='Hcosy' atom='H1' dim='-1' hops='0' rep='0'/>
+<step text='Ccosy' atom='C13' dim='1' hops='1' rep='0' mean='120.000000' dev='25.000000'/>
+<step text='Cinept' atom='C13' dim='2' hops='1' rep='0' mean='120.000000' dev='25.000000'/>
+<step text='Hinept' atom='H1' dim='0' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'>Gehring K, Ekiel I, J Magn Reson, 135, 185-193 (1998)</fld>
+</spectrum-type>
+<spectrum-type name='3D (H)CCH-TOCSYali'>
+<dim name='Hinept' atom='H1' width='0.000000'/>
+<dim name='Ctocsy' atom='C13' width='0.000000'/>
+<dim name='Cinept' atom='C13' width='0.000000'/>
+<step text='Htocsy' atom='H1' dim='-1' hops='0' rep='0'/>
+<step text='Ctocsy' atom='C13' dim='1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='Cinept' atom='C13' dim='2' hops='1' rep='1' mean='40.000000' dev='35.000000'/>
+<step text='Hinept' atom='H1' dim='0' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'></fld>
+</spectrum-type>
+<spectrum-type name='3D (H)CCH-TOCSYaro'>
+<dim name='Hinept' atom='H1' width='0.000000'/>
+<dim name='Ctocsy' atom='C13' width='0.000000'/>
+<dim name='Cinept' atom='C13' width='0.000000'/>
+<step text='Htocsy' atom='H1' dim='-1' hops='0' rep='0'/>
+<step text='Ctocsy' atom='C13' dim='1' hops='1' rep='0' mean='120.000000' dev='25.000000'/>
+<step text='Cinept' atom='C13' dim='2' hops='1' rep='1' mean='120.000000' dev='25.000000'/>
+<step text='Hinept' atom='H1' dim='0' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+</spectrum-type>
+<spectrum-type name='3D HC(C)H-TOCSYaro'>
+<dim name='Hinept' atom='H1' width='0.000000'/>
+<dim name='Htocsy' atom='H1' width='0.000000'/>
+<dim name='Cinept' atom='C13' width='0.000000'/>
+<step text='Hinept' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='Cinept' atom='C13' dim='2' hops='1' rep='0' mean='120.000000' dev='25.000000'/>
+<step text='Ctocsy' atom='C13' dim='-1' hops='1' rep='1' mean='120.000000' dev='25.000000'/>
+<step text='Htocsy' atom='H1' dim='1' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>3D Double Resonance</fld>
+<fld name='reference' type='Memo'>Bax A, Clore GM, Gronenborn A, J Magn Reson, 88, 425-431 (1990)</fld>
+</spectrum-type>
+<spectrum-type name='3D CBCA(CO)NH'>
+<dim name='HN' atom='H1' width='0.000000'>
+<label tag='H' off='0' final='1'/>
+</dim>
+<dim name='Cab' atom='C13' width='0.000000'>
+<label tag='CB' off='-1' final='1'/>
+<label tag='CA' off='-1' final='1'/>
+</dim>
+<dim name='N' atom='N15' width='0.000000'>
+<label tag='N' off='0' final='1'/>
+</dim>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='2' hops='1' rep='0'/>
+<step text='Co' atom='C13' dim='-1' hops='1' rep='0' mean='175.000000' dev='20.000000'/>
+<step text='Ca' atom='C13' dim='-1' hops='1' rep='0' mean='54.000000' dev='10.000000'/>
+<step text='Cab' atom='C13' dim='1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<fld name='ExperimentType' type='Memo'>3D Triple Resonance</fld>
+<fld name='reference' type='Memo'>Grzesiek S, Bax A, J Amer Chem Soc, 114, 6291-6293 (1992)</fld>
+</spectrum-type>
+<spectrum-type name='2D H(N)HB'>
+<dim name='HN' atom='H1' width='0.000000'/>
+<dim name='HB' atom='H1' width='0.000000'/>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='-1' hops='1' rep='0'/>
+<step text='See object Table' atom='C13' dim='-1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='of 3D HNHB' atom='C13' dim='-1' hops='1' rep='0' mean='40.000000' dev='35.000000'/>
+<step text='HB' atom='H1' dim='1' hops='1' rep='0'/>
+<fld name='ExperimentType' type='Memo'>2D Double Resonance</fld>
+<fld name='comment' type='Memo'>See comment in 3D HNHB (procedure uses C13)</fld>
+</spectrum-type>
+<spectrum-type name='2D H(N)HA'>
+<dim name='HN' atom='H1' width='0.000000'/>
+<dim name='HA' atom='H1' width='0.000000'/>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='-1' hops='1' rep='0'/>
+<step text='HA' atom='H1' dim='1' hops='3' rep='0'/>
+</spectrum-type>
+<spectrum-type name='2D H(NCO)CA'>
+<dim name='HN' atom='H1' width='0.000000'/>
+<dim name='CA' atom='C13' width='0.000000'/>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='-1' hops='1' rep='0'/>
+<step text='CO' atom='C13' dim='-1' hops='1' rep='0' mean='175.000000' dev='15.000000'/>
+<step text='CA' atom='C13' dim='1' hops='1' rep='0' mean='52.000000' dev='12.000000'/>
+<fld name='ExperimentType' type='Memo'>2D Triple Resonance</fld>
+<fld name='comment' type='Memo'>HN-CA projection of 3D HN(CO)CA</fld>
+</spectrum-type>
+<spectrum-type name='2D H(NCA)CO'>
+<dim name='HN' atom='H1' width='0.000000'/>
+<dim name='CO' atom='C13' width='0.000000'/>
+<step text='HN' atom='H1' dim='0' hops='0' rep='0'/>
+<step text='N' atom='N15' dim='-1' hops='1' rep='0'/>
+<step text='CA' atom='C13' dim='-1' hops='2' rep='0' mean='54.000000' dev='10.000000'/>
+<step text='CO' atom='C13' dim='1' hops='1' rep='0' mean='175.000000' dev='25.000000'/>
+<fld name='ExperimentType' type='Memo'>2D Triple Resonance</fld>
+<fld name='reference' type='Memo'></fld>
+<fld name='comment' type='Memo'>HN-CO projection of 3D HN(CA)CO</fld>
+</spectrum-type>
+<systype id='4' name='ALA' mdl='ALA' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='8' name='AMX' mdl='SER' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='9' name='GLY' mdl='GLY' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='11' name='LEU' mdl='LEU' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='13' name='VAL' mdl='VAL' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='18' name='ILE' mdl='ILE' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='19' name='PRO' mdl='PRO' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='20' name='THR' mdl='THR' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='22' name='long' mdl='LYS' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='23' name='ASN' mdl='ASN' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='24' name='GLN' mdl='GLN' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='25' name='TRP' mdl='TRP' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='26' name='HIS' mdl='HIS' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='27' name='PHE' mdl='PHE' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='28' name='TYR' mdl='TYR' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='29' name='MET' mdl='MET' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<systype id='30' name='ARG' mdl='ARG' nterm='N' cterm='C' gensys='BB' class='AA'/>
+<residue-type name='BBresidue' short='BB' letter='B' systype='8' >
+<group name='HB' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='118.000' dev='35.000' x='1' y='1' />
+<atom name='C' type='C13' num='1' mean='175.000' dev='12.000' x='3' y='1' />
+<atom name='H' type='H1' num='1' mean='8.500' dev='2.000' x='1' y='0' />
+<atom name='CB' type='C13' num='1' mean='30.000' dev='35.000' x='2' y='2' />
+<atom name='HB2' type='H1' num='1' mean='3.000' dev='0.000' x='1' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='3.100' dev='0.000' x='3' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.500' dev='0.000' x='2' y='0' />
+<atom name='CA' type='C13' num='1' mean='56.000' dev='35.000' x='2' y='1' />
+<atom name='O' type='O' num='1'  x='3' y='0'/>
+<atom name='X' type='B' num='1'  x='2' y='3'/>
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='H' to='N'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='X'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='O' to='C'/>
+<bond from='X' to='CB'/>
+</residue-type>
+<residue-type name='Alanine' short='ALA' letter='A' systype='4' >
+<atom name='N' type='N15' num='1' mean='123.230' dev='14.240' x='3' y='1' />
+<atom name='C' type='C13' num='1' mean='177.760' dev='8.560' x='5' y='1' />
+<atom name='H' type='H1' num='1' mean='8.200' dev='2.400' x='3' y='0' />
+<atom name='CB' type='C13' num='1' mean='19.000' dev='7.240' x='4' y='2' />
+<atom name='HB' type='H1' num='3' mean='1.360' dev='1.000' x='4' y='3' />
+<atom name='HA' type='H1' num='1' mean='4.260' dev='1.760' x='4' y='0' />
+<atom name='CA' type='C13' num='1' mean='53.160' dev='7.920' x='4' y='1' />
+<atom name='O' type='O' num='1'  x='5' y='0'/>
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='C' to='CA'/>
+<bond from='H' to='N'/>
+<bond from='CB' to='HB'/>
+<bond from='CB' to='CA'/>
+<bond from='HB' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='O' to='C'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='Double'>4.000000</fld>
+</residue-type>
+<residue-type name='Serine' short='SER' letter='S' systype='8' >
+<group name='HB' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='116.270' dev='14.280' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='174.670' dev='6.960' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.280' dev='2.360' x='0' y='0' />
+<atom name='CB' type='C13' num='1' mean='63.800' dev='5.960' x='1' y='2' />
+<atom name='HB2' type='H1' num='1' mean='3.880' dev='1.000' x='0' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='3.850' dev='1.120' x='2' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.480' dev='1.640' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='58.750' dev='8.400' x='1' y='1' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='HG' type='H1' num='1' mean='5.330' dev='4.040' x='1' y='4' />
+<atom name='OG' type='O' num='1'  x='1' y='3'/>
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='H' to='N'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='OG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='O' to='C'/>
+<bond from='HG' to='OG'/>
+<bond from='OG' to='CB'/>
+<bond from='OG' to='HG'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Glycine' short='GLY' letter='G' systype='9' >
+<group name='HA' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='109.670' dev='15.480' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='173.900' dev='7.560' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.330' dev='2.600' x='0' y='0' />
+<atom name='HA2' type='H1' num='1' mean='3.970' dev='1.520' x='2' y='2' group='HA'/>
+<atom name='HA3' type='H1' num='1' mean='3.900' dev='1.480' x='0' y='2' group='HA'/>
+<atom name='CA' type='C13' num='1' mean='45.370' dev='5.440' x='1' y='1' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='H' to='N'/>
+<bond from='HA2' to='CA'/>
+<bond from='HA3' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='HA2'/>
+<bond from='CA' to='HA3'/>
+<bond from='O' to='C'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Leucine' short='LEU' letter='L' systype='11' >
+<group name='HD' x='0' y='0'/>
+<group name='HB' x='0' y='0'/>
+<group name='HHD' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='121.860' dev='15.760' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='177.010' dev='7.960' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.220' dev='2.600' x='0' y='0' />
+<atom name='HD1' type='H1' num='3' mean='0.760' dev='1.120' x='0' y='5' group='HD'/>
+<atom name='HD2' type='H1' num='3' mean='0.730' dev='1.160' x='2' y='5' group='HD'/>
+<atom name='CB' type='C13' num='1' mean='42.300' dev='7.480' x='1' y='2' />
+<atom name='HB2' type='H1' num='1' mean='1.620' dev='1.360' x='0' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='1.530' dev='1.440' x='2' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.320' dev='1.880' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='55.650' dev='8.520' x='1' y='1' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='HG' type='H1' num='1' mean='1.510' dev='1.320' x='0' y='3' />
+<atom name='CG' type='C13' num='1' mean='26.800' dev='4.560' x='1' y='3' />
+<atom name='CD1' type='C13' num='1' mean='24.700' dev='6.400' x='0' y='4' />
+<atom name='CD2' type='C13' num='1' mean='24.100' dev='6.760' x='2' y='4' />
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='H' to='N'/>
+<bond from='HD1' to='CD1'/>
+<bond from='HD2' to='CD2'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='CA' to='N'/>
+<bond from='O' to='C'/>
+<bond from='HG' to='CG'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='HG'/>
+<bond from='CG' to='CD1'/>
+<bond from='CG' to='CD2'/>
+<bond from='CD1' to='HD1'/>
+<bond from='CD1' to='CG'/>
+<bond from='CD2' to='HD2'/>
+<bond from='CD2' to='CG'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Valine' short='VAL' letter='V' systype='13' >
+<group name='HG' x='0' y='0'/>
+<group name='HHG' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='121.120' dev='18.200' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='175.660' dev='7.560' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.290' dev='2.720' x='0' y='0' />
+<atom name='CB' type='C13' num='1' mean='32.720' dev='7.200' x='1' y='2' />
+<atom name='HB' type='H1' num='1' mean='1.980' dev='1.280' x='0' y='2' />
+<atom name='HA' type='H1' num='1' mean='4.180' dev='2.320' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='62.510' dev='11.520' x='1' y='1' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='HG2' type='H1' num='3' mean='0.800' dev='1.120' x='2' y='4' group='HG'/>
+<atom name='CG2' type='C13' num='1' mean='21.290' dev='6.280' x='2' y='3' />
+<atom name='HG1' type='H1' num='3' mean='0.830' dev='1.040' x='0' y='4' group='HG'/>
+<atom name='CG1' type='C13' num='1' mean='21.510' dev='5.440' x='0' y='3' />
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='C' to='CA'/>
+<bond from='H' to='N'/>
+<bond from='CB' to='HB'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG2'/>
+<bond from='CB' to='CG1'/>
+<bond from='HB' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='O' to='C'/>
+<bond from='HG2' to='CG2'/>
+<bond from='CG2' to='CB'/>
+<bond from='CG2' to='HG2'/>
+<bond from='HG1' to='CG1'/>
+<bond from='CG1' to='CB'/>
+<bond from='CG1' to='HG1'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Isoleucine' short='ILE' letter='I' systype='18' >
+<group name='HG1' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='121.470' dev='17.280' x='1' y='1' />
+<atom name='C' type='C13' num='1' mean='175.880' dev='7.760' x='3' y='1' />
+<atom name='H' type='H1' num='1' mean='8.280' dev='2.760' x='1' y='0' />
+<atom name='HD1' type='H1' num='3' mean='0.680' dev='1.160' x='1' y='5' />
+<atom name='CB' type='C13' num='1' mean='38.610' dev='8.080' x='2' y='2' />
+<atom name='HB' type='H1' num='1' mean='1.790' dev='1.160' x='1' y='2' />
+<atom name='HA' type='H1' num='1' mean='4.180' dev='2.240' x='2' y='0' />
+<atom name='CA' type='C13' num='1' mean='61.640' dev='10.760' x='2' y='1' />
+<atom name='O' type='O' num='1'  x='3' y='0'/>
+<atom name='CD1' type='C13' num='1' mean='13.460' dev='6.720' x='1' y='4' />
+<atom name='HG2' type='H1' num='3' mean='0.780' dev='1.080' x='3' y='4' />
+<atom name='CG2' type='C13' num='1' mean='17.530' dev='5.560' x='3' y='3' />
+<atom name='CG1' type='C13' num='1' mean='27.730' dev='6.880' x='1' y='3' />
+<atom name='HG12' type='H1' num='1' mean='1.280' dev='1.600' x='0' y='3' group='HG1'/>
+<atom name='HG13' type='H1' num='1' mean='1.200' dev='1.640' x='2' y='3' group='HG1'/>
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='C' to='CA'/>
+<bond from='H' to='N'/>
+<bond from='HD1' to='CD1'/>
+<bond from='CB' to='HB'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG2'/>
+<bond from='CB' to='CG1'/>
+<bond from='HB' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='O' to='C'/>
+<bond from='CD1' to='HD1'/>
+<bond from='CD1' to='CG1'/>
+<bond from='HG2' to='CG2'/>
+<bond from='CG2' to='CB'/>
+<bond from='CG2' to='HG2'/>
+<bond from='CG1' to='CB'/>
+<bond from='CG1' to='CD1'/>
+<bond from='CG1' to='HG12'/>
+<bond from='CG1' to='HG13'/>
+<bond from='HG12' to='CG1'/>
+<bond from='HG13' to='CG1'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Proline' short='PRO' letter='P' systype='19' >
+<group name='HD' x='0' y='0'/>
+<group name='HB' x='0' y='0'/>
+<group name='HG' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='133.920' dev='26.880' x='1' y='1' />
+<atom name='C' type='C13' num='1' mean='176.740' dev='6.120' x='3' y='1' />
+<atom name='HD2' type='H1' num='1' mean='3.650' dev='1.400' x='0' y='2' group='HD'/>
+<atom name='CB' type='C13' num='1' mean='31.850' dev='4.760' x='3' y='2' />
+<atom name='HB2' type='H1' num='1' mean='2.070' dev='1.400' x='4' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='2.010' dev='1.440' x='4' y='3' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.400' dev='1.320' x='2' y='0' />
+<atom name='CA' type='C13' num='1' mean='63.340' dev='6.200' x='2' y='1' />
+<atom name='O' type='O' num='1'  x='3' y='0'/>
+<atom name='CG' type='C13' num='1' mean='27.190' dev='4.320' x='2' y='3' />
+<atom name='HG2' type='H1' num='1' mean='1.930' dev='1.240' x='1' y='4' group='HG'/>
+<atom name='HG3' type='H1' num='1' mean='1.900' dev='1.320' x='2' y='4' group='HG'/>
+<atom name='CD' type='C13' num='1' mean='50.340' dev='3.920' x='1' y='2' />
+<atom name='HD3' type='H1' num='1' mean='3.620' dev='1.560' x='0' y='3' group='HD'/>
+<bond from='N' to='CA'/>
+<bond from='N' to='CD'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='HD2' to='CD'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='HG2'/>
+<bond from='CG' to='HG3'/>
+<bond from='CG' to='CD'/>
+<bond from='HG2' to='CG'/>
+<bond from='HG3' to='CG'/>
+<bond from='CD' to='N'/>
+<bond from='CD' to='HD2'/>
+<bond from='CD' to='CG'/>
+<bond from='CD' to='HD3'/>
+<bond from='HD3' to='CD'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Threonine' short='THR' letter='T' systype='20' >
+<atom name='N' type='N15' num='1' mean='115.450' dev='18.960' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='174.560' dev='7.040' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.250' dev='2.480' x='0' y='0' />
+<atom name='CB' type='C13' num='1' mean='69.720' dev='6.720' x='1' y='2' />
+<atom name='HB' type='H1' num='1' mean='4.170' dev='1.320' x='0' y='2' />
+<atom name='HA' type='H1' num='1' mean='4.460' dev='1.920' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='62.230' dev='10.440' x='1' y='1' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='HG2' type='H1' num='3' mean='1.140' dev='0.920' x='0' y='4' />
+<atom name='CG2' type='C13' num='1' mean='21.560' dev='4.400' x='0' y='3' />
+<atom name='HG1' type='H1' num='1' mean='4.950' dev='6.280' x='2' y='4' />
+<atom name='OG1' type='O' num='1'  x='2' y='3'/>
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='C' to='CA'/>
+<bond from='H' to='N'/>
+<bond from='CB' to='OG1'/>
+<bond from='CB' to='HB'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG2'/>
+<bond from='HB' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='O' to='C'/>
+<bond from='HG2' to='CG2'/>
+<bond from='CG2' to='CB'/>
+<bond from='CG2' to='HG2'/>
+<bond from='HG1' to='OG1'/>
+<bond from='OG1' to='CB'/>
+<bond from='OG1' to='HG1'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Lysine' short='LYS' letter='K' systype='22' >
+<group name='H' x='0' y='0'/>
+<group name='HD' x='0' y='0'/>
+<group name='HB' x='0' y='0'/>
+<group name='HG' x='0' y='0'/>
+<group name='HE' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='121.070' dev='15.160' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='176.680' dev='7.880' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.190' dev='2.440' x='0' y='0' />
+<atom name='HD2' type='H1' num='1' mean='1.610' dev='0.920' x='0' y='4' group='HD'/>
+<atom name='CB' type='C13' num='1' mean='32.790' dev='7.120' x='1' y='2' />
+<atom name='HB2' type='H1' num='1' mean='1.780' dev='1.000' x='0' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='1.750' dev='1.080' x='2' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.270' dev='1.760' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='56.970' dev='8.800' x='1' y='1' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='CG' type='C13' num='1' mean='24.920' dev='4.520' x='1' y='3' />
+<atom name='HG2' type='H1' num='1' mean='1.370' dev='1.040' x='0' y='3' group='HG'/>
+<atom name='HG3' type='H1' num='1' mean='1.350' dev='1.120' x='2' y='3' group='HG'/>
+<atom name='CD' type='C13' num='1' mean='28.960' dev='4.560' x='1' y='4' />
+<atom name='HD3' type='H1' num='1' mean='1.600' dev='0.920' x='2' y='4' group='HD'/>
+<atom name='HE2' type='H1' num='1' mean='2.920' dev='0.760' x='0' y='5' group='HE'/>
+<atom name='HE3' type='H1' num='1' mean='2.910' dev='0.800' x='2' y='5' group='HE'/>
+<atom name='HZ' type='H1' num='3' mean='7.420' dev='2.680' x='1' y='7' />
+<atom name='CE' type='C13' num='1' mean='41.900' dev='3.280' x='1' y='5' />
+<atom name='NZ' type='N15' num='1' mean='34.100' dev='11.880' x='1' y='6' />
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='C' to='CA'/>
+<bond from='H' to='N'/>
+<bond from='HD2' to='CD'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='HG2'/>
+<bond from='CG' to='HG3'/>
+<bond from='CG' to='CD'/>
+<bond from='HG2' to='CG'/>
+<bond from='HG3' to='CG'/>
+<bond from='CD' to='HD2'/>
+<bond from='CD' to='CG'/>
+<bond from='CD' to='HD3'/>
+<bond from='CD' to='CE'/>
+<bond from='HD3' to='CD'/>
+<bond from='HE2' to='CE'/>
+<bond from='HE3' to='CE'/>
+<bond from='HZ' to='NZ'/>
+<bond from='CE' to='CD'/>
+<bond from='CE' to='HE2'/>
+<bond from='CE' to='HE3'/>
+<bond from='CE' to='NZ'/>
+<bond from='NZ' to='HZ'/>
+<bond from='NZ' to='CE'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Asparagine' short='ASN' letter='N' systype='8' >
+<group name='HD2' x='0' y='0'/>
+<group name='HB' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='118.970' dev='16.080' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='175.300' dev='7.200' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.350' dev='2.480' x='0' y='0' />
+<atom name='CB' type='C13' num='1' mean='38.690' dev='6.720' x='1' y='2' />
+<atom name='HB2' type='H1' num='1' mean='2.810' dev='1.240' x='0' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='2.760' dev='1.320' x='2' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.670' dev='1.480' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='53.550' dev='7.520' x='1' y='1' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='CG' type='C13' num='1' mean='176.740' dev='5.560' x='1' y='3' />
+<atom name='OD1' type='O' num='1'  x='0' y='3'/>
+<atom name='HD22' type='H1' num='1' mean='7.130' dev='1.920' x='2' y='5' group='HD2'/>
+<atom name='ND2' type='N15' num='1' mean='112.770' dev='8.960' x='1' y='4' />
+<atom name='HD21' type='H1' num='1' mean='7.350' dev='1.920' x='0' y='5' group='HD2'/>
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='H' to='N'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='OD1'/>
+<bond from='CG' to='ND2'/>
+<bond from='OD1' to='CG'/>
+<bond from='HD22' to='ND2'/>
+<bond from='ND2' to='CG'/>
+<bond from='ND2' to='HD22'/>
+<bond from='ND2' to='HD21'/>
+<bond from='HD21' to='ND2'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Glutamine' short='GLN' letter='Q' systype='22' >
+<group name='HB' x='0' y='0'/>
+<group name='HG' x='0' y='0'/>
+<group name='HE2' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='119.890' dev='14.520' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='176.330' dev='7.840' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.220' dev='2.360' x='0' y='0' />
+<atom name='CB' type='C13' num='1' mean='29.180' dev='7.320' x='1' y='2' />
+<atom name='HB2' type='H1' num='1' mean='2.050' dev='1.000' x='0' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='2.020' dev='1.080' x='2' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.270' dev='1.720' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='56.590' dev='8.560' x='1' y='1' />
+<atom name='NE2' type='N15' num='1' mean='111.870' dev='7.040' x='1' y='5' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='CG' type='C13' num='1' mean='33.770' dev='4.480' x='1' y='3' />
+<atom name='HG2' type='H1' num='1' mean='2.320' dev='1.080' x='0' y='3' group='HG'/>
+<atom name='HG3' type='H1' num='1' mean='2.300' dev='1.160' x='2' y='3' group='HG'/>
+<atom name='CD' type='C13' num='1' mean='179.660' dev='5.320' x='1' y='4' />
+<atom name='OE1' type='O' num='1'  x='0' y='4'/>
+<atom name='HE21' type='H1' num='1' mean='7.240' dev='1.800' x='0' y='6' group='HE2'/>
+<atom name='HE22' type='H1' num='1' mean='7.020' dev='1.760' x='2' y='6' group='HE2'/>
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='H' to='N'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='NE2' to='CD'/>
+<bond from='NE2' to='HE21'/>
+<bond from='NE2' to='HE22'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='HG2'/>
+<bond from='CG' to='HG3'/>
+<bond from='CG' to='CD'/>
+<bond from='HG2' to='CG'/>
+<bond from='HG3' to='CG'/>
+<bond from='CD' to='NE2'/>
+<bond from='CD' to='CG'/>
+<bond from='CD' to='OE1'/>
+<bond from='OE1' to='CD'/>
+<bond from='HE21' to='NE2'/>
+<bond from='HE22' to='NE2'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Tryptophan' short='TRP' letter='W' systype='8' >
+<group name='HB' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='121.680' dev='16.520' x='1' y='1' />
+<atom name='C' type='C13' num='1' mean='176.190' dev='8.120' x='3' y='1' />
+<atom name='H' type='H1' num='1' mean='8.300' dev='3.120' x='1' y='0' />
+<atom name='HD1' type='H1' num='1' mean='7.150' dev='1.400' x='0' y='3' />
+<atom name='CB' type='C13' num='1' mean='29.980' dev='7.960' x='2' y='2' />
+<atom name='HB2' type='H1' num='1' mean='3.190' dev='1.440' x='1' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='3.130' dev='1.440' x='3' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.680' dev='2.080' x='2' y='0' />
+<atom name='CA' type='C13' num='1' mean='57.710' dev='10.360' x='2' y='1' />
+<atom name='HE1' type='H1' num='1' mean='10.100' dev='2.360' x='0' y='6' />
+<atom name='O' type='O' num='1'  x='3' y='0'/>
+<atom name='CG' type='C13' num='1' mean='110.640' dev='7.480' x='2' y='3' />
+<atom name='CD1' type='C13' num='1' mean='126.500' dev='7.560' x='1' y='4' />
+<atom name='CD2' type='C13' num='1' mean='127.480' dev='5.600' x='3' y='4' />
+<atom name='HE3' type='H1' num='1' mean='7.310' dev='1.640' x='5' y='4' />
+<atom name='HH2' type='H1' num='1' mean='6.980' dev='1.560' x='3' y='8' />
+<atom name='CE2' type='C13' num='1' mean='138.630' dev='27.200' x='2' y='5' />
+<atom name='NE1' type='N15' num='1' mean='129.360' dev='8.320' x='1' y='5' />
+<atom name='HZ2' type='H1' num='1' mean='7.280' dev='1.280' x='1' y='7' />
+<atom name='CZ2' type='C13' num='1' mean='114.240' dev='5.640' x='2' y='6' />
+<atom name='CZ3' type='C13' num='1' mean='121.410' dev='6.040' x='4' y='6' />
+<atom name='HZ3' type='H1' num='1' mean='6.860' dev='1.600' x='5' y='7' />
+<atom name='CH2' type='C13' num='1' mean='123.830' dev='7.000' x='3' y='7' />
+<atom name='CE3' type='C13' num='1' mean='120.470' dev='6.560' x='4' y='5' />
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='C' to='CA'/>
+<bond from='H' to='N'/>
+<bond from='HD1' to='CD1'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='HA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='HE1' to='NE1'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='CD1'/>
+<bond from='CG' to='CD2'/>
+<bond from='CD1' to='HD1'/>
+<bond from='CD1' to='CG'/>
+<bond from='CD1' to='NE1'/>
+<bond from='CD2' to='CG'/>
+<bond from='CD2' to='CE2'/>
+<bond from='CD2' to='CE3'/>
+<bond from='HE3' to='CE3'/>
+<bond from='HH2' to='CH2'/>
+<bond from='CE2' to='CD2'/>
+<bond from='CE2' to='NE1'/>
+<bond from='CE2' to='CZ2'/>
+<bond from='NE1' to='HE1'/>
+<bond from='NE1' to='CD1'/>
+<bond from='NE1' to='CE2'/>
+<bond from='HZ2' to='CZ2'/>
+<bond from='CZ2' to='CE2'/>
+<bond from='CZ2' to='HZ2'/>
+<bond from='CZ2' to='CH2'/>
+<bond from='CZ3' to='HZ3'/>
+<bond from='CZ3' to='CH2'/>
+<bond from='CZ3' to='CE3'/>
+<bond from='HZ3' to='CZ3'/>
+<bond from='CH2' to='HH2'/>
+<bond from='CH2' to='CZ2'/>
+<bond from='CH2' to='CZ3'/>
+<bond from='CE3' to='CD2'/>
+<bond from='CE3' to='HE3'/>
+<bond from='CE3' to='CZ3'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Histidine' short='HIS' letter='H' systype='8' >
+<group name='HB' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='119.600' dev='16.040' x='1' y='1' />
+<atom name='C' type='C13' num='1' mean='175.280' dev='7.920' x='3' y='1' />
+<atom name='H' type='H1' num='1' mean='8.240' dev='2.720' x='1' y='0' />
+<atom name='HD1' type='H1' num='1' mean='8.760' dev='10.680' x='0' y='3' />
+<atom name='HD2' type='H1' num='1' mean='7.020' dev='1.760' x='4' y='4' />
+<atom name='CB' type='C13' num='1' mean='30.210' dev='8.360' x='2' y='2' />
+<atom name='HB2' type='H1' num='1' mean='3.100' dev='1.440' x='1' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='3.040' dev='1.560' x='3' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.610' dev='1.760' x='2' y='0' />
+<atom name='CA' type='C13' num='1' mean='56.490' dev='9.240' x='2' y='1' />
+<atom name='HE1' type='H1' num='1' mean='7.960' dev='2.000' x='0' y='6' />
+<atom name='NE2' type='N15' num='1' mean='182.000' dev='56.760' x='3' y='5' />
+<atom name='ND1' type='N15' num='1' mean='195.360' dev='73.080' x='1' y='4' />
+<atom name='O' type='O' num='1'  x='3' y='0'/>
+<atom name='CG' type='C13' num='1' mean='131.440' dev='13.120' x='2' y='3' />
+<atom name='CD2' type='C13' num='1' mean='120.460' dev='13.800' x='3' y='4' />
+<atom name='HE2' type='H1' num='1' mean='9.770' dev='10.400' x='4' y='6' />
+<atom name='CE1' type='C13' num='1' mean='137.600' dev='9.320' x='1' y='5' />
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='C' to='CA'/>
+<bond from='H' to='N'/>
+<bond from='HD1' to='ND1'/>
+<bond from='HD2' to='CD2'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='HE1' to='CE1'/>
+<bond from='NE2' to='CD2'/>
+<bond from='NE2' to='HE2'/>
+<bond from='NE2' to='CE1'/>
+<bond from='ND1' to='HD1'/>
+<bond from='ND1' to='CG'/>
+<bond from='ND1' to='CE1'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='ND1'/>
+<bond from='CG' to='CD2'/>
+<bond from='CD2' to='HD2'/>
+<bond from='CD2' to='NE2'/>
+<bond from='CD2' to='CG'/>
+<bond from='HE2' to='NE2'/>
+<bond from='CE1' to='HE1'/>
+<bond from='CE1' to='NE2'/>
+<bond from='CE1' to='ND1'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Phenylalanine' short='PHE' letter='F' systype='8' >
+<group name='HD' x='0' y='0'/>
+<group name='HB' x='0' y='0'/>
+<group name='CD' x='0' y='0'/>
+<group name='HE' x='0' y='0'/>
+<group name='CE' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='120.480' dev='16.520' x='1' y='1' />
+<atom name='C' type='C13' num='1' mean='175.460' dev='8.000' x='3' y='1' />
+<atom name='H' type='H1' num='1' mean='8.360' dev='2.880' x='1' y='0' />
+<atom name='HD1' type='H1' num='1' mean='7.060' dev='1.200' x='0' y='4' group='HD'/>
+<atom name='HD2' type='H1' num='1' mean='7.070' dev='1.240' x='4' y='4' group='HD'/>
+<atom name='CB' type='C13' num='1' mean='39.940' dev='8.400' x='2' y='2' />
+<atom name='HB2' type='H1' num='1' mean='3.000' dev='1.480' x='1' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='2.940' dev='1.560' x='3' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.620' dev='2.280' x='2' y='0' />
+<atom name='CA' type='C13' num='1' mean='58.130' dev='10.280' x='2' y='1' />
+<atom name='HE1' type='H1' num='1' mean='7.090' dev='1.280' x='0' y='5' group='HE'/>
+<atom name='O' type='O' num='1'  x='3' y='0'/>
+<atom name='CG' type='C13' num='1' mean='138.340' dev='9.560' x='2' y='3' />
+<atom name='CD1' type='C13' num='1' mean='131.560' dev='4.880' x='1' y='4' group='CD'/>
+<atom name='CD2' type='C13' num='1' mean='131.650' dev='4.480' x='3' y='4' group='CD'/>
+<atom name='HE2' type='H1' num='1' mean='7.080' dev='1.280' x='4' y='5' group='HE'/>
+<atom name='HZ' type='H1' num='1' mean='7.000' dev='1.680' x='2' y='7' />
+<atom name='CE2' type='C13' num='1' mean='130.780' dev='4.600' x='3' y='5' group='CE'/>
+<atom name='CE1' type='C13' num='1' mean='130.680' dev='5.600' x='1' y='5' group='CE'/>
+<atom name='CZ' type='C13' num='1' mean='129.230' dev='6.120' x='2' y='6' />
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='H' to='N'/>
+<bond from='HD1' to='CD1'/>
+<bond from='HD2' to='CD2'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='HE1' to='CE1'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='CD1'/>
+<bond from='CG' to='CD2'/>
+<bond from='CD1' to='HD1'/>
+<bond from='CD1' to='CG'/>
+<bond from='CD1' to='CE1'/>
+<bond from='CD2' to='HD2'/>
+<bond from='CD2' to='CG'/>
+<bond from='CD2' to='CE2'/>
+<bond from='HE2' to='CE2'/>
+<bond from='HZ' to='CZ'/>
+<bond from='CE2' to='CD2'/>
+<bond from='CE2' to='HE2'/>
+<bond from='CE2' to='CZ'/>
+<bond from='CE1' to='HE1'/>
+<bond from='CE1' to='CD1'/>
+<bond from='CE1' to='CZ'/>
+<bond from='CZ' to='HZ'/>
+<bond from='CZ' to='CE2'/>
+<bond from='CZ' to='CE1'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Tyrosine' short='TYR' letter='Y' systype='8' >
+<group name='HD' x='0' y='0'/>
+<group name='HB' x='0' y='0'/>
+<group name='CD' x='0' y='0'/>
+<group name='HE' x='0' y='0'/>
+<group name='CE' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='120.610' dev='16.920' x='1' y='1' />
+<atom name='C' type='C13' num='1' mean='175.400' dev='7.960' x='3' y='1' />
+<atom name='H' type='H1' num='1' mean='8.320' dev='2.960' x='1' y='0' />
+<atom name='HD1' type='H1' num='1' mean='6.940' dev='1.200' x='0' y='4' group='HD'/>
+<atom name='HD2' type='H1' num='1' mean='6.930' dev='1.200' x='4' y='4' group='HD'/>
+<atom name='CB' type='C13' num='1' mean='39.310' dev='8.640' x='2' y='2' />
+<atom name='HB2' type='H1' num='1' mean='2.910' dev='1.480' x='1' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='2.850' dev='1.560' x='3' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.630' dev='2.240' x='2' y='0' />
+<atom name='CA' type='C13' num='1' mean='58.130' dev='10.160' x='2' y='1' />
+<atom name='HE1' type='H1' num='1' mean='6.710' dev='0.920' x='0' y='5' group='HE'/>
+<atom name='O' type='O' num='1'  x='3' y='0'/>
+<atom name='CG' type='C13' num='1' mean='129.750' dev='21.000' x='2' y='3' />
+<atom name='CD1' type='C13' num='1' mean='132.780' dev='4.880' x='1' y='4' group='CD'/>
+<atom name='CD2' type='C13' num='1' mean='132.740' dev='5.560' x='3' y='4' group='CD'/>
+<atom name='HE2' type='H1' num='1' mean='6.700' dev='0.960' x='4' y='5' group='HE'/>
+<atom name='CE2' type='C13' num='1' mean='117.920' dev='5.160' x='3' y='5' group='CE'/>
+<atom name='CE1' type='C13' num='1' mean='117.940' dev='4.840' x='1' y='5' group='CE'/>
+<atom name='CZ' type='C13' num='1' mean='156.610' dev='8.480' x='2' y='6' />
+<atom name='OH' type='O' num='1'  x='2' y='7'/>
+<atom name='HH' type='H1' num='1' mean='9.390' dev='5.600' x='3' y='8' />
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='H' to='N'/>
+<bond from='HD1' to='CD1'/>
+<bond from='HD2' to='CD2'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='HE1' to='CE1'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='CD1'/>
+<bond from='CG' to='CD2'/>
+<bond from='CD1' to='HD1'/>
+<bond from='CD1' to='CG'/>
+<bond from='CD1' to='CE1'/>
+<bond from='CD2' to='HD2'/>
+<bond from='CD2' to='CG'/>
+<bond from='CD2' to='CE2'/>
+<bond from='HE2' to='CE2'/>
+<bond from='CE2' to='CD2'/>
+<bond from='CE2' to='HE2'/>
+<bond from='CE2' to='CZ'/>
+<bond from='CE1' to='HE1'/>
+<bond from='CE1' to='CD1'/>
+<bond from='CE1' to='CZ'/>
+<bond from='CZ' to='CE2'/>
+<bond from='CZ' to='CE1'/>
+<bond from='CZ' to='OH'/>
+<bond from='OH' to='CZ'/>
+<bond from='OH' to='HH'/>
+<bond from='HH' to='OH'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Methionine' short='MET' letter='M' systype='22' >
+<group name='H' x='0' y='0'/>
+<group name='HB' x='0' y='0'/>
+<group name='HG' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='120.100' dev='14.280' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='176.210' dev='8.400' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.260' dev='2.400' x='0' y='0' />
+<atom name='CB' type='C13' num='1' mean='32.990' dev='8.960' x='1' y='2' />
+<atom name='HB2' type='H1' num='1' mean='2.030' dev='1.360' x='0' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='1.990' dev='1.360' x='2' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.410' dev='1.920' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='56.140' dev='9.000' x='1' y='1' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='CG' type='C13' num='1' mean='32.020' dev='5.040' x='1' y='3' />
+<atom name='HG2' type='H1' num='1' mean='2.430' dev='1.440' x='0' y='3' group='HG'/>
+<atom name='HG3' type='H1' num='1' mean='2.400' dev='1.520' x='2' y='3' group='HG'/>
+<atom name='HE' type='H1' num='3' mean='1.890' dev='1.840' x='1' y='6' />
+<atom name='CE' type='C13' num='1' mean='17.110' dev='7.080' x='1' y='5' />
+<atom name='SD' type='S' num='1'  x='1' y='4'/>
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='C' to='CA'/>
+<bond from='H' to='N'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='HG2'/>
+<bond from='CG' to='HG3'/>
+<bond from='CG' to='SD'/>
+<bond from='HG2' to='CG'/>
+<bond from='HG3' to='CG'/>
+<bond from='HE' to='CE'/>
+<bond from='CE' to='HE'/>
+<bond from='CE' to='SD'/>
+<bond from='SD' to='CG'/>
+<bond from='SD' to='CE'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Arginine' short='ARG' letter='R' systype='22' >
+<group name='HD' x='0' y='0'/>
+<group name='HB' x='0' y='0'/>
+<group name='HG' x='0' y='0'/>
+<group name='HH2' x='0' y='0'/>
+<group name='HH1' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='120.810' dev='14.800' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='176.440' dev='8.120' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.240' dev='2.440' x='0' y='0' />
+<atom name='HD2' type='H1' num='1' mean='3.120' dev='0.920' x='2' y='4' group='HD'/>
+<atom name='CB' type='C13' num='1' mean='30.680' dev='7.320' x='1' y='2' />
+<atom name='HB2' type='H1' num='1' mean='1.800' dev='1.080' x='0' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='1.770' dev='1.120' x='2' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.300' dev='1.840' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='56.790' dev='9.240' x='1' y='1' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='CG' type='C13' num='1' mean='27.220' dev='4.760' x='1' y='3' />
+<atom name='HG2' type='H1' num='1' mean='1.570' dev='1.080' x='0' y='3' group='HG'/>
+<atom name='HG3' type='H1' num='1' mean='1.550' dev='1.160' x='2' y='3' group='HG'/>
+<atom name='CD' type='C13' num='1' mean='43.160' dev='3.480' x='1' y='4' />
+<atom name='HD3' type='H1' num='1' mean='3.110' dev='1.000' x='0' y='4' group='HD'/>
+<atom name='HE' type='H1' num='1' mean='7.380' dev='2.520' x='0' y='5' />
+<atom name='CZ' type='C13' num='1' mean='160.060' dev='13.000' x='1' y='6' />
+<atom name='NH2' type='N15' num='1' mean='73.320' dev='13.640' x='1' y='7' />
+<atom name='NE' type='N15' num='1' mean='84.670' dev='7.000' x='1' y='5' />
+<atom name='NH1' type='N15' num='1' mean='73.670' dev='17.880' x='2' y='6' />
+<atom name='HH21' type='H1' num='1' mean='6.810' dev='1.880' x='0' y='7' group='HH2'/>
+<atom name='HH22' type='H1' num='1' mean='6.750' dev='1.440' x='1' y='8' group='HH2'/>
+<atom name='HH12' type='H1' num='1' mean='6.800' dev='1.280' x='2' y='7' group='HH1'/>
+<atom name='HH11' type='H1' num='1' mean='6.900' dev='1.840' x='3' y='6' group='HH1'/>
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='C' to='CA'/>
+<bond from='H' to='N'/>
+<bond from='HD2' to='CD'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='HG2'/>
+<bond from='CG' to='HG3'/>
+<bond from='CG' to='CD'/>
+<bond from='HG2' to='CG'/>
+<bond from='HG3' to='CG'/>
+<bond from='CD' to='HD2'/>
+<bond from='CD' to='CG'/>
+<bond from='CD' to='HD3'/>
+<bond from='CD' to='NE'/>
+<bond from='HD3' to='CD'/>
+<bond from='HE' to='NE'/>
+<bond from='CZ' to='NH2'/>
+<bond from='CZ' to='NE'/>
+<bond from='CZ' to='NH1'/>
+<bond from='NH2' to='CZ'/>
+<bond from='NH2' to='HH21'/>
+<bond from='NH2' to='HH22'/>
+<bond from='NE' to='CD'/>
+<bond from='NE' to='HE'/>
+<bond from='NE' to='CZ'/>
+<bond from='NH1' to='CZ'/>
+<bond from='NH1' to='HH12'/>
+<bond from='NH1' to='HH11'/>
+<bond from='HH21' to='NH2'/>
+<bond from='HH22' to='NH2'/>
+<bond from='HH12' to='NH1'/>
+<bond from='HH11' to='NH1'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Aspartate' short='ASP' letter='D' systype='8' >
+<group name='HB' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='120.660' dev='15.600' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='176.430' dev='7.040' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.310' dev='2.320' x='0' y='0' />
+<atom name='HD1' type='H1' num='1'  x='0' y='5'/>
+<atom name='CB' type='C13' num='1' mean='40.870' dev='6.520' x='1' y='2' />
+<atom name='HB2' type='H1' num='1' mean='2.720' dev='1.080' x='0' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='2.670' dev='1.120' x='2' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.600' dev='1.240' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='54.690' dev='8.160' x='1' y='1' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='CG' type='C13' num='1' mean='179.040' dev='7.040' x='1' y='3' />
+<atom name='OD1' type='O' num='1'  x='0' y='4'/>
+<atom name='OD2' type='O' num='1'  x='2' y='4'/>
+<bond from='N' to='CA'/>
+<bond from='N' to='H'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='H' to='N'/>
+<bond from='HD1' to='OD1'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='OD1'/>
+<bond from='CG' to='OD2'/>
+<bond from='OD1' to='CG'/>
+<bond from='OD1' to='HD1'/>
+<bond from='OD2' to='CG'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Glutamate' short='GLU' letter='E' systype='22' >
+<group name='HB' x='0' y='0'/>
+<group name='HG' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='120.680' dev='13.960' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='176.920' dev='7.840' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.330' dev='2.400' x='0' y='0' />
+<atom name='CB' type='C13' num='1' mean='30.000' dev='6.920' x='1' y='2' />
+<atom name='HB2' type='H1' num='1' mean='2.030' dev='0.840' x='0' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='2.000' dev='0.880' x='2' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.250' dev='1.640' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='57.350' dev='8.360' x='1' y='1' />
+<atom name='HE1' type='H1' num='1'  x='0' y='6'/>
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='CG' type='C13' num='1' mean='36.100' dev='4.840' x='1' y='3' />
+<atom name='HG2' type='H1' num='1' mean='2.270' dev='0.840' x='0' y='3' group='HG'/>
+<atom name='HG3' type='H1' num='1' mean='2.250' dev='0.840' x='2' y='3' group='HG'/>
+<atom name='CD' type='C13' num='1' mean='182.330' dev='7.200' x='1' y='4' />
+<atom name='OE1' type='O' num='1'  x='0' y='5'/>
+<atom name='OE2' type='O' num='1'  x='2' y='5'/>
+<bond from='N' to='H'/>
+<bond from='N' to='CA'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='H' to='N'/>
+<bond from='CB' to='HB2'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='CG'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='CA' to='HA'/>
+<bond from='HE1' to='OE1'/>
+<bond from='O' to='C'/>
+<bond from='CG' to='CB'/>
+<bond from='CG' to='HG2'/>
+<bond from='CG' to='HG3'/>
+<bond from='CG' to='CD'/>
+<bond from='HG2' to='CG'/>
+<bond from='HG3' to='CG'/>
+<bond from='CD' to='CG'/>
+<bond from='CD' to='OE1'/>
+<bond from='CD' to='OE2'/>
+<bond from='OE1' to='HE1'/>
+<bond from='OE1' to='CD'/>
+<bond from='OE2' to='CD'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+<residue-type name='Cysteine' short='CYS' letter='C' systype='8' >
+<group name='HB' x='0' y='0'/>
+<atom name='N' type='N15' num='1' mean='120.130' dev='18.720' x='0' y='1' />
+<atom name='C' type='C13' num='1' mean='174.840' dev='8.240' x='2' y='1' />
+<atom name='H' type='H1' num='1' mean='8.400' dev='2.680' x='0' y='0' />
+<atom name='CB' type='C13' num='1' mean='32.840' dev='25.080' x='1' y='2' />
+<atom name='HB2' type='H1' num='1' mean='2.950' dev='1.800' x='0' y='2' group='HB'/>
+<atom name='HB3' type='H1' num='1' mean='2.900' dev='1.880' x='2' y='2' group='HB'/>
+<atom name='HA' type='H1' num='1' mean='4.670' dev='2.200' x='1' y='0' />
+<atom name='CA' type='C13' num='1' mean='58.160' dev='13.520' x='1' y='1' />
+<atom name='O' type='O' num='1'  x='2' y='0'/>
+<atom name='HG' type='H1' num='1' mean='1.930' dev='5.680' x='1' y='4' />
+<atom name='SG' type='S' num='1'  x='1' y='3'/>
+<bond from='N' to='CA'/>
+<bond from='N' to='H'/>
+<bond from='C' to='CA'/>
+<bond from='C' to='O'/>
+<bond from='H' to='N'/>
+<bond from='CB' to='HB3'/>
+<bond from='CB' to='CA'/>
+<bond from='CB' to='SG'/>
+<bond from='CB' to='HB2'/>
+<bond from='HB2' to='CB'/>
+<bond from='HB3' to='CB'/>
+<bond from='HA' to='CA'/>
+<bond from='CA' to='HA'/>
+<bond from='CA' to='N'/>
+<bond from='CA' to='C'/>
+<bond from='CA' to='CB'/>
+<bond from='O' to='C'/>
+<bond from='HG' to='SG'/>
+<bond from='SG' to='CB'/>
+<bond from='SG' to='HG'/>
+<fld name='Updated-MM-DD-YYYY' type='String'>06-25-2010</fld>
+<fld name='SDmult' type='String'>4.0</fld>
+</residue-type>
+</library>
+<project name='blank' next='1' swf='1.000000' x='0.000000' y='0.000000' z='0.000000'>
+<sequence>
+</sequence>
+<spinbase>
+</spinbase>
