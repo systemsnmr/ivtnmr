@@ -1,0 +1,12 @@
+31P transmitter @ o1p -8.22 (for uniform excitation from PO4 to beta-PO4)
+--
+zgig.yn (31P)
+---
+1) calibrate 31P - use paropt p1=60 to 110 in 10us increments (was 45-47us@-10dB(10W))
+2) set p3@pl2 (P90H pulse): sequence will auto-calculate 1H-decoupling power (pcpd2).
+See Automation section in pulseprogram for details.
+---
+ns=256
+td=/16k
+d1=0.8s
+rg=203

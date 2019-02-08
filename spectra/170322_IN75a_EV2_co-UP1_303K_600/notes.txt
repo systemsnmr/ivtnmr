@@ -1,0 +1,4 @@
+
+== 170322_IN75a_EV2_co-UP1_303K_600
+
+Added polymerase at <time0>2017-03-22 22:11:50</time0> (RNAP was ~10 min on ice (from IN44 onwards - take fresh!))

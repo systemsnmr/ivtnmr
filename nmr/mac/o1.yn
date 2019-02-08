@@ -1,0 +1,17 @@
+#$OWNER=yaroslav
+# TODO:
+# - record 360 with p1+/-0.2us also - to check if calibration is indeed good!
+# - add some [python] code - to save the initial p1 value (calibrated with HCN90)
+# > use it automatically instead of asking the user
+
+# calibration of o1 frequency based on zg.eth water signal
+p1 0.02 # tip-pulse just to get the phase & save water shape
+# qu - to queue - is needed that all commands execute sequentially
+qu zg
+qu fp
+qu phc1 0
+qu apk0 # get phasing
+qu wrp 2 # save to procno 2 - to check shims
+qu p1 # here asks user input for "true" p1*4 (360 pulse)
+qu zg
+qu fp

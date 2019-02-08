@@ -1,0 +1,199 @@
+; This pulse-sequence is meant to have short acquisition time - to measure time-resolved series.
+; (Though it is not super-optimized yet. Future TODOs:
+; - try using Ernst anlge for excitation.)
+
+; For IVTNMR - set RG=114 !!! (due to Tris - cannot go to RG=203, so better keep consistent across datasets)
+
+; ==== Recommended setup procedure ==== 
+; 1) calibrate p1@pl1, o1 (by default all other parameters are calculated automatically - see "Automation section below").
+; 2) do rga. If rg is too low - set flag -DNOSP_AUTO and use manual sp1/phcor6 calibration (best from flips.all)
+; 3) for IVT-NMR expts definitely use -DWATERGATE and -DIVTNMR flags - will use semi-automatic sp1+0.75dB setup from empirical observations.
+; (in stocsy002.yn was using -DNOSP_AUTO flag and optimizing sp1/phcor6 in gs mode)
+; x) depending on the system - may want to try optimizing d1 vs S/N - to get maximum S/N/time.
+; ====
+
+; 160915. @YaroslavNikolaev. stocsy003.yn: auto-setup of sp1+0.75 dB with -DIVTNMR flag
+; 140616. @YaroslavNikolaev. stocsy002.yn: default setup - automatic calc of pulses (have to set -DNOAUTO to avoid auto-calc).
+; 140224. @YaroslavNikolaev. added -DAUTO -DSP_AUTO flags & section for auto-calculation of parameters.
+
+; 2012-12-xx
+; stocsy-v.yn - adapted for time-resolved measurements (short experiment time). // ChristophMaris, YaroslavNikolaev
+; 1) can use shorter d1=0.5s. // ns=4 + d1=0.5 gives better signal than, ns=2 d1=1.
+;    shifting carrier frequency to H5/H6 region allows to increase p7 length & thus reduce probe heating at short d1.
+; 2) includes WG option - to minimize signal distortions around water (meant for H5/H6 protons)
+
+;tocsy-v.all adapted for Topspin 2.1, Mario 6.2.2009
+;tocsy-v.eth
+;bergerd, Jan 2008
+
+;TOCSY with MLEV16 sequence for mixing, 	
+
+;A. Bax & D.G. Davis, J. Magn. Reson. 65, 355-360 (1985)
+;C. Griesinger, G. Otting, K. Wuethrich & R.R. Ernst, J. Am. Chem. Soc. 110, 7870 (1988)
+;G.Wider et al, JMR 56, 207-234 (1984)
+;M.Piotto et al, JBNMR 2, 661-665 (1992)
+
+;Use ZGOPTNS in ased to define the flags. eg -DPRESAT -DWATERGATE
+;#define PRESAT     	; presaturation
+;#define WG3_9_19   	; watergate with 3-9-19 pulse
+;#define WATERGATE	 ; watergate with soft pulse
+
+;pl1   : 1H standard power level
+;pl11   : TOCYS mixing power level - at least 3dB higher than pl1
+;pl9   : power for H2O presaturation
+;sp1   : soft pulse power for 1H
+
+;p1    : 90 1H pulse at standard pl1	
+;p7    : 90 1H TOCSY pulse at standard pl11
+;p11   : 90 degree soft pulse 1H (ca.1-2m)
+
+;p20   : 1ms (Gradient before 1st pulse)
+;p21   : 0.7ms (Gradient in WATERGATE)
+
+;gpz0  : 50%
+;gpz1  : 30%
+  
+;d1    : relaxation delay
+;d5    : delay 3-9-19=1/(Hz between nulls)
+;d8    : mixing time
+;in0   : increment for 1H evolution (2*dw)                             
+
+;cnst2 : 2.6 for macromol., 0.1 for small mol.
+;cnst27 : 6.58 set to the middle of H5/H6 region of TOCSY
+
+;$OWNER=setup
+#define GRADIENT0  10u p20:gp0 200u
+#define GRADIENT1  10u p21:gp1 200u
+
+#include <Avance.incl>
+
+"cnst27=6.58" ;cnst27=6.58 (ppm) for H5/H6 region
+
+"in0=inf1"
+
+"l1=(d8-3.3m)/((p1*4+p1*cnst2*2+2u)*16)"
+"d2=p7*cnst2"            ;cnst2=2.6 for macromolecules, cnst2=0.1 for small molecules
+"p8=p7*2"
+"d0=in0/2-p1*2/3.14159"
+
+
+; ===================================== Automation =====================================
+#ifndef NOAUTO
+; Use this section to auto-calculate parameters not requiring fine-tuning (HARD pulses, power levels, delays, AU-parameters, etc).
+
+; General procedure to calculate pulse power levels.
+; powerlevel [dB] = 20*log(pulseLength*SHAPE_INTEGFAC/(P90H/90*SHAPE_TOTROT))/log(10)+dBH
+; TopSpin for some reason does not recognize the call to dB level of shaped pulse: "spdb". Have to calcualte via whatts.
+; powerlevel [whatts] = plw1*pow( (P90H/90)/((pulseLength/SHAPE_TOTROT)*SHAPE_INTEGFAC), 2)
+
+; TOCSY spinlock p7@pl11 (rect ~16-24us 90deg):
+; Make sure TOCSY power level is at least 3dB weaker than hardpulse! (i.e. add +3dB)
+; current power level in dB @six:    20*log(24/P90H)-7
+"plw11=plw1*pow( (p1/90)/(p7/90), 2)" ; auto-calc in Whatts
+#endif /* NOAUTO */
+
+
+#ifndef NOSP_AUTO
+; Use this section to auto-calculate the power of SHAPED PULSES (assuming that in some cases one may want to fine-tune these)
+
+; selective water flip-back p11@sp1 (gauss128_5 1.5ms(1-2ms) 90deg):
+; current power level in dB @six:   20*log(1500*0.50111/P90H))-7
+#ifndef IVTNMR
+"spw1=plw1*pow( ((p1/90)/((p11/90)*0.5011)), 2)" ; auto-calc in Whatts
+#endif /* IVTNMR */
+#endif /* NOSP_AUTO */
+
+#ifdef IVTNMR
+; power change in Whatts from attenuation in dBs:
+; spdb2-spdb1 = 10*log10(spw1/spw2)
+; spw2 = spw1 / 10^((spdb2-spdb1)/10)
+"spw1 = plw1*pow( ((p1/90)/((p11/90)*0.5011)), 2) / pow(10, 0.75/10)"
+#endif /* IVTNMR */
+; ===================================== End of Automation ===============================
+
+
+1  30u ze
+   100u ip4
+2  1m 
+   5u fq=0 (sfo hz):f1 ; carrier frequency at H2O
+   10u LOCKH_OFF
+;------------------------
+#ifdef PRESAT
+   10u pl9:f1
+   d1 cw:f1 ph29
+#else					;PRESAT
+   d1
+#endif
+;------------------------
+   3u do:f1
+   10u LOCKH_ON
+   20u pl1:f1
+   GRADIENT0
+;-----------------------------------------1H-evolution
+   (p1 ph4):f1
+   d0 pl11:f1
+   (2mp ph5):f1 
+   2u fq=cnst27 (bf ppm):f1 ; set frequency to the middle of H5/H6 region
+;-----------------------------------------tocsy mixing sequence ; MLEV16
+5  (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1  
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   lo to 5 times l1
+   2u  fq=0 (sfo hz):f1 ; carrier freq back to H2O
+   (1.3mp ph5):f1
+;------------------------
+#ifdef WATERGATE
+   GRADIENT1
+   10u
+   (10u p11:sp1 ph6:r 10u):f1 
+   5u 5u pl1:f1
+   (p1*2 ph7):f1			 ;WATERGATE
+   10u
+   (10u p11:sp1 ph6:r 10u):f1
+   10u pl1:f1
+   GRADIENT1
+#endif
+;------------------------
+#ifdef WG3_9_19
+   5u pl1:f1
+   GRADIENT1
+   (p1*0.2308 ph8 d5 p1*0.6923 ph8 d5 p1*1.4615 ph8):f1 
+   d5							;WG3_9_19
+   (p1*1.4615 ph9 d5 p1*0.6923 ph9 d5 p1*0.2308 ph9):f1 
+   GRADIENT1
+   5u
+#endif  
+;-----------------------------------------acquisition                           
+   go=2 ph31 
+   1m mc #0 to 2 F1PH(ip4 & ip29, id0)                                               
+   10u do:f1
+   10u LOCKH_OFF
+exit
+
+ph1=1 3 1 3
+ph2=2 0 2 0
+ph3=3 1 3 1
+ph4=0 0 2 2
+ph5=0 2 0 2
+ph6=2
+ph7=0
+ph8=1
+ph9=3
+ph29=0
+ph31=0 0 2 2
+
+;##/($P[1],$PL[1])= &SetPulse(f1,0.000014,90);
+;##/$D[5]=&round(1/(10*$BF1),.00001);

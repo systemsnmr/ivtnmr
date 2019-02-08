@@ -1,0 +1,102 @@
+# Created by BioNetGen 2.1.7
+substanceUnits("Number");
+begin parameters
+    1 kcat 1 # Constant
+    2 kcatPPi 100 # Constant
+    3 kprecip 1 # Constant
+    4 kdissolve 1 # Constant
+    5 kdegNTP 0.0001 # Constant
+    6 kabortive 1 # Constant
+    7 kon 1 # Constant
+    8 koff 0.1 # Constant
+    9 NTP_0 20 # Constant
+   10 NDP_0 1 # Constant
+   11 Prot_0 0.15 # Constant
+end parameters
+begin molecule types
+  1 Aborts()
+  2 MgPO4()
+  3 NDP()
+  4 NTP()
+  5 PO4()
+  6 PPi()
+  7 Prot(H33,R75)
+  8 SMN(s1,s2)
+end molecule types 
+begin observables
+    1 Molecules PO4 PO4()
+    2 Molecules NTP NTP()
+    3 Molecules SMN SMN()
+    4 Molecules Aborts Aborts()
+    5 Molecules NDP NDP()
+    6 Molecules MgPO4 MgPO4()
+    7 Molecules Prot_bound_H33 Prot(H33!+)
+    8 Molecules Prot_bound_R75 Prot(R75!+)
+end observables
+begin species
+    1 NTP()                             NTP_0
+    2 SMN(s1,s2)                        0
+    3 PO4()                             0
+    4 PPi()                             0
+    5 MgPO4()                           0
+    6 NDP()                             NDP_0
+    7 Aborts()                          0
+    8 Prot(H33,R75)                     Prot_0
+    9 Prot(H33!1,R75!2).SMN(s1!1,s2!2)  0
+end species
+begin reaction rules
+Rule1: \
+  NTP() -> SMN(s1,s2) + PPi() kcat
+# Delete Pattern NTP()
+# Add Species SMN(s1,s2)
+# Add Species PPi()
+Rule2: \
+  NTP() -> Aborts() + PPi() kabortive
+# Delete Pattern NTP()
+# Add Species Aborts()
+# Add Species PPi()
+Rule3: \
+  PPi() -> PO4() + PO4() kcatPPi
+# Delete Pattern PPi()
+# Add Species PO4()
+# Add Species PO4()
+Rule4: \
+  PO4() <-> MgPO4() kprecip, kdissolve
+# Delete Pattern PO4()
+# Add Species MgPO4()
+# Reverse
+# Delete Pattern MgPO4()
+# Add Species PO4()
+Rule5: \
+  NTP() -> NDP() + PO4() kdegNTP
+# Delete Pattern NTP()
+# Add Species NDP()
+# Add Species PO4()
+Rule6: \
+  SMN(s1,s2) + Prot(H33,R75) <-> SMN(s1!1,s2!2).Prot(H33!1,R75!2) kon, koff
+# Bind(0.0.0,0.1.0)
+# Bind(0.0.1,0.1.1)
+# Reverse
+# Unbind(0.0.0,0.1.0)
+# Unbind(0.0.1,0.1.1)
+end reaction rules
+begin reactions
+    1 1 2,4 kcat #Rule1
+    2 1 4,7 kabortive #Rule2
+    3 4 3,3 kcatPPi #Rule3
+    4 3 5 kprecip #Rule4
+    5 5 3 kdissolve #Rule4r
+    6 1 3,6 kdegNTP #Rule5
+    7 2,8 9 kon #Rule6
+    8 9 2,8 koff #Rule6r
+end reactions
+begin groups
+    1 PO4                  3
+    2 NTP                  1
+    3 SMN                  2,9
+    4 Aborts               7
+    5 NDP                  6
+    6 MgPO4                5
+    7 Prot_bound_H33       9
+    8 Prot_bound_R75       9
+end groups

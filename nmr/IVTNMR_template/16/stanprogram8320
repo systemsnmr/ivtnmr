@@ -1,0 +1,226 @@
+# 1 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+; @Yaroslav: This pulse-sequence may still require optimization!
+; v004 - stable version (moved d39 calculation after p39 calculation).
+; v005 - BRANCHED version - included ih2o element to test water recovery. (need to record two separate expts: with and w/o -DH2O option).
+; v006 - added 15N decoupling option
+;
+; zg-sofast.yn
+; @YaroslavNikolaev, 2014-05.
+; 1D sequence with selective excitation of a subset of protons.
+; Gives increased S/N by using Ernst-angle excitation + Longitudinal Relaxation Optimization ("SOFAST" approach).
+; Additional gain is achieved on water-exchanging protons (iminos, aminos), since water stays unperturbed.
+; 
+; This sequence allows two modes of use:
+; === "zg-sofast mode" ===
+; If you just want to measure some protons of interest:
+;   1) calibrate: p1, o1
+;   2) set aq to ~T2 (1/(pi*linewidth): ~50ms for 10kDa molecule) - this may be the limiting factor for expt repetition speed
+;   3) set the offset for signals of interest (CNST19, ppm) and spectral width of the signals (CNST63, ppm).
+;      E.g. for RNA iminos, CNST19 ~12.5ppm, CNST63 ~5ppm.
+; 
+; Lengths & powers of selective pulses are calculated automatically.
+; If you want to manually set lengths and power levels for selective pulses - activate ZGOPTNS flags -DNOAUTO, -DNOSP_AUTO
+;
+; If you want to calibrate the delay d39 (compensates evolution of selective excitation pulse sp39) - check sequence zg-sofast-calD39.yn
+;
+; === "zg-wg mode" ===
+; If you want to test this sequence in "zg-wg" mode - activate -DWG option (will have to manually tune p11@sp1 and phcor2/4).
+;
+;
+; =================================================================================
+;
+; This sequence is based on
+;zg-wg.eth
+;1D sequence with watergate
+;modified LD 0301; FD 0203, GSW 0203
+
+;d1    : relaxation delay (~0.1s in zg-sofast, ~1s in zg-wg)
+;d21   : gradient recovery ~200 us
+;d39   : Compensates chem.shift evol. during p39 (p39*cnst39)
+;cnst39: To calc compensation of chem.shift evol. during p39 (for Pc9_4_120.1000: 0.529)
+
+;pl0 : any channel - 0dB
+# 43 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+;p1    : 90 degree hard pulse 1H
+;pl1   : power level for hard 1H pulse
+
+;p5    : 90 degree hard pulse 15N (for decoupling)
+;pl3   : power level for hard 15N pulse
+
+;p11   : 90º water flip-down pulse in zg-wg (1-2 ms).
+;sp1   : H2O flip-down pulse in zg-wg (~40 dB). Fine-tune sp1 and phcor2/4 in gs-mode or flips.eth
+;spnam1: gauss128_5
+# 53 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+;p39   : 120 deg shaped pulse for excitation (~3ms at 600MHz)
+;sp39  : power for excitation 120 degree (Pc9_4_120.1000)
+;spnam39: Pc9_4_120.1000
+
+;p40    : 180 deg shaped pulse for refocusing (~1ms at 600MHz)
+;sp40   : power for refocusing 180 degree (Rsnob.1000 (or try REBURP))
+;spnam40: Rsnob.1000
+
+;gpz1  : 30 % (zg-wg. zg-sofast recommends 10-20 G/cm (20-40%))
+;gpz2  : 30 % (zg-wg)
+# 64 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+;cnst19: chem.shift for protons of interest (offset, in ppm)
+;cnst63: spectral width of signals of interest (in ppm)
+
+;p21   : 200u (zg-sofast), 800u (zg-wg)
+;gpnam1: sine.32
+
+; Decoupling stuff
+;cpd3:    decoupling according to sequence defined by cpdprg3: garp4.p62
+;cpdprg3: garp4.p62
+;pcpd3:   N(F3) channel - 90 degree pulse for decoupling sequence (actually defined as p62)
+;p62:     N(F3) channel - 90 degree for decoupling sequence [~240us is good. Brukers >= 350 usec not enough]
+;pl26:    N(F3) channel - power level for CPD/BB decoupling (p62) (low power)
+# 77 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+;ZGOPTNS: WG - converts this sequence back to zg-wg (have to calibrate sp1 & phcor2/4 in that case).
+;ZGOPTNS: NOAUTO - disable automatic calculation of hard pulses, power levels, delays, etc.
+;ZGOPTNS: NOSP_AUTO - disable automatic calculation of SHAPED pulse lengths and power levels.
+;ZGOPTNS: 1				;15N decoupling
+
+; $OWNER=yaroslav
+
+"p2=2*p1"
+# 88 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+; Decoupling definitions:
+# 99 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+
+
+# 1 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl" 1
+;Avance4.incl
+;   for AV 4
+;
+;avance-version (16/08/18)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+
+
+# 19 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+;setrtp0 denotes TimingController
+
+
+# 50 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+# 51 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+
+
+# 63 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+# 89 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+# 90 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+
+
+# 123 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+;#define LOWQ
+;#define HIGHQ
+
+
+;#define MIX_UP
+;#define MIX_DOWN
+# 136 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+;$Id: Avance4.incl,v 1.11 2016/11/11 13:43:39 ber Exp $
+# 102 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn" 2
+
+; ===================================== Automation =====================================
+
+; Use this section to auto-calculate parameters not requiring fine-tuning (HARD pulses, power levels, delays, AU-parameters, etc).
+# 108 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+;"p62=240u"; Bruker recommends >=350us, but this m/b not enough
+; Calc pl26 (decoupling power) based on p62
+; 15f3 decoupling of p62 @ pl26 (rect ~250us 90deg):
+; p5 - 90 degree 15f3 pulse has to be defined in ased
+"plw26=plw3*pow( (p5/90)/(p62/90), 2)" ; auto-calc in Whatts
+
+
+# 116 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+; ----- Parameters used in "zg-sofast mode" -----
+; Offset for selective pulses - get Hz from ppm value:
+"spoff39=bf1*(cnst19/1000000)-o1"
+"spoff40=bf1*(cnst19/1000000)-o1"
+
+; For 120 degree Pc9_4_120.1000 pulse, normalization constant is 0.529 (See sfhmqcf3gpph parset and references therein).
+; If want to optimize this constant manually - see the header for instructions.
+"cnst39=0.529"
+
+; Shaped pulse lengths.
+; Pulse [us] = BWfactor (depends on the shape & angle) / Banwidth for excitation [Hz] * 1000000 (scaling for s->us).
+; Excitation 120 degree (Pc9_4_120.1000) pulse (##$SHAPE_BWFAC= 7.512000E00):
+"p39=(7.512/(bf1*cnst63))*1000000"
+; Refocusing 180 degree (Rsnob.1000) pulse (##$SHAPE_BWFAC= 2.332000E00):
+"p40=(2.332/(bf1*cnst63))*1000000"
+# 132 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+; Delay compensating for Chem.Shift evolution occurring during p39 pulse.
+"d39=p39*cnst39" 
+
+
+# 141 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+; Use this section to auto-calculate the power of SHAPED PULSES (assuming that in some cases one may want to fine-tune these)
+
+; General procedure to calculate shaped pulse power levels.
+; powerlevel [dB] = 20*log(pulseLength*SHAPE_INTEGFAC/(P90H/90*SHAPE_TOTROT))/log(10)+dBH
+; TopSpin for some reason does not recognize the call to dB level of shaped pulse: "spdb". Have to calcualte via whatts.
+; powerlevel [whatts] = plw1*pow( (P90H/90)/((pulseLength/SHAPE_TOTROT)*SHAPE_INTEGFAC), 2)
+
+# 149 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+; ----- Parameters used in "zg-sofast mode" -----
+; Excitation ~3ms 120 degree (Pc9_4_120.1000) pulse (##$SHAPE_INTEGFAC= 1.250034E-01):
+;"spdb39=20*log(p39*0.125/(p1/90*120))/log(10)+pldb1"
+"spw39=plw1*pow((p1/90)/((p39/120)*0.125),2)"
+
+; Refocusing ~1ms 180 degree (Rsnob.1000) pulse (##$SHAPE_INTEGFAC= 2.136957E-01):
+"spw40=plw1*pow((p1/90)/((p40/180)*0.2137),2)"
+
+; ----- Parameters used in "zg-wg mode" -----
+# 165 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+; ===================================== End of Automation =====================================
+
+
+# 168 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+1 ze
+2 10u
+  10u do:f3
+  10u setrtp0^0
+  d1 pl1:f1
+  10u setrtp0|0
+# 176 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+  (p39:sp39 ph4:r):f1
+
+
+# 183 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+  10u p21:gp1 200u
+
+
+  (p40:sp40 ph3:r):f1
+# 195 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+# 196 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+  10u p21:gp1 200u
+
+
+  d39
+# 202 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+  10u pl26:f3
+  go=2 ph0 cpd3:f3
+  10u do:f3
+  wr #0
+  10u setrtp0^0
+ exit
+
+;-------
+
+10u pl0:f3
+p5*0.0001:f3 ; This pulse is never used.
+; This is just a trick to allow user to enter 15f3 hard pulse in ased window,
+; (needed to auto-calculate the power level for 15f3 decoupling).
+# 217 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/zg-sofast006.yn"
+ph1=0 2
+ph2=2 2 3 3 0 0 1 1
+ph3=0 0 1 1 2 2 3 3
+ph4=2 0
+ph0=0 2 2 0
+
+;##/($P[1],$PL[1])=SetPulse(f1,HP,90);
+

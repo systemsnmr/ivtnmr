@@ -1,0 +1,74 @@
+# 1 "/root/.topspin-BladeEpu/local_acqu/ppDirs/zg.eth"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/root/.topspin-BladeEpu/local_acqu/ppDirs/zg.eth"
+;zg.eth               
+
+; 1D sequence 
+; modified  gsw0203
+
+;d1    : relaxation delay 
+;pl1   : power for 1H
+;p21   : 1 ms (Gradient before acquisition)
+;gpz1  : 50 %
+;pl9   : power level for presaturation
+;p1    : 90 degree hard pulse 1H
+# 14 "/root/.topspin-BladeEpu/local_acqu/ppDirs/zg.eth"
+;$OWNER=setup
+
+
+prosol relations=<eth>
+# 1 "/root/.topspin-BladeEpu/local_acqu/ppDirs/Avance.incl" 1
+;Avance4.incl
+;   for AV 4
+;
+;avance-version (16/08/18)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+
+
+# 19 "/root/.topspin-BladeEpu/local_acqu/ppDirs/Avance.incl"
+;setrtp0 denotes TimingController
+
+
+# 50 "/root/.topspin-BladeEpu/local_acqu/ppDirs/Avance.incl"
+# 51 "/root/.topspin-BladeEpu/local_acqu/ppDirs/Avance.incl"
+
+
+# 63 "/root/.topspin-BladeEpu/local_acqu/ppDirs/Avance.incl"
+# 89 "/root/.topspin-BladeEpu/local_acqu/ppDirs/Avance.incl"
+# 90 "/root/.topspin-BladeEpu/local_acqu/ppDirs/Avance.incl"
+
+
+# 123 "/root/.topspin-BladeEpu/local_acqu/ppDirs/Avance.incl"
+;#define LOWQ
+;#define HIGHQ
+
+
+;#define MIX_UP
+;#define MIX_DOWN
+# 136 "/root/.topspin-BladeEpu/local_acqu/ppDirs/Avance.incl"
+;$Id: Avance4.incl,v 1.11 2016/11/11 13:43:39 ber Exp $
+# 20 "/root/.topspin-BladeEpu/local_acqu/ppDirs/zg.eth" 2
+
+
+# 22 "/root/.topspin-BladeEpu/local_acqu/ppDirs/zg.eth"
+1 ze
+2 10u 
+  10u setrtp0^0
+  d1
+  10u setrtp0|0
+  p21:gp1
+  10u pl1:f1
+  10m 
+  p1 ph1
+  go=2 ph0
+  30m wr #0
+  10u setrtp0^0
+exit
+# 36 "/root/.topspin-BladeEpu/local_acqu/ppDirs/zg.eth"
+ph1=0 1 2 3
+ph0=0 1 2 3
+
+;##/($P[1],$PL[1])=&SetPulse(f1,HP,90);

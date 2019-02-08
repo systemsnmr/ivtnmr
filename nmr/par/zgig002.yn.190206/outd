@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TopSpin 4.0.5
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yaroslav
+$$ 2019-02-06 16:08:16.516 +0100  yaroslav@six
+$$ /opt/topspin/exp/stan/nmr/par/user/zgig002.yn.190206/outd
+$$ process /opt/topspin4.0.5/prog/mod/edparproc
+##$CURPLOT= <lj5>
+##$CURPRIN= <$lj5>
+##$DFORMAT= <normdp>
+##$LAYOUT= <+/layouts.ATP/1D.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

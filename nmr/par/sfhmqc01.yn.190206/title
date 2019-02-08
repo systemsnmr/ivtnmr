@@ -1,0 +1,18 @@
+current: N-UP1, N-AIRI, N-hnG : o3p 117.8; 1 sw 23.5; 1 td 100; d1 0.2; ns 24
+----
+// N-UP1, N-AIRI, N-hnG : o3p 117.8; 1 sw 23.5; 1 td 100; d1 0.2; ns 24
+// N-S1R2 (downfield 1 ppm): o3p 118.8; 1 sw 23.5
+// N-GB1: d1 0.15; o3p 118; 1 sw 24
+// N-PR1 (PTB RRM1): o3p 121; 1 sw 22.5; 1 td 128; ns 20
+// FV-5Pz: o3p 121.500; 1 sw 16; 1 td 88; d1 0.2; ns 64
+// TDP-NTDTm: o3p 117.8; 1 sw 24; 1 td 100; d1 0.2; ns 48
+// TDP-dLCD: o3p 117.05; 1 sw 26.1; 1 td 100; d1 0.2; ns 48
+// FUS-RMRG: o3p 117.45 (117.65 w/o NTPs); 1 sw 22.7; 1 td 100; d1 0.2; ns 24
+p62=240us
+---
+sfhmqc01.yn
+---
+ns=24  rg=203
+td=2048/100  sw=16.0/24
+aq=106/34 ms
+d1=0.15-0.2

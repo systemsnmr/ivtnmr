@@ -1,0 +1,9 @@
+p62(cpd)=240us, ds/ns=32/2.5k (~WESF), d1=0.1, aq=53m
+-DN15DEC
+---
+zg-sofast006.yn
+---
+ns=2560  rg=203
+td=1536  sw=24.0
+aq=53 ms
+d1=0.1

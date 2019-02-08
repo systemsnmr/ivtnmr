@@ -1,0 +1,79 @@
+; v001 @YaroslavN (20140806): modified -DAUTO to -DNOAUTO, etc for auto-calculation of all pulses
+;zg-wg.yn - slightly automated
+
+;zg-wg.eth
+;1D sequence with watergate
+;modified LD 0301; FD 0203, GSW 0203
+
+;d1    : relaxation delay and water suppression 
+;d21   : gradient recovery >200 us
+;pl1   : power level for hard 1H pulse p1
+;p1    : 90 degree hard pulse 1H
+;p11   : length of sp1 (1-2 ms). (May need to adjust sp1 & phcor2 in gs-mode)
+;gpz1  : 30 %
+;gpz2  : 30 %
+;sp1   : power level for soft pulse (~40 dB) 
+;spnam1: gauss128_5
+;p21   : 800u (1st gradient in watergate)
+;adjust sp1 and ph2 with gs
+
+;$OWNER=yaroslav
+"p2=2*p1"
+
+#define GRADIENT1 10u p21:gp1 200u
+
+#include <Avance.incl>
+
+; ===================================== Automation =====================================
+#ifndef NOAUTO
+; Use this section to auto-calculate parameters NOT requiring fine-tuning (HARD pulses, power levels, delays, AU-parameters, etc).
+
+#endif /* NOAUTO */
+
+
+#ifndef NOSP_AUTO
+; Use this section to auto-calculate the power of SHAPED PULSES (assuming that in some cases one may want to fine-tune these)
+
+; General procedure to calculate shaped pulse power levels.
+; powerlevel [dB] = 20*log(pulseLength*SHAPE_INTEGFAC/(P90H/90*SHAPE_TOTROT))/log(10)+dBH
+; TopSpin for some reason does not recognize the call to dB level of shaped pulse: "spdb". Have to calcualte via whatts.
+; powerlevel [whatts] = plw1*pow( (P90H/90)/((pulseLength/SHAPE_TOTROT)*SHAPE_INTEGFAC), 2)
+
+; Water flip-down and flip-back: p11@sp1  ~1-2ms  90 degree  gauss128_5  pulse (##$SHAPE_INTEGFAC= 5.0111E-01).
+"spw1=plw1*pow((p1/90)/((p11/90)*0.50111),2)"
+
+#endif /* NOSP_AUTO */
+; ===================================== End of Automation =====================================
+
+
+
+
+1 ze
+2 10u
+  10u LOCKH_OFF
+  d1 pl1:f1
+  10u LOCKH_ON
+  (p11:sp1 ph4:r):f1
+  5u 5u pl1:f1 
+  p1 ph1
+  GRADIENT1
+  (p11:sp1 ph2:r):f1
+  4u
+  6u pl1:f1
+  (p2 ph3):f1
+  10u
+  (p11:sp1 ph2:r):f1
+  GRADIENT1
+  go=2 ph0
+  wr #0
+  10u LOCKH_OFF
+ exit
+
+ph1=0 2
+ph2=2 2 3 3 0 0 1 1
+ph3=0 0 1 1 2 2 3 3
+ph4=2 0
+ph0=0 2 2 0 
+
+;##/($P[1],$PL[1])=SetPulse(f1,HP,90);
+

@@ -1,0 +1,10 @@
+Added polymerase at <time0>XXXX-XX-XX XX:XX:XX</time0> (RNAP was ~10 min on ice)
+
+TOPSPIN 4 + NEO issues:
+- qumulti over a running queue is likely to skip the first experiment added with QUMULTI
+- GMT setting is still offset by ~1 hours in TopSpin/Computer (file timestamps) vs console (written to audita.txt)
+- Log file sometimes is not written
+- Because pulsecal not debugged yet - do P90H manually in IVTNMR_template - and keep it commented in the in_v02.yn.py setup script
+
+- To ease automated sorting - record any non-standard experiments with expnos
+  ABOVE 500! (sort.py for sorting will take 12-500 by default)

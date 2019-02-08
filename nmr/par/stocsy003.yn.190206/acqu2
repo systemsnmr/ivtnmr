@@ -1,0 +1,25 @@
+##TITLE= Parameter file, TopSpin 4.0.5
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yaroslav
+$$ 2019-02-06 16:08:03.637 +0100  yaroslav@six
+$$ /opt/topspin/exp/stan/nmr/par/user/stocsy003.yn.190206/acqu2
+$$ process /opt/topspin4.0.5/prog/mod/edparproc
+##$ACQT0= 0
+##$BF1= 600.13
+##$FnILOOP= 0
+##$FnMODE= 5
+##$NUC1= <1H>
+##$NusJSP= 0
+##$NusT2= 1
+##$NusTD= 0
+##$O1= 2822
+##$PULPROG= <zg30>
+##$ProjAngle= 0
+##$SFO1= 600.132822
+##$SW= 9.0000000749834
+##$SW_h= 5401.195443
+##$TD= 200
+##END=

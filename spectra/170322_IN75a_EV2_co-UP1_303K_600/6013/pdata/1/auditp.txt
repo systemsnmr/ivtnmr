@@ -1,0 +1,23 @@
+##TITLE= Audit trail, TOPSPIN		Version 3.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yar
+$$ /Volumes/Data/yar/_eth2/data_NMR/spectra/170322_IN75a_EV2_co-UP1_303K_600/6013/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2017-03-23 06:07:36.786 +0100>,<yaroslav>,<six>,<go>,<TOPSPIN 3.2>,
+      <created by zg
+	started at 2017-03-23 06:00:30.190 +0100,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       E3 FA 72 CD 7B BF EF 27 71 77 70 87 51 2F 1E 26
+       data hash MD5: 1536
+       DB 2A 2A E9 85 DB F5 84 E3 E9 79 A6 DB 35 34 8D>)
+(   2,<2017-04-28 12:02:49.428 +0200>,<yar>,<yarmbp2.mol.dbiol.d.ethz.ch>,<proc1d>,<TOPSPIN 3.2>,
+      <Start of raw data processing
+       efp BC_mod = 4 LB = 2 FT_mod = 6 PKNL = 1 PHC0 = -50 PHC1 = 0 SI = 32K 
+       data hash MD5: 32K
+       25 A2 77 83 25 42 BA 63 AF D4 34 14 B4 C7 C3 C4>)
+##END=
+
+$$ hash MD5
+$$ 6E A9 BB 85 B8 49 8A 46 24 5A 68 91 8D A4 50 C6

@@ -1,0 +1,6 @@
+stocsy003yn
+1) set p1@pl1, o1 (by default all other parameters
+    are calculated automatically - see pp header for details)
+2) for IVTNMR - set flags -DWATERGATE -DIVTNMR
+---
+d1=0.5 ns=4 td=200 sw=10/9  rg=114 (can do up to 161 in TTD buffer)

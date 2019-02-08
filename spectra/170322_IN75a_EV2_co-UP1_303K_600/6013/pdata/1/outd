@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TOPSPIN		Version 3.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yaroslav
+$$ 2017-03-22 21:06:28.548 +0100  yaroslav@six
+$$ /opt/topspin/data/yaroslav/nmr/170322_IN75a_EV2_co-UP1_303K_600/78/pdata/1/outd
+$$ process /opt/topspin/prog/mod/dirdata
+##$CURPLOT= <hplj5l>
+##$CURPRIN= <$hplj5l>
+##$DFORMAT= <normdp>
+##$LAYOUT= </home/setup/xwp/1d.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

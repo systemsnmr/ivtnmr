@@ -1,0 +1,39 @@
+;zg.eth               
+
+; 1D sequence 
+; modified  gsw0203
+
+;d1    : relaxation delay 
+;pl1   : power for 1H
+;p21   : 1 ms (Gradient before acquisition)
+;gpz1  : 50 %
+;pl9   : power level for presaturation
+;p1    : 90 degree hard pulse 1H
+
+
+;$OWNER=setup
+#define GRADIENT1 10u p21:gp1 200u
+
+prosol relations=<eth>
+
+#include <Avance.incl>
+
+
+1 ze
+2 10u 
+  10u LOCKH_OFF
+  d1
+  10u LOCKH_ON
+  p21:gp1
+  10u pl1:f1
+  10m 
+  p1 ph1
+  go=2 ph0
+  30m wr #0
+  10u LOCKH_OFF
+exit
+
+ph1=0 1 2 3
+ph0=0 1 2 3
+
+;##/($P[1],$PL[1])=&SetPulse(f1,HP,90);

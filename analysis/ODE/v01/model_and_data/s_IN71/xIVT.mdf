@@ -1,0 +1,60 @@
+<DOC>
+...add text...
+</DOC>
+
+<VAR>
+x1  20  0  2000    # NTP()
+x2  0  0  0    # SMN(s1,s2)
+x3  0  0  0    # PO4()
+x4  0  0  0    # PPi()
+x5  0  0  0    # MgPO4()
+x6  1  0  100    # NDP()
+x7  0  0  0    # Aborts()
+x8  0.15  0  15    # Prot(H33,R75)
+x9  0  0  0    # Prot(H33!1,R75!2).SMN(s1!1,s2!2)
+</VAR>
+
+<PAR>
+kcat  1  0  100    
+kcatPPi  100  0  10000    
+kprecip  1  0  100    
+kdissolve  1  0  100    
+kdegNTP  0.0001  0  0.01    
+kabortive  1  0  100    
+kon  1  0  100    
+koff  0.1  0  10    
+</PAR>
+
+<DEF>
+f1 = kcat*x1
+f2 = kabortive*x1
+f3 = kcatPPi*x4
+f4 = kprecip*x3
+f5 = kdissolve*x5
+f6 = kdegNTP*x1
+f7 = kon*x2*x8
+f8 = koff*x9
+</DEF>
+
+<RHS>
+-f1 -f2 -f6
++f1/28 -f7 +f8
++2*f3 -f4 +f5 +f6
++f1*(27/28) +f2 -f3
++f4 -f5
++f6
++f2
+-f7 +f8
++f7 -f8
+</RHS>
+
+<OBS>
++x3    # PO4()
++x1    # NTP()
++x2+x9    # SMN()
++x7    # Aborts()
++x6    # NDP()
++x5    # MgPO4()
++x9    # Prot(H33!+)
++x9    # Prot(R75!+)
+</OBS>

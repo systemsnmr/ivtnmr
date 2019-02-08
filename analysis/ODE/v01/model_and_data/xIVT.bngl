@@ -1,0 +1,91 @@
+begin model
+
+begin parameters
+# kinetic parameters (units: molecules/time)
+kcat         1         # Production of unfolded SMN
+kcatPPi      100         # Hydrolysis of PPi by Pyrophosphatase
+kprecip       1         # Rate of PO4 disappearance in MgPO4 complexes.
+kdissolve     1         # Reverse rate of MgPO4 precipitation
+kdegNTP       0.0001         # Unspecific hydrolysis of NTPs by RNAP
+kabortive     1         # Production of aborts
+kon       	  1         # Protein-RNA binding
+koff          0.1       # Protein-RNA binding
+
+# initial amounts of components (units: molecules)
+#NTP_0       20 # Summing up 4*5 mM. Disabled for the moment - cuz its otherwise included into model parameters!
+NTP_0		20
+NDP_0		1
+Prot_0		0.15
+end parameters
+
+begin molecule types
+NTP
+SMN(s1,s2)	# s - site f protein binding
+PPi
+PO4
+MgPO4
+NDP
+Aborts
+Prot(H33,R75)
+end molecule types
+
+begin seed species
+NTP         NTP_0 # 20-0.15*28 #   Can't just use NTP_0-UP1_0 - NTP_0 goes into model params then!
+SMN(s1,s2) 	0
+PO4 		0
+PPi 		0
+MgPO4 		0
+NDP 		NDP_0
+Aborts      0
+Prot(H33,R75)		Prot_0
+end seed species
+
+begin reaction rules
+NTP -> SMN(s1,s2) + PPi kcat
+NTP -> Aborts + PPi kabortive
+PPi -> PO4 + PO4 kcatPPi
+PO4 <-> MgPO4 kprecip,kdissolve
+NTP -> NDP + PO4 kdegNTP
+SMN(s1,s2) + Prot(H33,R75) <-> SMN(s1!1,s2!2).Prot(H33!1,R75!2) kon, koff
+
+end reaction rules
+
+begin observables
+Molecules PO4 PO4
+Molecules NTP NTP
+Molecules SMN SMN
+Molecules Aborts Aborts
+Molecules NDP NDP
+Molecules MgPO4 MgPO4
+Molecules Prot_bound_H33 Prot(H33!+)
+Molecules Prot_bound_R75 Prot(R75!+)
+end observables
+end model
+
+# generate network and output files
+generate_network({overwrite=>1});
+writeMfile({});
+writeSBML({});
+
+# Simulations
+
+# Equilibration..
+#setConcentration("P()",0)
+#setConcentration("T()",0)
+#simulate({method=>"ode",suffix=>"equil",t_end=>100000,n_steps=>10,steady_state=>1})
+
+# Kinetics..
+#setConcentration("P(Conf~Inact,sT,sA,sD)","P_0")
+#setConcentration("T(sT)","T_0")
+
+#simulate({method=>"ode",t_end=>1,n_steps=>100}) # atol=>1e-8,rtol=>1e-8,sparse=>1
+
+## Equilibration
+#simulate_ode({suffix=>equil,t_end=>100000,n_steps=>10,steady_state=>1}); #sparse=>1, recommended f v large netw (>100 species)
+#setConcentration(?EGF(R)?,?EGF_init?); 
+#saveConcentrations(); # Saves concentrations for future reset
+
+# Kinetics 
+#simulate_ode({t_end=>120,n_steps=>120});
+#resetConcentrations(); # reverts to saved Concentrations
+#simulate_ssa({suffix=>ssa,t_end=>120,n_steps=>120});

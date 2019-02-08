@@ -1,0 +1,26 @@
+#$OWNER=yaroslav
+## Mind the temperature ranges:
+## 99.8% Methanol-d4 works 282-330K. See calctemp au program for alternatives.
+
+### Experiment setup
+### Below lines are commented out, since do not want to repeat 
+### them each time after adjusting temprtr & executing xmac temp.yn
+#rpar methanol4.eth (or copy from previous set)
+#lock MeOD
+### Shimming to have good peak shape!!!
+#topshim gui (tg)
+#topshim convcomp 
+### or WRITE "convcomp" in the PARAMETERS!
+### (Compensates for convection effect in shims - linear Z gradient)
+
+
+## Measurement and calculation of temperature
+ns 4 # increased from 1 - to reduce the effect of sound/vibration noise artifact on the peak
+p1 2 # set a low value e.g. 1-2us
+pldb1 -7# check what is current in logbook
+zg
+si 128k
+lb 4 # need a stronger exponent to have smoother peakshape
+efp # need to have exponent to collapse coupling multiplet
+apk # phase correction. May want to do manually
+calctemp # choose D # can also try calctemp2 - but t did n work on 600

@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TOPSPIN		Version 3.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yaroslav
+$$ 2017-06-09 12:43:20.744 +0200  yaroslav@six
+$$ /opt/topspin/data/yaroslav/nmr/IVTNMR_template/15/pdata/1/outd
+$$ process /opt/topspin/prog/mod/edparproc
+##$CURPLOT= <C280>
+##$CURPRIN= <$C280>
+##$DFORMAT= <normdp>
+##$LAYOUT= <+/2D_inv.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

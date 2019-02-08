@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by BioNetGen 2.1.7  -->
+<sbml xmlns="http://www.sbml.org/sbml/level2" level="2" version="1">
+  <model id="xIVT">
+    <listOfCompartments>
+      <compartment id="cell" size="1"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="S1" compartment="cell" initialConcentration="20" name="NTP()"/>
+      <species id="S2" compartment="cell" initialConcentration="0" name="SMN(s1,s2)"/>
+      <species id="S3" compartment="cell" initialConcentration="0" name="PO4()"/>
+      <species id="S4" compartment="cell" initialConcentration="0" name="PPi()"/>
+      <species id="S5" compartment="cell" initialConcentration="0" name="MgPO4()"/>
+      <species id="S6" compartment="cell" initialConcentration="1" name="NDP()"/>
+      <species id="S7" compartment="cell" initialConcentration="0" name="Aborts()"/>
+      <species id="S8" compartment="cell" initialConcentration="0.15" name="Prot(H33,R75)"/>
+      <species id="S9" compartment="cell" initialConcentration="0" name="Prot(H33!1,R75!2).SMN(s1!1,s2!2)"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <!-- Independent variables -->
+      <parameter id="kcat" value="1"/>
+      <parameter id="kcatPPi" value="100"/>
+      <parameter id="kprecip" value="1"/>
+      <parameter id="kdissolve" value="1"/>
+      <parameter id="kdegNTP" value="0.0001"/>
+      <parameter id="kabortive" value="1"/>
+      <parameter id="kon" value="1"/>
+      <parameter id="koff" value="0.1"/>
+      <parameter id="NTP_0" value="20"/>
+      <parameter id="NDP_0" value="1"/>
+      <parameter id="Prot_0" value="0.15"/>
+      <parameter id="PO4" value="0"/>
+      <parameter id="NTP" value="0"/>
+      <parameter id="SMN" value="0"/>
+      <parameter id="Aborts" value="0"/>
+      <parameter id="NDP" value="0"/>
+      <parameter id="MgPO4" value="0"/>
+      <parameter id="Prot_bound_H33" value="0"/>
+      <parameter id="Prot_bound_R75" value="0"/>
+      <!-- Dependent variables -->
+      <!-- Observables -->
+      <parameter id="Group_PO4" constant="false"/>
+      <parameter id="Group_NTP" constant="false"/>
+      <parameter id="Group_SMN" constant="false"/>
+      <parameter id="Group_Aborts" constant="false"/>
+      <parameter id="Group_NDP" constant="false"/>
+      <parameter id="Group_MgPO4" constant="false"/>
+      <parameter id="Group_Prot_bound_H33" constant="false"/>
+      <parameter id="Group_Prot_bound_R75" constant="false"/>
+    </listOfParameters>
+    <listOfRules>
+      <!-- Dependent variables -->
+      <!-- Observables -->
+      <assignmentRule variable="Group_PO4">
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+                <cn> 0 </cn>
+              <ci> S3 </ci>
+            </apply>
+          </math>
+      </assignmentRule>
+      <assignmentRule variable="Group_NTP">
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+                <cn> 0 </cn>
+              <ci> S1 </ci>
+            </apply>
+          </math>
+      </assignmentRule>
+      <assignmentRule variable="Group_SMN">
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+              <ci> S2 </ci>
+              <ci> S9 </ci>
+            </apply>
+          </math>
+      </assignmentRule>
+      <assignmentRule variable="Group_Aborts">
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+                <cn> 0 </cn>
+              <ci> S7 </ci>
+            </apply>
+          </math>
+      </assignmentRule>
+      <assignmentRule variable="Group_NDP">
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+                <cn> 0 </cn>
+              <ci> S6 </ci>
+            </apply>
+          </math>
+      </assignmentRule>
+      <assignmentRule variable="Group_MgPO4">
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+                <cn> 0 </cn>
+              <ci> S5 </ci>
+            </apply>
+          </math>
+      </assignmentRule>
+      <assignmentRule variable="Group_Prot_bound_H33">
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+                <cn> 0 </cn>
+              <ci> S9 </ci>
+            </apply>
+          </math>
+      </assignmentRule>
+      <assignmentRule variable="Group_Prot_bound_R75">
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+                <cn> 0 </cn>
+              <ci> S9 </ci>
+            </apply>
+          </math>
+      </assignmentRule>
+    </listOfRules>
+    <listOfReactions>
+      <reaction id="R1" reversible="false">
+        <listOfReactants>
+          <speciesReference species="S1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S2"/>
+          <speciesReference species="S4"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> kcat </ci>
+              <ci> S1 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R2" reversible="false">
+        <listOfReactants>
+          <speciesReference species="S1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S4"/>
+          <speciesReference species="S7"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> kabortive </ci>
+              <ci> S1 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R3" reversible="false">
+        <listOfReactants>
+          <speciesReference species="S4"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S3"/>
+          <speciesReference species="S3"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> kcatPPi </ci>
+              <ci> S4 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R4" reversible="false">
+        <listOfReactants>
+          <speciesReference species="S3"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S5"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> kprecip </ci>
+              <ci> S3 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R5" reversible="false">
+        <listOfReactants>
+          <speciesReference species="S5"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S3"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> kdissolve </ci>
+              <ci> S5 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R6" reversible="false">
+        <listOfReactants>
+          <speciesReference species="S1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S3"/>
+          <speciesReference species="S6"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> kdegNTP </ci>
+              <ci> S1 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R7" reversible="false">
+        <listOfReactants>
+          <speciesReference species="S2"/>
+          <speciesReference species="S8"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S9"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> kon </ci>
+              <ci> S2 </ci>
+              <ci> S8 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R8" reversible="false">
+        <listOfReactants>
+          <speciesReference species="S9"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S2"/>
+          <speciesReference species="S8"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> koff </ci>
+              <ci> S9 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

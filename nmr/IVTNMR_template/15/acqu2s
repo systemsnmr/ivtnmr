@@ -1,0 +1,22 @@
+##TITLE= Parameter file, TOPSPIN		Version 3.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yaroslav
+$$ 2017-06-09 12:43:20.742 +0200  yaroslav@six
+$$ /opt/topspin/data/yaroslav/nmr/IVTNMR_template/15/acqu2s
+$$ process /opt/topspin/prog/mod/edparproc
+##$ACQT0= 0
+##$BF1= 60.810644
+##$FnMODE= 5
+##$NUC1= <15N>
+##$NusJSP= 0
+##$NusT2= 1
+##$NusTD= 100
+##$O1= 7163.49
+##$SFO1= 60.81780749
+##$SW= 23.5027910546772
+##$SW_h= 1429.38822184105
+##$TD= 100
+##END=

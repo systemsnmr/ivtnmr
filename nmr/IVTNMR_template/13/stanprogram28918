@@ -1,0 +1,240 @@
+# 1 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+; This pulse-sequence is meant to have short acquisition time - to measure time-resolved series.
+; (Though it is not super-optimized yet. Future TODOs:
+; - try using Ernst anlge for excitation.)
+
+; For 1 - set RG=114 !!! (due to Tris - cannot go to RG=203, so better keep consistent across datasets)
+
+; ==== Recommended setup procedure ==== 
+; 1) calibrate p1@pl1, o1 (by default all other parameters are calculated automatically - see "Automation section below").
+; 2) do rga. If rg is too low - set flag -DNOSP_AUTO and use manual sp1/phcor6 calibration (best from flips.all)
+; 3) for IVT-NMR expts definitely use -DWATERGATE and -DIVTNMR flags - will use semi-automatic sp1+0.75dB setup from empirical observations.
+; (in stocsy002.yn was using -DNOSP_AUTO flag and optimizing sp1/phcor6 in gs mode)
+; x) depending on the system - may want to try optimizing d1 vs S/N - to get maximum S/N/time.
+; ====
+# 15 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+; 160915. @YaroslavNikolaev. stocsy003.yn: auto-setup of sp1+0.75 dB with -DIVTNMR flag
+; 140616. @YaroslavNikolaev. stocsy002.yn: default setup - automatic calc of pulses (have to set -DNOAUTO to avoid auto-calc).
+; 140224. @YaroslavNikolaev. added -DAUTO -DSP_AUTO flags & section for auto-calculation of parameters.
+
+; 2012-12-xx
+; stocsy-v.yn - adapted for time-resolved measurements (short experiment time). // ChristophMaris, YaroslavNikolaev
+; 1) can use shorter d1=0.5s. // ns=4 + d1=0.5 gives better signal than, ns=2 d1=1.
+;    shifting carrier frequency to H5/H6 region allows to increase p7 length & thus reduce probe heating at short d1.
+; 2) includes WG option - to minimize signal distortions around water (meant for H5/H6 protons)
+
+;tocsy-v.all adapted for Topspin 2.1, Mario 6.2.2009
+;tocsy-v.eth
+;bergerd, Jan 2008
+# 29 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+;TOCSY with MLEV16 sequence for mixing, 	
+
+;A. Bax & D.G. Davis, J. Magn. Reson. 65, 355-360 (1985)
+;C. Griesinger, G. Otting, K. Wuethrich & R.R. Ernst, J. Am. Chem. Soc. 110, 7870 (1988)
+;G.Wider et al, JMR 56, 207-234 (1984)
+;M.Piotto et al, JBNMR 2, 661-665 (1992)
+
+;Use ZGOPTNS in ased to define the flags. eg -DPRESAT -DWATERGATE
+;#define PRESAT     	; presaturation
+;#define WG3_9_19   	; watergate with 3-9-19 pulse
+;#define 1	 ; watergate with soft pulse
+# 41 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+;pl1   : 1H standard power level
+;pl11   : TOCYS mixing power level - at least 3dB higher than pl1
+;pl9   : power for H2O presaturation
+;sp1   : soft pulse power for 1H
+
+;p1    : 90 1H pulse at standard pl1	
+;p7    : 90 1H TOCSY pulse at standard pl11
+;p11   : 90 degree soft pulse 1H (ca.1-2m)
+
+;p20   : 1ms (Gradient before 1st pulse)
+;p21   : 0.7ms (Gradient in 1)
+# 53 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+;gpz0  : 50%
+;gpz1  : 30%
+  
+;d1    : relaxation delay
+;d5    : delay 3-9-19=1/(Hz between nulls)
+;d8    : mixing time
+;in0   : increment for 1H evolution (2*dw)                             
+
+;cnst2 : 2.6 for macromol., 0.1 for small mol.
+;cnst27 : 6.58 set to the middle of H5/H6 region of TOCSY
+
+;$OWNER=setup
+# 1 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl" 1
+;Avance4.incl
+;   for AV 4
+;
+;avance-version (16/08/18)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+
+
+# 19 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+;setrtp0 denotes TimingController
+
+
+# 50 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+# 51 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+
+
+# 63 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+# 89 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+# 90 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+
+
+# 123 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+;#define LOWQ
+;#define HIGHQ
+
+
+;#define MIX_UP
+;#define MIX_DOWN
+# 136 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/Avance.incl"
+;$Id: Avance4.incl,v 1.11 2016/11/11 13:43:39 ber Exp $
+# 69 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn" 2
+
+"cnst27=6.58" ;cnst27=6.58 (ppm) for H5/H6 region
+
+"in0=inf1"
+# 74 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+"l1=(d8-3.3m)/((p1*4+p1*cnst2*2+2u)*16)"
+"d2=p7*cnst2"            ;cnst2=2.6 for macromolecules, cnst2=0.1 for small molecules
+"p8=p7*2"
+"d0=in0/2-p1*2/3.14159"
+
+
+; ===================================== Automation =====================================
+# 82 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+; Use this section to auto-calculate parameters not requiring fine-tuning (HARD pulses, power levels, delays, AU-parameters, etc).
+
+; General procedure to calculate pulse power levels.
+; powerlevel [dB] = 20*log(pulseLength*SHAPE_INTEGFAC/(P90H/90*SHAPE_TOTROT))/log(10)+dBH
+; TopSpin for some reason does not recognize the call to dB level of shaped pulse: "spdb". Have to calcualte via whatts.
+; powerlevel [whatts] = plw1*pow( (P90H/90)/((pulseLength/SHAPE_TOTROT)*SHAPE_INTEGFAC), 2)
+
+; TOCSY spinlock p7@pl11 (rect ~16-24us 90deg):
+; Make sure TOCSY power level is at least 3dB weaker than hardpulse! (i.e. add +3dB)
+; current power level in dB @six:    20*log(24/P90H)-7
+"plw11=plw1*pow( (p1/90)/(p7/90), 2)" ; auto-calc in Whatts
+# 97 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+; Use this section to auto-calculate the power of SHAPED PULSES (assuming that in some cases one may want to fine-tune these)
+
+; selective water flip-back p11@sp1 (gauss128_5 1.5ms(1-2ms) 90deg):
+; current power level in dB @six:   20*log(1500*0.50111/P90H))-7
+
+# 107 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+; power change in Whatts from attenuation in dBs:
+; spdb2-spdb1 = 10*log10(spw1/spw2)
+; spw2 = spw1 / 10^((spdb2-spdb1)/10)
+"spw1 = plw1*pow( ((p1/90)/((p11/90)*0.5011)), 2) / pow(10, 0.75/10)"
+
+; ===================================== End of Automation ===============================
+
+# 1 "mc_line 115 file /root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn exp. def. part of mc cmd. before ze"
+; dimension 2D; AQ_mode  (F1) States-TPPI
+define delay MCWRK
+define delay MCREST
+define loopcounter ST1CNT
+"ST1CNT = trunc(td1 / 2)"
+"MCREST = 1m - 1m"
+"MCWRK = 0.250000*1m"
+# 115 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+# 115 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+1  30u ze
+# 1 "mc_line 115 file /root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn exp. def. of mc cmd. after ze"
+LBLAV, MCWRK
+# 116 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+   100u ip4
+# 1 "mc_line 117 file /root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn exp. start label for mc cmd."
+2 MCWRK  * 2
+LBLSTS1, MCWRK 
+LBLF1, MCWRK
+  MCREST
+# 118 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+   5u fq=0 (sfo hz):f1 ; carrier frequency at H2O
+   10u setrtp0^0
+;------------------------
+
+
+# 125 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+   d1
+
+;------------------------
+   3u do:f1
+   10u setrtp0|0
+   20u pl1:f1
+   10u p20:gp0 200u
+;-----------------------------------------1H-evolution
+   (p1 ph4):f1
+   d0 pl11:f1
+   (2mp ph5):f1 
+   2u fq=cnst27 (bf ppm):f1 ; set frequency to the middle of H5/H6 region
+;-----------------------------------------tocsy mixing sequence ; MLEV16
+5  (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1  
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph3 d2 p8 ph5 d2 p7 ph3 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   (p7 ph1 d2 p8 ph2 d2 p7 ph1 2u):f1
+   lo to 5 times l1
+   2u  fq=0 (sfo hz):f1 ; carrier freq back to H2O
+   (1.3mp ph5):f1
+;------------------------
+
+   10u p21:gp1 200u
+   10u
+   (10u p11:sp1 ph6:r 10u):f1 
+   5u 5u pl1:f1
+   (p1*2 ph7):f1			 ;1
+   10u
+   (10u p11:sp1 ph6:r 10u):f1
+   10u pl1:f1
+   10u p21:gp1 200u
+# 169 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+;------------------------
+# 179 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+;-----------------------------------------acquisition                           
+   go=2 ph31 
+# 1 "mc_line 181 file /root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn exp. mc cmd. in line"
+  MCWRK  wr #0 if #0 zd ip4  MCWRK  ip29
+  lo to LBLSTS1 times 2
+  MCWRK id0
+  lo to LBLF1 times ST1CNT
+  MCWRK rf #0
+  lo to LBLAV times tdav
+# 182 "/root/.topspin-BladeEpu/local_acqu/simulDirs/ppDirs/stocsy003.yn"
+   10u do:f1
+   10u setrtp0^0
+exit
+
+ph1=1 3 1 3
+ph2=2 0 2 0
+ph3=3 1 3 1
+ph4=0 0 2 2
+ph5=0 2 0 2
+ph6=2
+ph7=0
+ph8=1
+ph9=3
+ph29=0
+ph31=0 0 2 2
+
+;##/($P[1],$PL[1])= &SetPulse(f1,0.000014,90);
+;##/$D[5]=&round(1/(10*$BF1),.00001);
