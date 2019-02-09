@@ -16,7 +16,7 @@ init_NTP = 20; % mM
 
 rna_lengths = containers.Map({...
     'IN60','IN61','IN62','IN63','IN65','IN70','IN71','IN72','IN73','IN75','IN78'},...
-    [10, 28, 28, 33, 49, 10, 28, 28, 33, 49, 10]);
+    [5.8, 28, 28, 33, 49, 5.8, 28, 28, 33, 49, 5.8]);
 
 dset_names = {...
 '170310_IN70a_pR02_co-UP1_303K_600'
@@ -53,13 +53,13 @@ run_cds_initial = 0;
     cds_optns.plot_final = 0;    
     cds_optns.data_for_fit = fullfile(pwd,'data_for_fit');
 
-run_collect_csp = 1;
+run_collect_csp = 0;
     export_data = 1;
-    plot_csp_results = 1;
+    plot_csp_results = 0;
     
 run_gen_ivtnmr_from_dsel = 1;
     plot_gen_ivtnmr_results = 1;
-    save_to_global_ivtnmr = 0; % will save into NMR-spectra directory too.
+    save_to_global_ivtnmr = 1; % will save into NMR-spectra directory too.
 
 run_add_csp = 1;
 
@@ -136,9 +136,8 @@ if run_add_csp || run_all
     datasave_folder = DATA_IVTNMR;
     csp_file = 'csp_all.mat';
     csp_file_location = fullfile(datasave_folder, csp_file);
-    add_csp_to_ivtnmr_02(csp_file_location);
+    add_csp_to_ivtnmr_03(csp_file_location);
 end
-
 
 %% Interpolate
 %===================

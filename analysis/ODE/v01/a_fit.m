@@ -175,12 +175,6 @@ d = load(datafile); % for data generation see create_data_str.m
 data = d.dsel; % Get data matrix from the structure: {'PO4','NTP','RNAtotal','SMNfolded','Abortives','NDP','MgPO4','HSQC';}
 clear d.dsel;
 
-%%% Correct RNA0 length - matching rna_length used for ITC quantification
-%=======================
-if strcmp(data_name(1:4), 'IN70')
-    data.hn.rna_length = 5.8;
-end
-
 %%% Normalize HN Prot observable
 %=======================
 prot_idx = numel(data.names); % assuming protein is LAST
@@ -293,7 +287,7 @@ data.s(RNA_idx,:) = data.s(RNA_idx,:) ./ data.hn.rna_length;
 %%% Currently have to set these manually, if using only some of
 %%% observables.
 obs_data_to_keep = [1 2 3 4 5 6 7];
-colors = [cLightGrey; cOrange; cBlack; cBlack; cOrange; cLightGrey]; % set for OBSERVABLES
+colors = [cLightGrey; cOrange; cBlack; cBlack; cOrange; cLightGrey; cRed]; % set for OBSERVABLES
 %%% Manually define colors for individual observables above - if want to.
 %%% Otherwise will be adapted below automatically.
 n_obs = numel(obs_data_to_keep); 

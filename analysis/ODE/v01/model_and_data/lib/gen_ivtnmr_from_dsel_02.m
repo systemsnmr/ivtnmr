@@ -66,7 +66,7 @@ if nargin == 0
     %%% NOW IS PASSED AS PARAMETER!! HERE ONLY LOCAL TEST!
     rna_lengths = containers.Map({...
         'IN60','IN61','IN62','IN63','IN65','IN70','IN71','IN72','IN73','IN75'},...
-        [10, 28, 28, 33, 49, 10, 28, 28, 33, 49]);
+        [5.8, 28, 28, 33, 49, 5.8, 28, 28, 33, 49]);
     
 else
     

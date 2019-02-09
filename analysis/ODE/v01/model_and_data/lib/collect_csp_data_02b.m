@@ -9,11 +9,7 @@ addpath('/Volumes/Data/yar/Dropbox/Programming/Matlab/tests');
 
 global DATA_IVTNMR;
 
-if exist('./lib','dir')
-    datasave_folder = strcat(DATA_IVTNMR, '/'); % if running in root (runall)
-else
-    datasave_folder = strcat('../', DATA_IVTNMR, '/'); % if running from lib directory
-end
+datasave_folder = DATA_IVTNMR;
 
 %% Params to run "locally"
 %===========================
@@ -128,18 +124,20 @@ plotLW = 1;
 plot_subset = 0; % 0 - all, 1 - A1R1, 2 - UP1       
 n_projects = numel(projects);
 
+datafile_path = fullfile(datasave_folder, datasave_name);
+
 %% Import data
 %===========================
 if ~reimport_data
     
-    load(strcat(datasave_folder, datasave_name));
+    load( datafile_path );
 
 else % reimportData
 
     fl = cell(n_projects,1);
     
     for i=1:n_projects
-        fl{i} = get_cara_peakshifts( fullfile(cara_path, cara_repo_name), projects{i}, peaklists{i});
+        fl{i} = get_cara_peakshifts_03( fullfile(cara_path, cara_repo_name), projects{i}, peaklists{i});
         fl{i}.name = projects{i};
         fl{i}.n_peaks = numel(fl{i}.peak_tags);
 %         fl{i}.color = colors{i}; % was in collect_csp_data
@@ -161,9 +159,9 @@ if export_data
 % dlmwrite(output_file,csArray, '	');
 
 % Just saving as MAT file - not table or anything.
-save_mat_name = sprintf('%s%s', datasave_folder, datasave_name);
+save_mat_name = datafile_path;
 fprintf(1,'Data saved into %s\n', save_mat_name);        
-save(strcat(save_mat_name),'fl');
+save(save_mat_name, 'fl');
 
 % disp(csArray);
 end
