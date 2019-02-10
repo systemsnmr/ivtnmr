@@ -7,8 +7,8 @@ clear; close all;
 %=====================
 %%% By default takes first results file (assumes its only one)
 model_sub_folder = 'model_and_data';
-result_files = dir( fullfile(model_sub_folder, 'results', '*.mat') );
-datafile = fullfile(model_sub_folder, 'results', result_files(1).name);
+result_files = dir( fullfile(model_sub_folder, 'fit_results', '*.mat') );
+datafile = fullfile(model_sub_folder, 'fit_results', result_files(1).name);
 % datafile = fullfile(model_sub_folder, 'results', 'a_v01_multi.mat');
 
 %% Settings / flags
