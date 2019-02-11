@@ -12,11 +12,11 @@ Most up-to-date version of the protocol (including example code and data): [gith
 
 ----
 # Table of contents
-[ A. Design and prep of RNA and protein ](#sample_prep)  
+[ A. Design and prep of RNA templates and protein ](#sample_prep)  
 [ B. Setup of transcription-NMR reaction ](#rxn_setup)  
 [ C. Data processing ](#data_processing)  
-[ D. Data analysis ](#data_analysis)  
-[ E. Parameter uncertainty ](#param_uncertainty)  
+[ D. Data analysis and model fitting ](#data_analysis)  
+[ E. Parameter (reaction constant) uncertainty ](#param_uncertainty)  
 [ G. Adjusting ODE model ](#ode_change)  
 <!--[ H. Future improvements ](#improvements)  -->
 [ X. Disclaimer: Limitations of Liability for the code ](#liability)  
