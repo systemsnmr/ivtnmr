@@ -90,7 +90,7 @@ To match the starting Tris-Triton-DTT (TTD) transcription buffer, transfer your 
 
 #### 2. NMR setup
 Notes:
-- :bangbang::warning::bangbang:<span style="color:red">WARNING: the TopSpin Python scripts and pulseprograms are provided here "as is" - merely as a guideline for automated setup. These were not thoroughly tested on different spectrometers and may contain bugs and incompatibilities with TopSpin and spectrometer console versions!:bangbang::warning::bangbang:</span>
+- :bang::warning::bang:<span style="color:red">WARNING: the TopSpin Python scripts and pulseprograms are provided here "as is" - merely as a guideline for automated setup. These were not thoroughly tested on different spectrometers and may contain bugs and incompatibilities with TopSpin and spectrometer console versions!:bang::warning::bang:</span>
 
 - We use an automated script `nmr/py/in_v02.yn.py` which makes tuning-matching, shimming, pulse calibrations and experiment setup.
 - The measured experiments are configured by this script based on the template experiments which are placed into an empty IVTNMR_template - template dataset (example in `nmr/IVTNMR_template`):
@@ -217,5 +217,5 @@ Run `analysis/LW/a_fit_LW.m` to fit and visualize imino linewidths. This fitting
 
 <a name="liability"></a>
 ### (X) Disclaimer: Limitations of Liability for the code
-:bangbang::warning::bangbang:<span style="color:red">
-The code, pulseprograms, and especially TopSpin Python scripts, in this repository are provided "as is" - merely as a guideline for automated setup. These were not thoroughly tested on different spectrometers and may contain bugs and incompatibilities with TopSpin versions. Authors assume no responsibility, and shall not be liable to you or to any third party for any direct, indirect, special, consequential, indirect or incidental losses, damages, or expenses, directly or indirectly relating to the use or misuse of the code and pulseprograms provided here.:bangbang::warning::bangbang:</span>
+:bang::warning::bang:<span style="color:red">
+The code, pulseprograms, and especially TopSpin Python scripts, in this repository are provided "as is" - merely as a guideline for automated setup. These were not thoroughly tested on different spectrometers and may contain bugs and incompatibilities with TopSpin versions. Authors assume no responsibility, and shall not be liable to you or to any third party for any direct, indirect, special, consequential, indirect or incidental losses, damages, or expenses, directly or indirectly relating to the use or misuse of the code and pulseprograms provided here.:bang::warning::bang:</span>
