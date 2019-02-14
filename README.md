@@ -136,6 +136,8 @@ Step-by-step procedure:
 
 1. Sort experiments: `sort.py`. This script sorts data by experiment type, adds rough experiment time to the title, creates cara repository with linked 2DHN spectra and `integr_datasets_31P.txt` file for 31P integration. See script header for details. For auto-generation of cara repository, two fragments of final repository (`180917_INx_blank_1top.cara`, `180917_INx_blank_2bottom.cara`) need to be present in the py/user directory.
 
+2. For quick visualization / comparison of data in TopSpin - see helper scripts: `res.py` (reading data by giving only parts of dataset name), `md.py` (overlaying series), `zim.py` and `zh33.py` (zooming on specific regions of spectra).
+
 3. Process 1D31P:
   - `qumulti 5000-5500`
   - example of processing command (check only SR corrections, in our setup phase seems determined robustly enough by `apks` routine):
