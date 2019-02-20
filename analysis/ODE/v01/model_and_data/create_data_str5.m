@@ -27,6 +27,8 @@ function create_data_str5(dset,use_average_PO4,integr_ref,export_files, hn_optns
 %%% 20190204 @YN - create_data_str5
 %   - Adds 'optns' input parameter - e.g. to set datasave dir.
 %   - !! TODO: drop 'pure' versions - just do PNM.
+%   20190220
+%   - Removes hard-coded CURDIR paths - uses optns.nmr_data_path now
 
 
 % TODO:
@@ -137,10 +139,10 @@ end
 
 %% Data variables
 %=======================================================
-CURDIR = '/Users/yar/_eth2/data_NMR/spectra';
+CURDIR = optns.nmr_data_path;
 % CURDIR = '~/Desktop/BK2017/NMR';
 
-dset_t0 = cellfun(@(x) get_time0(x), dset); % uses helper func (see EOF)
+dset_t0 = cellfun(@(x) get_time0(optns.nmr_data_path,x), dset); % uses helper func (see EOF)
 
 dset_exp_31P = {...
     cell2mat(arrayfun(@(x) str2num(x.name), dir(fullfile(CURDIR,dset{1},'5*')), 'unifo', 0))';
@@ -618,8 +620,8 @@ end
 
 %% Helper functions
 %==============================
-function time0 = get_time0(dset)
-    CURDIR = '/Users/yar/_eth2/data_NMR/spectra';
+function time0 = get_time0(nmr_data_path, dset)
+    CURDIR = nmr_data_path;
 
     notes_path = fullfile(CURDIR,dset,'notes.txt');
 
