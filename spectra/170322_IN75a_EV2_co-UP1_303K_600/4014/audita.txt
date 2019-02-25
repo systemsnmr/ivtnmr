@@ -2,17 +2,17 @@
 ##JCAMPDX= 5.01
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= yaroslav
-$$ /opt/topspin/data/yaroslav/nmr/180314_IN72b_SMN214_co-NUP1_303K_600/81/audita.txt
+$$ /opt/topspin/data/yaroslav/nmr/170322_IN75a_EV2_co-UP1_303K_600/81/audita.txt
 ##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
-(   1,<2018-03-15 01:59:45.011 +0100>,<yaroslav>,<six>,<go>,<TOPSPIN 3.2>,
+(   1,<2017-03-23 06:36:03.659 +0100>,<yaroslav>,<six>,<go>,<TOPSPIN 3.2>,
       <created by zg
-	started at 2018-03-15 01:45:49.020 +0100,
+	started at 2017-03-23 06:22:07.783 +0100,
 	POWCHK enabled, PULCHK disabled,
        configuration hash MD5:
-       14 7F E0 19 F4 CC 9D E8 22 DE CF 16 21 2D 09 47
+       E3 FA 72 CD 7B BF EF 27 71 77 70 87 51 2F 1E 26
        data hash MD5: 2K * 100
-       C1 D2 C0 48 36 34 6A E5 06 12 B3 DD A7 BA 7C 91>)
+       55 F8 47 E0 F9 E4 49 37 3F 8F 44 59 7E 6E 55 1C>)
 ##END=
 
 $$ hash MD5
-$$ 69 7B 5A B9 69 21 BE 96 E9 1C 61 9C 6C C7 42 96
+$$ 8F A8 C0 36 F1 5F 28 EB D5 A3 A2 45 6B 28 D1 AC
