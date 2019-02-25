@@ -39,7 +39,7 @@ dset_names = {...
 };
 
 analyze_subset = [8 11];
-% analyze_subset = [1 8 11];
+analyze_subset = [1 8 11];
 % analyze_subset = [1];
 
 
