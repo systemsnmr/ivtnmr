@@ -1,0 +1,134 @@
+CONFIGURATION INFORMATION
+=========================
+
+Path         : /opt/topspin/conf/instr/spect/uxnmr.info
+Date         : Thu Jul 14 12:12:39 2016
+Release      : TOPSPIN Version 3.2-pl3
+Installed in : /opt/topspin
+Host         : six
+OS           : CentOS release 5.11 (Final)
+CPU          : Intel(R) Xeon(R) CPU W3505 @ 2.53GHz (2 cores at 1596 MHz)
+User         : salmonl (Loic Salmon)
+Description  : Avance III 600
+Location     : ETHZ HPM
+System       : Avance III NMR spectrometer
+1H-frequency : 600.13 MHz
+Order Number : ZH051606
+Configured in: /opt/topspin/conf/instr/spect
+
+IPSO: connected to spectrometer subnet
+- TCP/IP address = 149.236.99.254
+- Tctrl : 1
+- Fctrls: 4
+- Gctrl1: without digital preemphasis
+- Rctrl : none
+- FREDs : none
+- DPP : none
+
+DRU: AQS DRU-E Z102520/00369 ECL 02.00
+- TCP/IP address = 149.236.99.89
+- Firmware Version = 130125
+- DRU controls AQS-Rack and HPPR/2
+
+AQS: connected to 149.236.99.89:/dev/tty10
+  _Slot_ SBSB _____________________Board_____________________
+  Number Addr Type HW-VS FW-VS ID  ECL Name   Description
+  -----------------------------------------------------------
+     2   0x10 0x42   0x3    AW  R  3.0 REC-1  AQS RXAD600 Z102117/250 ECL 03.00
+     3   0x34 0xc0   0x1        X  1.0 REF-1  REF-600 Reference Board for AQS Receiver
+     4   0x24 0x19   0x8    AD  S  2.0 SGU-1  AQS SGU/2 600 Z103081/00083 ECL 02.00 FPGA-Vs=AE
+     5   0x25 0x19   0x8    AD  S  2.0 SGU-2  AQS SGU/2 600 Z103081/00086 ECL 02.00 FPGA-Vs=AE
+     6   0x26 0x19   0x8    AD  S  2.0 SGU-3  AQS SGU/2 600 Z103081/00087 ECL 02.00 FPGA-Vs=AE
+     7   0x27 0x19   0x8    AD  S  2.0 SGU-4  AQS SGU/2 600 Z103081/00163 ECL 02.00 FPGA-Vs=AE
+    10   0x3c 0xc5     0        Y  1.0 ROUT-1 AQS Router 1/4
+    21   0x21 0xcf     0        P  0.0 PSD-1  PSD/3 Power Supply Distribution Board
+    --   0x20 0xc6     0        B  1.2 AQS/2  AQS/2 chassis
+     1   0x20  0x7     0        B      MASTER AQS Rack Master
+  Logical Receiver/SGU configuration:
+
+
+Router: 1 AQS Router 1/4
+
+
+Transmitters at the spectrometer subnet:
+----------------------------------------
+BLA_W1345099_0010 W1345099/0010 ECL 0:
+- TCP/IP address = 149.236.99.253
+- Firmware VS    = 20120627
+- Amplifier      = BLAXH2H500/100/150 E 200-600MHZ: W1345099/0010 ECL 0
+- Router         = BLMMR32 RF AMPLIFIER MODULE: W1345204/0086 ECL 0
+- Controller     = BLA CONTROL BOARD 6 2V V-USB: W1522040/0215 ECL 1
+BLA_W1345093_0006 W1345093/0006 ECL 0:
+- TCP/IP address = 149.236.99.252
+- Firmware VS    = 20120627
+- Amplifier      = BLAX500 E 6-365MHZ: W1345093/0006 ECL 0
+- Router         = BLMMR31 RF AMPLIFIER MODULE: W1345212/0048 ECL 0
+- Controller     = BLA CONTROL BOARD 6 2V V-USB: W1522040/0115 ECL 1
+BLA_W1345093_0034 W1345093/0034 ECL 0:
+- TCP/IP address = 149.236.99.251
+- Firmware VS    = 20120627
+- Amplifier      = BLAX500 E 6-365MHZ: W1345093/0034 ECL 0
+- Router         = BLMMR31 RF AMPLIFIER MODULE: W1345212/0169 ECL 0
+- Controller     = BLA CONTROL BOARD 6 1V V-USB: W1522041/0125 ECL 1
+
+BSMS: BSMS/2 connected to ethernet
+- TCP/IP address = 149.236.99.20
+- ELCB firmware version = 20111004
+- GAB current limits = 0.0/X, 0.0/Y, 10.0/Z (in A)
+- SCB channels = 40
+- Shim System = BOSS2-SB
+- 2HTX Amplifier: not available
+- Lock: installed
+
+Eurotherm VTU: device connected to 149.236.99.254:/dev/tty04
+
+Preamplifiers :
+HPPR: - HPPR/2 preamplifier connected to 149.236.99.89:/dev/tty10
+    Type      : HPPR/2
+    Controller: Application firmware = AP
+                15 LEDs for tuning, 15 LEDs for matching
+    Module  1 : 1H LNA
+                 PN=Z003462, SN=00459 from 20070214
+    Module  2 : XBB19F 2HS
+                 PN=Z003506, SN=00498 from 20060809
+    Module  3 : 2H
+                 PN=Z003473, SN=00460 from 20060808
+    Module  4 : 13C
+                 PN=Z003524, SN=00443 from 20090112
+    Module  5 : 31P
+                 PN=Z102449, SN=00027 from 20101123
+    Module  6 : 15N
+                 PN=Z003530, SN=00334 from 20090109
+
+
+Frequency generation:
+- F1: for SGU
+- F2: for SGU
+- F3: for SGU
+- F4: for SGU
+
+
+
+RF cable connections (detected by 'confamp')
+--------------------------------------------------------------------
+SGU1 NORM output -> input 1 of transmitter 1 (BLAXH2H500/100/150 E 200-600MHZ W1345099/0010 at TCP/IP 149.236.99.253)
+SGU1 AUX  output -> input 2 of transmitter 2 (BLAX500 E 6-365MHZ W1345093/0006 at TCP/IP 149.236.99.252)
+SGU2 NORM output -> input 2 of transmitter 1 (BLAXH2H500/100/150 E 200-600MHZ W1345099/0010 at TCP/IP 149.236.99.253)
+SGU2 AUX  output -> input 1 of transmitter 3 (BLAX500 E 6-365MHZ W1345093/0034 at TCP/IP 149.236.99.251)
+SGU3 NORM output -> input 1 of transmitter 2 (BLAX500 E 6-365MHZ W1345093/0006 at TCP/IP 149.236.99.252)
+SGU3 AUX  output -> input 2 of transmitter 3 (BLAX500 E 6-365MHZ W1345093/0034 at TCP/IP 149.236.99.251)
+SGU4 NORM output -> input 4 of transmitter 1 (BLAXH2H500/100/150 E 200-600MHZ W1345099/0010 at TCP/IP 149.236.99.253)
+SGU4 AUX  output -> input of AQS Router 1/4
+AQS Router 1/4 output 1 -> input 3 of transmitter 1 (BLAXH2H500/100/150 E 200-600MHZ W1345099/0010 at TCP/IP 149.236.99.253)
+AQS Router 1/4 output 2 -> input 3 of transmitter 2 (BLAX500 E 6-365MHZ W1345093/0006 at TCP/IP 149.236.99.252)
+AQS Router 1/4 output 3 -> input 3 of transmitter 3 (BLAX500 E 6-365MHZ W1345093/0034 at TCP/IP 149.236.99.251)
+AQS Router 1/4 output 4 -> open
+
+Blanking cable connections (detected by 'confamp')
+--------------------------------------------------------------------
+transmitter 1 (BLAXH2H500/100/150 E 200-600MHZ W1345099/0010 at TCP/IP 149.236.99.253) amplifier 1H-100W uses blanking 2
+transmitter 1 (BLAXH2H500/100/150 E 200-600MHZ W1345099/0010 at TCP/IP 149.236.99.253) amplifier X-500W uses blanking 1
+transmitter 1 (BLAXH2H500/100/150 E 200-600MHZ W1345099/0010 at TCP/IP 149.236.99.253) amplifier 2H-150W needs no blanking
+transmitter 2 (BLAX500 E 6-365MHZ W1345093/0006 at TCP/IP 149.236.99.252) amplifier X-500W uses blanking 3
+transmitter 3 (BLAX500 E 6-365MHZ W1345093/0034 at TCP/IP 149.236.99.251) amplifier X-500W uses blanking 4
+

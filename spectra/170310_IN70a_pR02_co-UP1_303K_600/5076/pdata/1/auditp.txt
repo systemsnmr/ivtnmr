@@ -1,0 +1,31 @@
+##TITLE= Audit trail, TOPSPIN		Version 3.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yar
+$$ /opt/topspin/data/yar/datasets/IN_paper/170310_IN70a_pR02_co-UP1_303K_600/5076/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2017-03-12 16:12:59.749 +0100>,<yaroslav>,<six>,<go>,<TOPSPIN 3.2>,
+      <created by zg
+	started at 2017-03-12 16:06:17.035 +0100,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       E3 FA 72 CD 7B BF EF 27 71 77 70 87 51 2F 1E 26
+       data hash MD5: 16K
+       22 41 04 93 65 D2 C7 B1 E3 4A AF D6 75 1D 08 88>)
+(   2,<2018-08-21 09:35:55.733 +0200>,<yar>,<yarmbp2.mol.dbiol.d.ethz.ch>,<proc1d>,<TOPSPIN 3.2>,
+      <Start of raw data processing
+       efp LB = 2 FT_mod = 6 PKNL = 1 PHC0 = -76.163 PHC1 = -177.6 SI = 64K 
+       data hash MD5: 64K
+       0F 53 7F 53 62 0B 2C D1 E4 33 53 EC 7E 11 5E 88>)
+(   3,<2018-08-21 09:35:55.817 +0200>,<yar>,<yarmbp2.mol.dbiol.d.ethz.ch>,<proc1d>,<TOPSPIN 3.2>,
+      <apks 
+       data hash MD5: 64K
+       36 2B 72 F3 98 72 AC FD 76 AE 3B EE D4 5F C6 10>)
+(   4,<2018-08-21 09:35:55.896 +0200>,<yar>,<yarmbp2.mol.dbiol.d.ethz.ch>,<proc1d>,<TOPSPIN 3.2>,
+      <abs n ABSG = 5 
+       data hash MD5: 64K
+       D1 BA 77 B9 18 76 70 67 A5 1F FC E3 6A F1 66 2F>)
+##END=
+
+$$ hash MD5
+$$ C5 9E 3B 22 05 99 BF A6 B4 45 94 60 C8 51 E0 45

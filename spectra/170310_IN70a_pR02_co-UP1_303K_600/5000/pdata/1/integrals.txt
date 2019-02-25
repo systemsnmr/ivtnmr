@@ -1,0 +1,5 @@
+   Current data set:
+   NAME =	170310_IN70a_pR02_co-UP1_303K_600	EXPNO =	5000	PROCNO = 1
+   DU   =	/opt/topspin/data/yar/datasets/IN_paper
+
+   Number   Integrated Region     Integral

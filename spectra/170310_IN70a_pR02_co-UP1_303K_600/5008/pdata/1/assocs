@@ -1,0 +1,11 @@
+##TITLE= Parameter file, TOPSPIN		Version 3.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yar
+$$ 2018-09-12 16:15:31.888 +0200  yar@yarmbp2.mol.dbiol.d.ethz.ch
+$$ /Volumes/Data/yar/_eth2/data_NMR/spectra/170310_IN70a_pR02_co-UP1_303K_600/5008/pdata/1/assocs
+$$ process /opt/topspin3.2/prog/mod/dataserver
+##$MULTDISP= </Volumes/Data/yar/_eth2/data_NMR/spectra/170313_IN71a_p114_co-UP1_303K_600/5008/pdata/1|/Volumes/Data/yar/_eth2/data_NMR/spectra/170426_IN72a_SMN2_co-UP1_303K_600/5008/pdata/1|/Volumes/Data/yar/_eth2/data_NMR/spectra/170322_IN75a_EV2_co-UP1_303K_600/5008/pdata/1|/Volumes/Data/yar/_eth2/data_NMR/spectra/171208_IN80a_SMN2_co-hnG_303K_600/5005/pdata/1|/Volumes/Data/yar/_eth2/data_NMR/spectra/180131_IN41c_SMN210_co-NUP1_303K_600/5006/pdata/1|/Volumes/Data/yar/_eth2/data_NMR/spectra/180215_IN90a_SMN214m_co-NUP1_303K_600/5008/pdata/1|/Volumes/Data/yar/_eth2/data_NMR/spectra/180307_IN84a_AGU_co-NUP1_303K_600/5003/pdata/1|/Volumes/Data/yar/_eth2/data_NMR/spectra/180307_IN84a_AGU_co-NUP1_303K_600/5004/pdata/1|/Volumes/Data/yar/_eth2/data_NMR/spectra/180702_IN70b_pR02_co-NUP1_303K_600/5008/pdata/1>
+##END=

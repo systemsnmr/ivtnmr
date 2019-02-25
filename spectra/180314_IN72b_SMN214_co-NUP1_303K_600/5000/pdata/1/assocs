@@ -1,0 +1,11 @@
+##TITLE= Parameter file, TopSpin 3.6.0
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yar
+$$ 2019-01-17 13:19:08.984 +0100  yar@YarMBP2.local
+$$ /opt/topspin/data/yar/datasets/IVTNMR/180314_IN72b_SMN214_co-NUP1_303K_600/5000/pdata/1/assocs
+$$ process /opt/topspin3.6.0/prog/mod/dataserver
+##$MULTDISP= </opt/topspin/data/yar/datasets/IVTNMR/180314_IN72b_SMN214_co-NUP1_303K_600/5005/pdata/1|/opt/topspin/data/yar/datasets/IVTNMR/180314_IN72b_SMN214_co-NUP1_303K_600/5010/pdata/1|/opt/topspin/data/yar/datasets/IVTNMR/180314_IN72b_SMN214_co-NUP1_303K_600/5015/pdata/1|/opt/topspin/data/yar/datasets/IVTNMR/180314_IN72b_SMN214_co-NUP1_303K_600/5020/pdata/1|/opt/topspin/data/yar/datasets/IVTNMR/180314_IN72b_SMN214_co-NUP1_303K_600/5025/pdata/1|/opt/topspin/data/yar/datasets/IVTNMR/180314_IN72b_SMN214_co-NUP1_303K_600/5030/pdata/1>
+##END=

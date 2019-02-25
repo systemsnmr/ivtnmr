@@ -1,0 +1,11 @@
+##TITLE= Parameter file, TOPSPIN		Version 3.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 3	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yaroslav
+$$ 2019-01-31 09:38:22.192 +0100  yar@YarMBP2.local
+$$ /opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5000/pdata/1/assocs
+$$ process /opt/topspin3.2/prog/mod/dataserver
+##$MULTDISP= </opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5002/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5004/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5006/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5008/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5010/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5012/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5014/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5016/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5018/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5020/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5022/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5024/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5026/pdata/1|/opt/topspin/data/yar/datasets/IN_paper/170322_IN75a_EV2_co-UP1_303K_600/5028/pdata/1>
+##END=
