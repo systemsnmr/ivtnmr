@@ -7,7 +7,7 @@ global SB;
 
 addpath('/Volumes/Data/yar/Dropbox/Programming/Matlab/tests');
 
-global DATA_IVTNMR;
+global DATA_IVTNMR NMR_DATA_PATH;
 
 datasave_folder = DATA_IVTNMR;
 
@@ -137,7 +137,8 @@ else % reimportData
     fl = cell(n_projects,1);
     
     for i=1:n_projects
-        fl{i} = get_cara_peakshifts_03( fullfile(cara_path, cara_repo_name), projects{i}, peaklists{i});
+        get_cara_peakshifts_optns.nmr_data_path = NMR_DATA_PATH;
+        fl{i} = get_cara_peakshifts_04( fullfile(cara_path, cara_repo_name), projects{i}, peaklists{i}, get_cara_peakshifts_optns);
         fl{i}.name = projects{i};
         fl{i}.n_peaks = numel(fl{i}.peak_tags);
 %         fl{i}.color = colors{i}; % was in collect_csp_data

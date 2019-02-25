@@ -1,4 +1,4 @@
-function full_peaklist = get_cara_peakshifts_03(cara_repo_path, target_project, target_peaklist)
+function full_peaklist = get_cara_peakshifts_04(cara_repo_path, target_project, target_peaklist, optns)
 
 % > IN CURRENT IMPLEMENTATION - NEED TO HAVE ANALYZED SPECTRA IN LINEAR SEQUENCE for CARA IDs!
 
@@ -20,6 +20,8 @@ function full_peaklist = get_cara_peakshifts_03(cara_repo_path, target_project, 
 % get_cara_peakshifts_02.m - modified version, to not depend on TIME0 /
 % IVTNMR stuff
 % get_cara_peakshifts_03 - adds reading of peak AMPLITUDE!
+% get_cara_peakshifts_04 - uses optns structure to get info about nmr data
+% path. (not just read it from cara file)
 
 
 %% If called locally
@@ -121,14 +123,17 @@ for k = 0:n_proj-1 % because this is JAVA object - indexing goes from ZERO
                 % and expno numbers.
                 fl.last_path = char(spectrum.item(item_idx).getAttribute('path'));
                 path_parts = regexp(fl.last_path, filesep, 'split');
-                fl.nmr_data_path = fullfile(filesep,path_parts{1:end-5});
+                
+%                 fl.nmr_data_path = fullfile(filesep,path_parts{1:end-5});
+                fl.nmr_data_path = optns.nmr_data_path;
+                
                 fl.dset_name = path_parts{end-4};
                 fl.last_expno = str2num(path_parts{end-3});
                 try 
                     fl.time0 = getTime0(fl.nmr_data_path,fl.dset_name);
                     % In calculating first expno - we assume expnos go
                     % linearly.                             
-                    fl.time = getNMRTime(fl.dset_name,...
+                    fl.time = getNMRTime( fullfile(optns.nmr_data_path, fl.dset_name),...
                         [fl.last_expno-n_spec+1:fl.last_expno], fl.time0);
                 catch
                     warning('Some error in processing time0 in notes.txt. Using 1:n_spec index instead of TIME.');

@@ -166,7 +166,7 @@ refExpt = dset_exp_31P;
 % dataVectorLength = 33;
 
 % Get common time-vector based on above parameters:
-targetTime = getNMRTime(dset{refSet},refExpt{refSet},dset_t0{refSet});
+targetTime = getNMRTime( fullfile(optns.nmr_data_path, dset{refSet}), refExpt{refSet},dset_t0{refSet});
 % v5a - disabled
 % if exist('dataVectorLength','var')
 %     targetTime = targetTime(1:dataVectorLength);
