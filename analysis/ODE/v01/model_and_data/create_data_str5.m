@@ -27,9 +27,6 @@ function create_data_str5(dset,use_average_PO4,integr_ref,export_files, hn_optns
 %%% 20190204 @YN - create_data_str5
 %   - Adds 'optns' input parameter - e.g. to set datasave dir.
 %   - !! TODO: drop 'pure' versions - just do PNM.
-%   20190220 - Removes hard-coded CURDIR paths - uses optns.nmr_data_path now
-%   20190225
-%   - makes use 31P 'PNM' file when doing 'intern' (any(strcmp(integr_ref,{'PNM', 'intern'}))
 
 
 % TODO:
@@ -131,7 +128,7 @@ end
 err_calc = 1; % 1: std of 1st and 2nd pt. 2: uniform (max) std from (1). 3: noise-based error
 % was: use_uniform_std
 
-if any(strcmp(integr_ref,{'PNM', 'intern'}))
+if strcmp(integr_ref,'PNM')    
     p31_integr_file = 'integr_results_31P_PNM.txt'; % integr_results_31P_pure_PO4.txt. default '31P'
 else
     p31_integr_file = 'integr_results_31P_pure_PO4.txt'; % integr_results_31P_pure_PO4.txt. default '31P'
@@ -140,10 +137,10 @@ end
 
 %% Data variables
 %=======================================================
-CURDIR = optns.nmr_data_path;
+CURDIR = '/Users/yar/_eth2/data_NMR/spectra';
 % CURDIR = '~/Desktop/BK2017/NMR';
 
-dset_t0 = cellfun(@(x) get_time0(optns.nmr_data_path,x), dset); % uses helper func (see EOF)
+dset_t0 = cellfun(@(x) get_time0(x), dset); % uses helper func (see EOF)
 
 dset_exp_31P = {...
     cell2mat(arrayfun(@(x) str2num(x.name), dir(fullfile(CURDIR,dset{1},'5*')), 'unifo', 0))';
@@ -332,7 +329,7 @@ p31_norm = p31_raw;
 for i=1:numOfSets
     % NTP_RNA_border
 %     p31_raw(i) = getNMRData3(dset{i},dset_exp_31P{i},dset_t0{i},'31P',2,2,'',noise_31P); % 1st row - ref spectrum. 1st column - TopSpin spectr index. 
-    p31_raw(i) = getNMRData4(dset{i},dset_exp_31P{i},dset_t0{i}, p31_integr_file, 2,2, CURDIR, noise_31P); % 1st row - ref spectrum. 1st column - TopSpin spectr index. 
+    p31_raw(i) = getNMRData4(dset{i},dset_exp_31P{i},dset_t0{i}, p31_integr_file, 2,2,'',noise_31P); % 1st row - ref spectrum. 1st column - TopSpin spectr index. 
         
     % Referencing / scaling.
     % PO4 is already referenced during integration. 
@@ -621,8 +618,8 @@ end
 
 %% Helper functions
 %==============================
-function time0 = get_time0(nmr_data_path, dset)
-    CURDIR = nmr_data_path;
+function time0 = get_time0(dset)
+    CURDIR = '/Users/yar/_eth2/data_NMR/spectra';
 
     notes_path = fullfile(CURDIR,dset,'notes.txt');
 

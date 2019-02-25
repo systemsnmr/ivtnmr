@@ -40,7 +40,7 @@ dset_names = {...
 
 analyze_subset = [8 11];
 analyze_subset = [1 8 11];
-analyze_subset = [1];
+% analyze_subset = [1];
 
 
 %% Which sections to run:
@@ -103,7 +103,6 @@ if run_cds_initial || run_all
     % 'ivtnmr' dataset files
     cds_optns.flag_exlude_hsqc_for_initial_dsel_generation = 1;
     cds_optns.dset_names = dset_names;
-    cds_optns.nmr_data_path = NMR_DATA_PATH;
     cds_multi(cds_optns);
 end;
 
