@@ -1,0 +1,18 @@
+##TITLE= Audit trail, TOPSPIN		Version 3.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= yaroslav
+$$ /opt/topspin/data/yaroslav/nmr/170310_IN70a_pR02_co-UP1_303K_600/190/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2017-03-11 16:48:45.928 +0100>,<yaroslav>,<six>,<go>,<TOPSPIN 3.2>,
+      <created by zg
+	started at 2017-03-11 16:42:07.336 +0100,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       E3 FA 72 CD 7B BF EF 27 71 77 70 87 51 2F 1E 26
+       data hash MD5: 16K
+       D3 93 6E 6F 9C 45 B3 0D FF 47 39 B5 04 56 83 FD>)
+##END=
+
+$$ hash MD5
+$$ A0 78 0F 4A 2D 24 34 48 56 14 12 6F 1A 49 9A 67
