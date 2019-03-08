@@ -41,29 +41,30 @@ dset_names = {...
 analyze_subset = [8 11];
 analyze_subset = [1 8 11];
 % analyze_subset = [1];
+% analyze_subset = [11];
 
 
 %% Which sections to run:
 %==========================
 run_all = 1; % makes as if all below are TRUE
 % ---
-run_cds_initial = 0;
+run_cds_initial = 1;
     cds_optns.plot_hsqc = 0;
     cds_optns.plot_p31 = 0;
-    cds_optns.plot_final = 0;    
+    cds_optns.plot_final = 1;    
     cds_optns.data_for_fit = fullfile(pwd,'data_for_fit');
 
 run_collect_csp = 0;
     export_data = 1;
     plot_csp_results = 0;
     
-run_gen_ivtnmr_from_dsel = 1;
+run_gen_ivtnmr_from_dsel = 0;
     plot_gen_ivtnmr_results = 1;
     save_to_global_ivtnmr = 1; % will save into NMR-spectra directory too.
 
-run_add_csp = 1;
+run_add_csp = 0;
 
-run_interpolate_p31 = 1;
+run_interpolate_p31 = 0;
     interp_optns.save_to_global_ivtnmr = 1;
     interp_optns.plot_results = 0;
 

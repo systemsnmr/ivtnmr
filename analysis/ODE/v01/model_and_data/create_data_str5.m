@@ -131,7 +131,7 @@ end
 err_calc = 1; % 1: std of 1st and 2nd pt. 2: uniform (max) std from (1). 3: noise-based error
 % was: use_uniform_std
 
-if any(strcmp(integr_ref,{'PNM', 'intern'}))
+if strcmp(integr_ref,'PNM')
     p31_integr_file = 'integr_results_31P_PNM.txt'; % integr_results_31P_pure_PO4.txt. default '31P'
 else
     p31_integr_file = 'integr_results_31P_pure_PO4.txt'; % integr_results_31P_pure_PO4.txt. default '31P'

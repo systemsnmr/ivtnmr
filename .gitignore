@@ -1,6 +1,7 @@
 # ignore some files
 .DS_store
 *m~
+EDIT_BETTER_z_EXAMPLE_not_git
 # Include others
 # except foo.html which is maintained by hand
 # !foo.html
