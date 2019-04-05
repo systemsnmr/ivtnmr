@@ -138,6 +138,8 @@ Step-by-step procedure:
 
 2. For quick visualization / comparison of data in TopSpin - see helper scripts: `res.py` (reading data by giving only parts of dataset name), `md.py` (overlaying series), `zim.py` and `zh33.py` (zooming on specific regions of spectra).
 
+2. Except for 31P spectra - the phases of 1D1H, 1D1H-iminos and 2DHN spectra need to be detemined manually for optimal results. For 1D1H and 2DHN - ideally the common phase for time-resolved series is determined not on the first (time0) spectrum, but on the second spectrum - one after T7 addition. One might want to check the phases of 2DHN and 1D1H time0 spectra then (these might be slightly different from "time1" spectra).
+
 3. Process 1D31P:
   - `qumulti 5000-5500`
   - example of processing command (check only SR corrections, in our setup phase seems determined robustly enough by `apks` routine):
