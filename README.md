@@ -1,10 +1,10 @@
-
 <!--If/when exporting as HTML(then pdf) -- remove the :exclamation:warning: stuff (d n load icons locally)-->
 
 Supplementary protocol for:
+
 ### Systems NMR: simultaneous quantification of RNA, protein, and metabolite reaction dynamics for biomolecular network analysis
 
-*Yaroslav V. Nikolaev, Nina Ripin, Martin Soste, Paola Picotti, Dagmar Iber and  Frédéric H.-T. Allain (ETH Zürich, Switzerland)*
+*Yaroslav Nikolaev, Nina Ripin, Martin Soste, Paola Picotti, Dagmar Iber and  Frédéric H.-T. Allain (ETH Zürich, Switzerland)*
 
 Corresponding authors: yaroslav.v.nikolaev__gmail.com or allain__mol.biol.ethz.ch
 
@@ -14,18 +14,54 @@ Most up-to-date version of the protocol (including example code and data): [gith
 
 ----
 ## Table of contents
+[ Abstract/Intro ](#intro)</br>
+[ Reagents ](#reagents)</br>
+[ Equipment ](#equipment)</br>
+[ Procedure ](#procedure)</br>
 [ A. Design and prep of RNA templates and protein ](#sample_prep)</br>
 [ B. Setup of transcription-NMR reaction ](#rxn_setup)</br>
 [ C. Data processing ](#data_processing)</br>
 [ D. Data analysis and model fitting ](#data_analysis)</br>
 [ E. Parameter (reaction constant) uncertainty ](#param_uncertainty)</br>
-[ G. Adjusting ODE model ](#ode_change)</br>
-<!--[ H. Future improvements ](#improvements)  -->
-[ X. Disclaimer: Limitations of Liability for the code ](#liability)</br>
+[ F. Adjusting ODE model ](#ode_change)</br>
+[ Anticipated results ](#results)</br>
+[ Acknowledgements ](#acknowledgements)</br>
+<!--[ Future improvements ](#improvements)  -->
+[ Disclaimer: Limitations of Liability for the code ](#liability)</br>
 
 ---
-## Procedure
+<a name="intro"></a>
+## Abstract/Intro
+The protocol describes how to setup and analyse observation of a co-transcriptional RNA folding network by Systems NMR approach. While most experimental approaches can monitor only a single molecule class or reaction type at a time, Systems NMR permits single-sample dynamic quantification of entire “heterotypic” networks – involving different reaction and molecule types. It thus provides a deeper systems-level understanding of biological network dynamics by combining the dynamic resolution of biochemical assays and the multiplexing ability of “omics”.
+    This particular protocol describes the reconstruction of an 8-reaction co-transcriptional network - with simultaneous monitoring of RNA, metabolite, and proteins in a single sample at the same time. From reactions side, the protocol simultaneously quantifies RNA transcription, RNA folding and RNA-protein interactions (observed both from RNA and from protein side) and few other auxiliary reactions. In addition to fundamental analyses of reaction constants under different conditions, the current applications of this particular reconstruction are to (1) monitor co-transcriptional RNA folding perturbations by proteins and small molecules, and (2) to monitor RNA-transcription-driven protein phase-separation with the possibility to observe multiple proteins at once, each with residue-level resolution. Not counting the protein and RNA template preparation times, the NMR measurement and data analysis parts take about 1 day each.
 
+<a name="reagents"></a>
+## Reagents
+### DNA/RNA template prepation:
+
+- Standard DNA cloning, bacterial expression and DNA purification reagents
+- Midi/Maxi kit for DNA purification allowing to purify ≥ 250 ug plasmid DNA
+- NEB buffer 3.1
+- BsaI enzyme for plasmid linearization
+
+### In-vitro-transcription in NMR tube
+- 5mm (or 3mm) NMR tubes (TA type is ok)
+- 20x transcription buffer (TTD77): 800 mM Tris-HCl, pH 7.7, 0.2% Triton X-100, 100 mM dithiothreitol (DTT).
+- 0.5mM DSS (4,4-dimethyl-4-silapentane-1-sulfonic acid) solution in D2O
+- 80 mM nucleotide triphosphate (NTP) solutions (for each NTP, Applichem, ATP: A1348.0005; GTP: A1803.0001; CTP: A2145.0500; UTP: A2237.0001) - adjusted to pH 7.7-8.
+- 1M MgCl2
+- 100 U/ml Inorganic Pyrophosphatase from baker’s yeast (Sigma)
+- ~70 uM (7 g/l 100 kDa) - 250x T7 RNA Polymerase (usually prepared in-house)
+- [If protein observations are planned]: RNA-binding protein of interest
+
+<a name="equipment"></a>
+## Equipment
+- Standard DNA cloning, bacterial expression and DNA purification equipment
+- NMR spectrometer with 1H + 31P cryoprobe (e.g. CPQCI), and ≥ 500 MHz 1H frequency (~12 Tesla)
+- Computer with TopSpin and Matlab software
+
+<a name="procedure"></a>
+## Procedure
 <a name="sample_prep"></a>
 ### (A) Design and preparation of RNA transcription template(s), and protein (~8 days)
 
@@ -71,7 +107,7 @@ Run small-scale transcriptions (~25 µl is enough) and analyze them using denatu
 #### 3. Buffer exchange for protein of interest (~0.5 day)
 To match the starting Tris-Triton-DTT (TTD) transcription buffer, transfer your protein into: 40 mM Tris-HCl, 0.01% Triton-X100, 5 mM Dithiothreitol, pH 7.7. From our experience many proteins are stable in this buffer. To stabilize the protein more, one can potentially add:
   - 50 mM L-Arg/L-Glu (this leads to increased broadening of imino signals)
-  - up to ~50 mM NaCl / KCl (salt decreases transcription efficiency)
+  - up to ~75 mM NaCl / KCl (salt decreases transcription efficiency)
   - ~1 mM NTPs - these seem capable to mask RNA-binding interfaces, reducing self-aggregation of protein through those. Added NTPs need to be taken into account in the total NTP concentration -- for addition of MgCl2, and for setting the initial concentrations during ODE network modeling.
 
 <a name="rxn_setup"></a>
@@ -197,7 +233,7 @@ Run `analysis/LW/a_fit_LW.m` to fit and visualize imino linewidths. This fitting
 - **FIM.** The standard Fisher Information Matrix / Cramer Rao bound also often yields unrealistically narrow or unrealistically large uncertainties - most likely due to the lack of reasonable error estimates on the individual NMR integral / chemical shift data points.
 
 <a name="ode_change"></a>
-### (G) Adjusting ODE model
+### (F) Adjusting ODE model
 1. In [RuleBender](http://visualizlab.org/rulebender/) software (or just text editor): **edit the BioNetGen network** definition (`ODE/v01/model_and_data/xIVT.bngl`). For downstream fitting it is important to match the number and order of defined observables to the data vectors you actually provide for model fitting.
 
 2. In shell/terminal: **recompile the model**.
@@ -218,6 +254,25 @@ Run `analysis/LW/a_fit_LW.m` to fit and visualize imino linewidths. This fitting
    - If added new constants/params: check their init values in the `a_fit.m`, file and/or exclude from optimization. And potentially add their normalization and saving into the output of model fit results.
 
 **Note**: In the used here implementation BioNetGen cannot provide arbitrary rate laws and algebraic constants for scaling. If want such things included - need to specify them in the final `*.mdf` file used for fitting - similar to what we do for RNA length definition. Alternatively one can switch to e.g. [PottersWheel](https://potterswheel.de/) software which provides more advanced, up-to-date and fully integrated environment for model definition and optimization, including model optimization in log-space.
+
+<a name="results"></a>
+## Anticipated results
+- Overall pattern of RNA iminos - reporting on the structural fold of the RNA.
+
+- Time-resolved LineWidths of RNA imino signals - quantitatively reporting on structural in RNA during transcription reaction. Linewidths are convertible to ∆G - free energy of folding, when the intrinsic and base-flipping rates of imino exchange (kex,intrinsic and kex,base-flipping) are known.
+
+- Time-resolved and RNA-concentration resolved chemical shift and signal intensity perturbations for all observable residues in the protein of interest - reporting on potential interaction sites / structural changes in the protein.
+
+- Kd of the protein-RNA interaction (if protein becomes saturated during reaction, and/or if chemical shifts of protein residues in RNA-saturated state are known).
+
+- kcat rate of RNA transcription.
+
+- Individual rates of ATP, GTP, UTP, CTP consumption (currently not yet implemented in the automated analysis).
+
+<a name="acknowledgements"></a>
+## Acknowledgements
+We thank J. Vollmer and G. Fengos for the help with network modeling. We acknowledge G. Wider and all members of the ETH BNSP platform for excellent maintenance of the NMR infrastructure. We thank all members of the Allain Lab, in particular F. Damberger, and the Parpan retreat participants for helpful discussions. This work was supported by the Promedica Stiftung, Chur (Grant 1300/M to Y.N.), Novartis Foundation and Krebsliga Zurich (Y.N.), NCCR RNA and Disease by the Swiss National Science Foundation (F.A. and N.R.).
+
 
 <a name="liability"></a>
 ### (X) Disclaimer: Limitations of Liability for the code
