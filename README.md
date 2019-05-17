@@ -1,14 +1,15 @@
 <!--If/when exporting as HTML(then pdf) -- remove the :exclamation:warning: stuff (d n load icons locally)-->
+<!--Maybe include figures for typical results?-->
 
 Supplementary protocol for:
 
-### Systems NMR: simultaneous quantification of RNA, protein, and metabolite reaction dynamics for biomolecular network analysis
+### Systems NMR: single-sample quantification of RNA, protein, and metabolite dynamics for biomolecular network analysis
 
 *Yaroslav Nikolaev, Nina Ripin, Martin Soste, Paola Picotti, Dagmar Iber and  Frédéric H.-T. Allain (ETH Zürich, Switzerland)*
 
 Corresponding authors: yaroslav.v.nikolaev__gmail.com or allain__mol.biol.ethz.ch
 
-Most up-to-date version of the protocol (including example code and data): [github.com/systemsnmr/ivtnmr](github.com/systemsnmr/ivtnmr)
+The most up-to-date version of the protocol (including example code and data): [github.com/systemsnmr/ivtnmr](github.com/systemsnmr/ivtnmr)
 
 **Note:** This is not a software distribution package. Code provided with the protocol serves primarily as an example/guideline - it may require adjustment to your particular setup, and may not function properly in your environment.
 
@@ -18,12 +19,12 @@ Most up-to-date version of the protocol (including example code and data): [gith
 [ Reagents ](#reagents)</br>
 [ Equipment ](#equipment)</br>
 [ Procedure ](#procedure)</br>
-[ A. Design and prep of RNA templates and protein ](#sample_prep)</br>
-[ B. Setup of transcription-NMR reaction ](#rxn_setup)</br>
-[ C. Data processing ](#data_processing)</br>
-[ D. Data analysis and model fitting ](#data_analysis)</br>
-[ E. Parameter (reaction constant) uncertainty ](#param_uncertainty)</br>
-[ F. Adjusting ODE model ](#ode_change)</br>
+[ - A. Design and prep of RNA templates and protein ](#sample_prep)</br>
+[ - B. Setup of transcription-NMR reaction ](#rxn_setup)</br>
+[ - C. Data processing ](#data_processing)</br>
+[ - D. Data analysis and model fitting ](#data_analysis)</br>
+[ - E. Parameter (reaction constant) uncertainty ](#param_uncertainty)</br>
+[ - F. Adjusting ODE model ](#ode_change)</br>
 [ Anticipated results ](#results)</br>
 [ Acknowledgements ](#acknowledgements)</br>
 <!--[ Future improvements ](#improvements)  -->
@@ -33,7 +34,8 @@ Most up-to-date version of the protocol (including example code and data): [gith
 <a name="intro"></a>
 ## Abstract/Intro
 The protocol describes how to setup and analyse observation of a co-transcriptional RNA folding network by Systems NMR approach. While most experimental approaches can monitor only a single molecule class or reaction type at a time, Systems NMR permits single-sample dynamic quantification of entire “heterotypic” networks – involving different reaction and molecule types. It thus provides a deeper systems-level understanding of biological network dynamics by combining the dynamic resolution of biochemical assays and the multiplexing ability of “omics”.
-    This particular protocol describes the reconstruction of an 8-reaction co-transcriptional network - with simultaneous monitoring of RNA, metabolite, and proteins in a single sample at the same time. From reactions side, the protocol simultaneously quantifies RNA transcription, RNA folding and RNA-protein interactions (observed both from RNA and from protein side) and few other auxiliary reactions. In addition to fundamental analyses of reaction constants under different conditions, the current applications of this particular reconstruction are to (1) monitor co-transcriptional RNA folding perturbations by proteins and small molecules, and (2) to monitor RNA-transcription-driven protein phase-separation with the possibility to observe multiple proteins at once, each with residue-level resolution. Not counting the protein and RNA template preparation times, the NMR measurement and data analysis parts take about 1 day each.
+
+This particular protocol describes the reconstruction of an 8-reaction co-transcriptional network - with simultaneous monitoring of RNA, metabolite, and proteins in a single sample at the same time. From reactions side, the protocol simultaneously quantifies RNA transcription, RNA folding and RNA-protein interactions (observed both from RNA and from protein side) and few other auxiliary reactions. In addition to fundamental analyses of reaction constants under different conditions, the current applications of this particular reconstruction are: (1) map RNA-binding interfaces on proteins without having to purify/order the RNA; (2) monitor co-transcriptional RNA folding perturbations by proteins and small molecules; (3) monitor RNA-transcription-driven protein phase-separation with the possibility to observe multiple proteins at once, each with residue-level resolution. Not counting the protein and RNA template preparation times, the NMR measurement and data analysis parts take about 1 day each.
 
 <a name="reagents"></a>
 ## Reagents
@@ -168,20 +170,30 @@ Step-by-step procedure:
 9. Start experiment series (`qumulti ##-##`).
 
 <a name="data_processing"></a>
-### (D) Data processing (>= 1 hour per sample)
+### (C) Data processing (>= 1 hour per sample)
+
+TopSpin may show errors "Can't display data" or "NullPointerExceptions" during execution of the below automated python scripts. In most cases these two errors can be ignored. The log/comments of these script operations are output into TopSpin shell/console window and also into processing.log file inside the project directory.
 
 1. Sort experiments: `sort.py`. This script sorts data by experiment type, adds rough experiment time to the title, creates cara repository with linked 2DHN spectra and `integr_datasets_31P.txt` file for 31P integration. See script header for details. For auto-generation of cara repository, two fragments of final repository (`180917_INx_blank_1top.cara`, `180917_INx_blank_2bottom.cara`) need to be present in the py/user directory.
 
 2. For quick visualization / comparison of data in TopSpin - see helper scripts: `res.py` (reading data by giving only parts of dataset name), `md.py` (overlaying series), `zim.py` and `zh33.py` (zooming on specific regions of spectra).
 
-2. Except for 31P spectra - the phases of 1D1H, 1D1H-iminos and 2DHN spectra need to be detemined manually for optimal results. For 1D1H and 2DHN - ideally the common phase for time-resolved series is determined not on the first (time0) spectrum, but on the second spectrum - one after T7 addition. One might want to check the phases of 2DHN and 1D1H time0 spectra then (these might be slightly different from "time1" spectra).
+3. Except for 31P spectra - the phases of 1D1H, 1D1H-iminos and 2DHN spectra need to be detemined manually for optimal results. For 1D1H and 2DHN - ideally the common phase for time-resolved series is determined not on the first (time0) spectrum, but on the second ("time1") spectrum - after T7 addition. One might want to check the phases of 2DHN and 1D1H time0 spectra then (these might be slightly different from "time1" spectra).
 
-3. Process 1D31P:
-  - `qumulti 5000-5500`
-  - example of processing command (check only SR corrections, in our setup phase seems determined robustly enough by `apks` routine):
-  `SR -139; si 64k; wdw EM; lb 2; efp; apks; absf1 14; absf2 -26; absg 5; absn`
+4. Automated processing of all spectra is done by `inproc2.py` - see its header for details.
 
-4. Integrate: TopSpin `intser` command, pointing to the `integr_datasets_31P.txt` as the list of spectra to integrate (it should be created by `sort.py` in the dataset folder). Use default settings for integration - the calibration of integrals to internal NTP signal happens later during analysis.
+5. If using "manual" processing:
+  * 1D31P:
+    - `qumulti 5000-5500`
+    - example of processing command (check only SR corrections, in our setup phase seems determined robustly enough by `apks` routine):
+    - `SR -139; si 64k; wdw EM; lb 2; efp; apks; absf1 14; absf2 -26; absg 5; absn`
+
+  * 2DHN:
+      - `qumulti 4000-4500`
+      - example of processing command (check phase, SR corrections, STSI/STSR for the dimensions of the final spectrum, etc):
+      - `2 sr -26.41; 1 sr -2.676; 2 phc0 -264.203; 2 phc1 0; 2 si 8k; 1 si 512; 2 STSI 2214; 2 STSR 1512; 1 stsi 0; 1 stsr 0; 2 absf1 11; 2 absf2 5.5; 1 absf1 200; 1 absf2 80; absg 5; xfb n nc_proc 7; abs2; abs1`
+
+6. Integrate: TopSpin `intser` command, pointing to the `integr_datasets_31P.txt` as the list of spectra to integrate (it should be created by `sort.py` in the dataset folder). Use default settings for integration - the calibration of integrals to internal NTP signal happens later during analysis.
   - Integration regions we use:
   ```
   #   3.4714285714285715  1.5571428571428572   -- PO4
@@ -196,12 +208,7 @@ Step-by-step procedure:
   #   -19.052380952380954  -19.714285714285715 -- betaNTP
   ```
 
-4. Process 2DHN:
-    - `qumulti 4000-4500`
-    - example of processing command (check phase, SR corrections, STSI/STSR for the dimensions of the final spectrum, etc):
-    `2 sr -26.41; 1 sr -2.676; 2 phc0 -264.203; 2 phc1 0; 2 si 8k; 1 si 512; 2 STSI 2214; 2 STSR 1512; 1 stsi 0; 1 stsr 0; 2 absf1 11; 2 absf2 5.5; 1 absf1 200; 1 absf2 80; absg 5; xfb n nc_proc 7; abs2; abs1`
-
-5. Pick peaks in 2DHN spectra: create a project and a peaklist in a Cara repository, then pick peaks of interest and trace their positions across time series using peak aliasing in Cara Monoscope. The `sort.py` script creates a cara repository with linked spectra in the dataset folder. Downstream analysis scripts read the peaks information from cara repositories at the moment. If analyzing multiple datasets at once, it is, however, convenient instead of having multiple Cara files, to have one Cara file with each dataset represented by own project and peaklist. Useful shortcuts for peak tracing in Monoscope:
+7. Pick peaks in 2DHN spectra: create a project and a peaklist in a Cara repository, then pick peaks of interest and trace their positions across time series using peak aliasing in Cara Monoscope. The `sort.py` script creates a cara repository with linked spectra in the dataset folder. Downstream analysis scripts read the peaks information from cara repositories at the moment. If analyzing multiple datasets at once, it is, however, convenient instead of having multiple Cara files, to have one Cara file with each dataset represented by own project and peaklist. Useful shortcuts for peak tracing in Monoscope:
     - `Ctrl+1 / Ctrl+2` - move between spectra
     - `mp / ma` - move peak or its alias
     - `gp` - go to peak
@@ -209,7 +216,7 @@ Step-by-step procedure:
 
 
 <a name="data_analysis"></a>
-### (E) Data analysis and model fitting (≈ 0.5 day)
+### (D) Data analysis and model fitting (≈ 0.5 day)
 Unless stated otherwise, most below procedures are done in Matlab (`*.m` files).
 #### 1. Generate data structure for ODE model fit.
 Run `analysis/ODE/v01/model_and_data/gen_ivtnmr.m` - this script will read 31P integrals from above 31P integration file, and 2DHN chemical shifts from cara repository, and then create the data structure used by the ODE model fitting procedure in `ODE/v01/model_and_data/data_for_fit` folder. It will also generate "ivtnmr" data object in `ODE/v01/model_and_data/data_ivtnmr_full/` - which contains main information about IVTNMR experiment in one Matlab structure (names, number of time-points, integrals, chemical shifts, etc). The code in `v01` folder is largely self-contained - so its convenient to just duplicate and rename it (e.g. `v02_test`) to keep track of different versions when you're making adjustments to data analysis / model structure / etc.
@@ -227,7 +234,7 @@ Run `analysis/LW/a_fit_LW.m` to fit and visualize imino linewidths. This fitting
 <!-- ### 5. You can run `analysis/runall.m` script which will run all the above steps: generate data for fit, fit ODE model, fit imino LWs -->
 
 <a name="param_uncertainty"></a>
-### (F) Analysis of parameter (reaction constant) uncertainty
+### (E) Analysis of parameter (reaction constant) uncertainty
 - **Replicates.** Based on our current experience, the most sensible / realistic parameter uncertainties are obtained by running ≥2 experimental replicates - ideally using different batches of DNA template and/or protein. Basic code for calculation of such uncertainties is included in `analysis/ODE/v01/a_visualize.m` <!-- and `analysis/LW/a_visualize_LW.m`. -->
 - **Bootstrap.** Uncertainties obtained from bootstrap analysis (resampling of the full data vector with replacement prior to the fitting), in our setup yield too narrow confidence intervals - most likely due to very high number of recorded data points.
 - **FIM.** The standard Fisher Information Matrix / Cramer Rao bound also often yields unrealistically narrow or unrealistically large uncertainties - most likely due to the lack of reasonable error estimates on the individual NMR integral / chemical shift data points.
@@ -275,6 +282,6 @@ We thank J. Vollmer and G. Fengos for the help with network modeling. We acknowl
 
 
 <a name="liability"></a>
-### (X) Disclaimer: Limitations of Liability for the code
+## Disclaimer: Limitations of Liability for the code
 :exclamation::warning::exclamation:<span style="color:red">
 The code, pulseprograms, and especially TopSpin Python scripts, in this repository are provided "as is" - merely as a guideline for automated setup. These were not thoroughly tested on different spectrometers and may contain bugs and incompatibilities with TopSpin versions. Authors assume no responsibility, and shall not be liable to you or to any third party for any direct, indirect, special, consequential, indirect or incidental losses, damages, or expenses, directly or indirectly relating to the use or misuse of the code and pulseprograms provided here.:exclamation::warning::exclamation:</span>
