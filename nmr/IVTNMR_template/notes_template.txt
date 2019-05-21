@@ -1,10 +1,115 @@
-Added polymerase at <time0>XXXX-XX-XX XX:XX:XX</time0> (RNAP was ~10 min on ice)
 
-TOPSPIN 4 + NEO issues:
-- qumulti over a running queue is likely to skip the first experiment added with QUMULTI
-- GMT setting is still offset by ~1 hours in TopSpin/Computer (file timestamps) vs console (written to audita.txt)
-- Log file sometimes is not written
-- Because pulsecal not debugged yet - do P90H manually in IVTNMR_template - and keep it commented in the in_v02.yn.py setup script
+## Watch out:
+===================
+# - TOPSPIN 4 - qumulti over a running queue is likely to skip the first experiment added with QUMULTI !!!!
 
-- To ease automated sorting - record any non-standard experiments with expnos
-  ABOVE 500! (sort.py for sorting will take 12-500 by default)
+## Quick procedure outline:
+===================
+- create expt by copying temp calibration with edc
+- temperature calibration ~5' (lock, shim, run) (at least once a week)
+- insert sample
+- setup using: edpy in_v03*
+- in the notes.txt file -- search for " XX" - follow placeholders (action points) in the script:
+   - create experiment series using: edpy createExpSeries.py
+   - after adding T7 & putting sample into magnet - run "in_start_XX" script
+   - start series: qumulti ..
+
+- consider sometimes checking 1H, 31P atmm (tune/match) at the end of FULL series (in case if strongly detuned - pulses are not exactly 90-degree anymore - quantification may be off).
+
+## Notes
+===================
+Since ATMM is NOT SO STABLE (may detune over time), do either:
+  - check MANUALLY STABILITY OF ATMM after some minutes (if used EXACT optimization in the in_v0* script).
+  - do manual atmm first - wait until stable - use UNEXACT_TUNE_MATCH flag in the in_v0* script.
+
+- Post-series (if adding something after delay): always add an extra zg-sofast experiment at the beginning (expno 321) - to get fast events - if there are any!
+- Set post-series from expno 322 (normally 23-300 is the first - "CO"-transcriptional batch.)
+- To ease automated sorting later - record any non-standard experiments with expnos
+  ABOVE 500! (sorting script will take 12-500 by default)
+
+- Consider replacing zg-wg with zgesgp?! (better baseline, and we likely anyway don't care about high-Mw species in this spectrum!)
+
+
+
+## Experiments recorded in the reference set
+============================================
+12 zg-wg (to get individual NTPs in future)
+13 stocsy (not used much)
+14 1D31P
+15 2DHN (SFHMQC default)
+16 zg-sofast
+
+! If NTP signals give too much t1-noise - can include hsqcetgpsi_02.yn instead of SFHMQC - gradients filtering out this noise (but expt is less sensitive than sfhmqc).
+
+#-----------------------------------------------------------------------
+#-----------------------------------------------------------------------
+
+
+## Before CREATING series of repeating expts
+======================================
+## Check 31P pulse
+If you used INCLUDE_PAROPT:
+- 31P pulse is OK? XX (45.5-46us):
+re 4 999
+Do not need to perfectionize here. Because we are using internal referencing for quantification, if pulses are slightly off - does not affect quantification.
+
+
+## Check stability of tuning-matching for 1H and 31P
+This is especially important if you changed the buffer / tube type / etc - there is more tuning needed, the tuning mechanical rods are adjusted more, and the likelihood of detuning is higher.
+1H:
+re 3 100; .md no_load; rep 101; rep 102; rep 103
+31P:
+re 4 100; .md no_load; rep 101; rep 102; rep 103
+
+1H - OK? XX
+31P - OK? XX
+
+If want save the current tune-match state - start atmm and save into new procno:
+re 3; atmm;
+wbwr <PROCNO>
+
+If detuned too much - re-tune, and potentially recalibrate 1H pulse, and set the correct 1H pulse into all experiments.
+
+
+## Create the series
+======================================
+ XX
+edpy createExpSeries.py
+
+
+
+## START the series
+======================================
+
+## Timezone offset required below. In CH have: +0100 (winter), +0200 (summer)
+Added polymerase at <time0>XXXX-XX-XX XX:XX:XX +0200</time0>
+- Run the latest version of starting script (script requires time0 above to be set already).
+ XX
+edpy in_start*
+
+(Script does: lock, tune-match 1H and 31P, shim twice).
+
+ XX
+- Qumulti 22-300 > zg > press start
+- Be careful - if doing zg on exnpo 22, and then qumulti 23-300 - in TOPSPIN 4 - qumulti over a running queue is likely to skip the first experiment added with QUMULTI !!!! (i.e. in this case 23 will be skipped).
+
+## Post-series (if doing any):
+==============================
+
+- Adding protein (or buffer, for proper control of dilution effect):
+- XX (Normally used 45ul to not have more than 10% dilution)
+- Added after XX hours [13 hours]
+
+## Add experiments (if did not add them before):
+- see flag_post_series_addon in:
+ XX
+edpy createExpSeries.py
+
+- Add/Start with 321 - zg-sofast - to check for fast events!
+
+Time of addition:
+<time1>XXXX-XX-XX XX:XX:XX +0200</time1>
+
+After inserting the sample:
+-  XX: lock, atmm check, topshim twice
+-  XX: Start from 321 ..
