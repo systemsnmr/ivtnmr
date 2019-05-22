@@ -2,44 +2,21 @@
 ## Writes the time from start of the experiment into the title file.
 ## To be executed from within a dataset (not EDTE, etc).
 ## Can also generate cara repository with spectra links.
+## Check that all used pulse-program names are listed in the script!! (defines expt type by pulprog name)
 
 #tt2 - could also invoke inproc2 after execution.
 
-################
-#### If modified pulse-program names -- add those to the list!!
-################
-
 # TODO:
 # - Implement reading time from audita.txt !!! (cannot rely on timestamp of file modification!!)
-
-####################################
-### TODO-Plan for integration with inproc.py (see TopSpin python scripts - Task 24)
-# - Make a sort_ivtnmr.py function out of tt.py
-# - Spin out into MAIN FUNC
-# - Take 3 input args: dset name + sorting range
+# - Add flags for automatic archiving before and deletion of 12--500 dirs after?
 # - DO NOT SKIP EXPTS 12-19 even if they are empty! (in case if skipped refs)
-# - Read the expno in target dataset
-# - Execute the rest
-# 
-# - CALL THE SORT function from inproc - and wait until its finishes?!
-####################################
-
-####################################
-# TODO - do not skip expts from 12-19 (refs) even if they are empty
-# (e.g. as when non-recording 17-18
-## @Yar.Nikolaev. 2012-..
-
-## Options of the script:
-#==================================================
-## ..
-
-## TODO
-#==================================================
+#   (e.g. as when non-recording 17-18
+#-----
 # - LOG the results of sorting!
-# + Use default range? (e.g. 12-300) And set optional using an argument?
 # - Better check user input of arguments
-# - Functionalize properly - using __main__
 # - Add OPTIONS parsing
+
+## @Yar.Nikolaev. 2012-..
 
 ## Versions
 #==================================================
@@ -64,7 +41,15 @@
 	
 # 2018-09-17. @YN:
 	# - added automatic generation of an empty cara repository for 2DHN spectra
+# 2019-05-xx
+#   # - multiple improvements: reads expt time from audita.txt; takes into account UTC of EPU/blade, ...
 #==================================================
+try: # Try-catch to allow tests in normal Python (outside of TopSPin)
+    from TopCmds import *
+    RUNNING_IN_TOPSPIN = 1
+except:
+    RUNNING_IN_TOPSPIN = 0
+    pass
 
 from subprocess import call
 #import sys, os, time, shutil, commands, collections
@@ -74,10 +59,8 @@ import datetime
 import re
 from datetime import timedelta
 
-#MSG('- Mind that ForkLift when COPYING TOP DIR, not just folders! may change time from the magnet!!')
-
 flag_sort = 1
-flag_generate_cara_repo = 1
+flag_generate_cara_repo = 0
 flag_auto_process_data = 0 # will execute inproc2.py in the end
 
 start_time = time.time()
@@ -168,7 +151,7 @@ def sortFolders(expRange):
         # Write the time to the title (should happen only for actual experiments, not for "spacers" w/o pulprog)
         if writeTitles:
         	timeToTitle(exp,time0)
-														
+        															
         if (pulprog in zgPulprogs):
         	# Copies, preserving all modification dates
         	call(["cp", "-rpf", expFolder, datasetFolder+str(zgStart+zgCount)])
@@ -206,6 +189,58 @@ def directory_check(NAME):
         '<br><br>Some data may be overwritten! <br> Continue?!</html>') == 0:
         EXIT()
 
+def convert_datetime_to_UTC(t):
+    ret = datetime.datetime.strptime(t[0:19],'%Y-%m-%d %H:%M:%S')
+    if t[20]=='+':
+        ret-=timedelta(hours=int(t[21:23]),minutes=int(t[23:]))
+    elif t[20]=='-':
+        ret+=timedelta(hours=int(t[21:23]),minutes=int(t[23:]))
+    return ret
+
+
+def read_audita_times(expno_dir):
+    # print expno_dir
+    fname='%s/audita.txt'%expno_dir
+    f = open(fname,'r')
+
+    found_start = 0
+    found_end = 0
+
+    # Go line by line - trying to find end-time and start-time (usually end is first)
+    for line in f:
+        # print line
+                
+        if not found_end:
+            if "(   1,<" in line:
+                # print 'found end'
+                found_end = 1
+                end=line.split(',')[1]
+                end=end[1:-1] # drop flanking brackets
+                end=end.split()[:-1] # convert to array, drop last element (timezone) // cuz TS python cannot get pytz/tzinfo
+                ## For TopSpin3.2 - need to remove microseconds, old python, does not recognize:
+                end=' '.join(end)[:-4] # [:-4] - drops microseconds!
+                # end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M:%S.%f')
+                end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M:%S')
+                # print end
+            continue
+            
+        if not found_start:            
+            if "started at" in line:
+                # print 'found start'
+                found_start = 1
+                start=line.split()[2:4]
+                ## For TopSpin3.2 - need to remove microseconds, old python, does not recognize:
+                start=' '.join(start)[:-4] # [:-4] - drops microseconds!
+                # start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S.%f')
+                start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
+                # print start
+            continue
+
+    f.close()
+
+    center = start + (end-start)/2
+    return start, center, end
+
 
 def get_time0():
     notes_path = os.path.join(CURDIR,NAME,'notes.txt')
@@ -217,93 +252,79 @@ def get_time0():
     if len(matches) > 1:
         ERRMSG("Script aborted: more than one time0 tags found.")
     else:
+        # matches[0] = '2018-12-21 22:30:12 +0200' # DEBUG        
         print("notes.txt time0 = %s" % matches[0])
-        time0_parts = matches[0].split(' ')
+
+        time0_notes_txt = matches[0]
+        time0_parts = time0_notes_txt.split(' ')
         n_parts = len(time0_parts)
+        time0_field_length = len(time0_notes_txt)
 
-        if n_parts == 3:
-            print matches[0] + ': time0 has timezone'
-            print 'Assuming Op.System time and time0 in notes.txt were in same timezone - no need to change.'
-            print 'TODO: include UTC/timezone awareness - if using time from audita.txt in future.'
+        if n_parts==2 and time0_field_length==19:
+            msg_out = """
+            Time0 defined w/o timezone.
+            Assuming time0 in the notes.txt matches the timezone of audita.txt.
+            """
+            print(msg_out)
             time0 = datetime.datetime.strptime(' '.join(time0_parts[:2]), '%Y-%m-%d %H:%M:%S')
-            # print timezone_offset
 
-        elif n_parts == 2:
-            print matches[0] + ': time0 has no timezone'
-
-            aug_1_2018 = datetime.date(2018, 8, 1)
-            april_1_2019 = datetime.date(2019, 4, 1)
-
-            time0 = datetime.datetime.strptime(matches[0], '%Y-%m-%d %H:%M:%S')
-
-            if time0.date() < aug_1_2018:
-                print 'Date before Aug 2018. Assuming audita.txt, Op.System time and time0_notes are same timezone.'
-                # Leaves time0 intact
-
-            elif time0.date() >= april_1_2019:
-                ERRMSG("Aborting .. (After April 1 2019, expecting time0 in notes.txt to have timezone included!)")
-
-            else:
-                print 'Date between Aug 2018 and April 2019. UTC difference not fixed. Assuming time0_notes is in UTC (like in EPU/blade), and system time (real time) is one hour later - +0100 (CET).'
-                time0 = time0 + timedelta(hours=1)
-                print 'time0 after +1-hour correction:' + str(time0)
-
+        elif n_parts==3 and time0_field_length==25 and len(time0_parts[2])==5:
+            msg_out = """
+            Time0 defined with timezone. 
+            Assuming >=TopSpin4 and >=NEO console, and
+            converting time0 to UTC to match audita format.
+            """
+            print(msg_out)
+            time0 = convert_datetime_to_UTC(time0_notes_txt)
         else:
-            ERRMSG("Something went wrong with parsing time0 stamp, aborting..")
-    
+            error('Unrecognized time0 format (expecting: YYYY-MM-DD HH:MM:SS x0000). Aborting..\n')
+
     print "Final time0: " + str(time0)
+    # exit() # DEBUG
     return time0
 
+def get_time_difference(expno_dir,time0):
+    """
+    Calculates time center point of the experiment (from audita.txt).
+    Returns timedelta between the center of expt and time0.
+    This should result in ~identical time as with getNMRtime Matlab.
+    """
+    # ideas: stackoverflow - how-to-get-file-creation-modification-date-times-in-python; + stuff from MMayzel
 
-def getTimeDifference(filename,time0):
-	"""
-	Calculates time difference between start of time-series (time0) and end time of current NMR experiment.
-	Returns the difference as a _string_ of the form Minutes:Seconds.
-	
-	Times calculated here provide only a rough timepoint.
-	A more accurate way to calculate time-point is to take acquisition start & end times from TopSpin acquisition
-	file, and then calculate a middle point from that. This is done in MatLab getNMRdata routine. 
-	"""
-	# some part taken from http://stackoverflow.com/questions/237079/how-to-get-file-creation-modification-date-times-in-python
-	t = os.path.getmtime(filename)
-	timeAtExperimentEnd = datetime.datetime.fromtimestamp(t)
-    # print timeAtExperimentEnd
-	timeDiff = timeAtExperimentEnd-time0
-	
-	# 2015-05-11: added DAYS in the diffMin calculation:
-	diffMin = timeDiff.days*24*60 + (timeDiff.seconds / 60)
-	diffSec = timeDiff.seconds - diffMin*60
-	#return str(diffMin) + ':' + str(diffSec)
-	# Add zero in front, if diffMin is only two-digit number
-	if diffMin<100:
-		diffMin = "00"+str(diffMin)
-	elif diffMin<1000:
-		diffMin = "0"+str(diffMin)		
-	return str(diffMin)
+    _, time_center, _ = read_audita_times(expno_dir)
+    timeDiff = time_center-time0
 
+    # 2015-05-11: added DAYS in the diffMin calculation:
+    diffMin = timeDiff.days*24*60 + (timeDiff.seconds / 60)
+    diffSec = timeDiff.seconds - diffMin*60
+    #return str(diffMin) + ':' + str(diffSec)
+    # Add zero in front, if diffMin is only two-digit number
+    if diffMin<100:
+        diffMin = "00"+str(diffMin)
+    elif diffMin<1000:
+        diffMin = "0"+str(diffMin)      
+    return str(diffMin)
 
 def timeToTitle(experiment,time0):
-	"""
-	Writes the time difference from the start to current experiment into the title file.
-	Does not overwrite if the file exists.
-	"""
-	experiment = str(experiment)
-	acqusFilePath = datasetFolder+experiment+'/'+'acqus'
-	titleFilePath = datasetFolder+experiment+'/pdata/1/title'
-
-	## If title exists - do not overwrite. Disabled for the moment (2016-09-09) - d n make sense anyway!?
-    # if os.path.exists(titleFilePath):
-	if 0:
-		print 'expno', experiment, ': title file exists - will not overwrite.'
-	else:
-		timeDiff = getTimeDifference(acqusFilePath,time0)
-		f = open(titleFilePath, 'w')
-		f.write( timeDiff )
-		f.close()
-
-	f = open(titleFilePath, 'r')
-	print 'expno', experiment, 'time =', f.readline()
-	#MSG(timeDiff)
+    """
+    Writes the time difference from the start to current experiment into the title file.
+    Does not overwrite if the file exists.
+    """
+    	
+    experiment = str(experiment)
+    # acqusFilePath = datasetFolder+experiment+'/'+'acqus'
+    expno_dir = os.path.join(CURDIR,NAME,experiment)	
+    titleFilePath = datasetFolder+experiment+'/pdata/1/title'
+    
+    # timeDiff = getTimeDifference(acqusFilePath,time0)
+    timeDiff = get_time_difference(expno_dir,time0)
+    
+    f = open(titleFilePath, 'w')
+    f.write( timeDiff )
+    f.close()
+    
+    print 'expno', experiment, 'time =', timeDiff
+    #MSG(timeDiff)
 
 
 ################################################################################
@@ -469,6 +490,10 @@ def main():
         
     if flag_auto_process_data:
         EXEC_PYFILE('inproc2.py')  
+
+### Constructs for debugging
+# print 'breakpoint reached', start                
+# EXIT() if RUNNING_IN_TOPSPIN else exit()                            
     
 # This is the standard boilerplate that calls the main() function.
 if __name__ == '__main__':
