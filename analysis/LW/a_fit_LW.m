@@ -1,55 +1,107 @@
-function a_fit_LW(nmr_data_path, dsets, imino_ppms, optns)
-% !!! ITS GOOD TO ANALYZE ONE SET - AND THEN SAVE LW TO IVTNMR !!!
-% Function for visualizing - make separate!
+function a_fit_LW(nmr_data_path, dsets, imino_ppm, optns)
+% a_fit_LW: reads 1D1H (expnos 5xxx) NMR data (multiple datasets possible); 
+% fits linewidths (assuming single lorentzian) at specific imino frequency; 
+% and plots time-resolved LineWidth. Saves intermediate data (spectra and fits) into *.mat files.
+% Saves final figure into EPS form.
+% 
+% Run with e.g.:
+%   a_fit_LW('/opt/topspin/.../...', {'dataset1', 'dataset2'}, 14.2, optns)
+%
+% Additional features:
+% - has an option to visualize the LineWidth fits - to check the quality
+% of the fitting.
+% - can calculate dG of the RNA -- but be careful, this depends on multiple
+% RNA- and buffer-specific parameters!!!!
+%
+% For details about setup and analysis protocol see github.com/systemsnmr/ivtnmr
 
-%%% Obligatory parameters
+%% Settings
+%=================
 if nargin == 0
     clear; close all;
     
     analysis_root = fullfile(pwd, '..');
     nmr_data_path = fullfile(analysis_root, '..', 'spectra');
 %     nmr_data_path = '/Volumes/Data/yar/_eth2/data_NMR/spectra/';
+    nmr_data_path = '/Volumes/Data/yar/scratch/SystemsNMR_data_2019';
                 
     dsets = {...
-        '170322_IN75a_EV2_co-UP1_303K_600'
         '180314_IN72b_SMN214_co-NUP1_303K_600'
+        '170322_IN75a_EV2_co-UP1_303K_600'
+%         '170322_IN75aa_EV2_co';
+%         '170402_IN75jj_EV2_post';
     };
-    imino_ppms = [13.18, 14.033, 13.518, 13.197, 11.937, 11.623];        
-end;
+    
+    optns.fit_width = 0.2; % in ppm. (earlier was using half-width here and not /2 below).
+    optns.fit_width = 0.06; % in ppm. (earlier was using half-width here and not /2 below).
+    imino_ppm_list = [13.22, 11.937, 13.197, 14.033, 13.518];
+    imino_ppm = imino_ppm_list(1); % select the imino to fit.
 
-% Defaults for optional parameters (are set all together at the moment)
-if any(nargin == [0 3])
-    optns.fitWidth = 0.1;
+    optns.reread_or_load_spectra = [1 1 1]; % Three parameters: [reread, save, load]
+    optns.refit_or_load_lw = [1 1 1]; % Three parameters: [refit, save, load]
+
+    optns.adjust_fitted_range_to_center_on_peak_max = 1; % not finished yet    
     
-    optns.display_lw = 1;    
-    optns.xaxis_start = 5; % h
-    optns.plotSym = 'o-';
+    %%% Display: LW fits
+    optns.displayFits = 1; % Shows fitting of spectra
+    optns.ppm_window_to_display = 0.5; % ppm around the peak - NOT IMPLEMENTED YET
+    optns.n_spectra_to_disp = 15; % Spectra shown when showing LW fits.    
     
-    optns.display_dG = 1; %% -- better exclude?!! -- this should be a separate analysis!
-    optns.temperature = 303; % in case if setting in the acqus is not exact.    
+    %%% Display: time-resolved LW
+    optns.xaxis_start = 0; % h
     
+    %%% Less frequently changed    
+    optns.temperature = 303; % for dG derivation. in case if setting in the acqus is not exact.        
     optns.save_figure = 1;
-%     optns.save_to_global_ivtnmr
+    optns.display_lw = 1; % LW versus time
+    optns.plotSym = 'o-';
+        
+    dset_id = cellfun(@(x) x(8:13), dsets, 'un', 0);
+    optns.legend = cellfun(@(x) x(10:end-9), dsets, 'un', 0);
 
-    optns.displayFits = 0;
-    optns.n_spectra_to_disp = 5; % Spectra shown when showing LW fits.    
+    %%% For Kop and deltaG derivation
+    optns.display_dG = 1; %% -- better exclude?!! -- this should be a separate analysis!
+    optns.kex_base_flip_plus_R2 = 61.4; % Hz: STSL1 TTD 28mM Mg 303K
+    kex_int_Ura_TTD = 1042983.7; % kex_int_Ura_TTRED = 2094645.5; % TTRED - with 50mM Arg/Glu
+    kex_int_Gua_TTD = 956480.3; % kex_int_Gua_TTRED = 1959861.5; % TTRED - with 50mM Arg/Glu
+    optns.kex_int = mean([kex_int_Ura_TTD, kex_int_Gua_TTD]);           
+    
 end;
 
-%% Fixed Settings
-%=====================
-iminoPPM = imino_ppms(1); % takes first imino by default
+scratchfile_prefix = strcat(mfilename);
+scratch_dir = 'datasave'; % for intermediate data
+datasave_dir = 'datasave'; % for final data
 
+    
+%% Extra options (usually unused if running by external call - thats why not)
+%===========================
+flag_unittest_spectra = 0;
+flag_unittest_LW = 0;
+
+flag_display_fit_details = 0;
+
+
+%% "Fixed" Settings
+%=====================
 fSize = 9;
 scale = 1;
 sbSide = 220;
 sbWidth = sbSide * scale;
 sbHeight = sbSide * scale;
-
-display_fit_details = 0;
 global FIG; FIG=0;
 
-addpath( genpath(fullfile(pwd,'lib')) );
 
+%% Initial prep / preallocation
+%=====================
+spec_flags = num2cell(optns.reread_or_load_spectra);
+lwfit_flags = num2cell(optns.refit_or_load_lw);
+[flag_reread_spectra, flag_save_spectra_to_scratch, flag_load_spectra_from_scratch] = ...
+    deal(spec_flags{:});
+[flag_refit_lw, flag_save_to_scratch, flag_load_from_scratch] = ...
+    deal(lwfit_flags{:});
+
+addpath( genpath(fullfile(pwd,'lib')) );
+dset_full_paths = cellfun(@(x) fullfile(nmr_data_path,x), dsets, 'un', 0);
 n_sets = numel(dsets);
 colors = lines(n_sets);
 plotLW_list = ones(1, n_sets);
@@ -63,44 +115,87 @@ kex_unfold_mean = cell(n_sets,1);
 Kop = cell(n_sets,1);
 dG_folding = cell(n_sets,1);
 dG_folding_mean = cell(n_sets,1);
-time = cell(n_sets,1);
 
-%% Actual fitting
+fitted_ppm_center = cell(n_sets,1);
+
+% to store spectra params:
+expt_names = cell(n_sets,1);
+time = cell(n_sets,1);
+S = cell(n_sets,1);
+
+% Create dirs if don't exist yet.
+if ~exist( datasave_dir ,'dir'), mkdir(datasave_dir), end;
+if ~exist( scratch_dir ,'dir'), mkdir(scratch_dir), end;
+
+%% Actual analysis
 %=====================
 
+%=====================
+if flag_reread_spectra
 for ds=1:n_sets    
-    files = cell2mat(arrayfun(@(x) str2num(x.name), dir(fullfile(nmr_data_path, dsets{ds},'6*')), 'un', 0));
-    expnos = files(files>=6000 & files<=6999)';
+        files = cell2mat(arrayfun(@(x) str2num(x.name), dir(fullfile(nmr_data_path, dsets{ds},'6*')), 'un', 0));
+        expnos = files(files>=6000 & files<=6999)';
 
-    time0 = get_time0(nmr_data_path, dsets{ds});
-    time{ds} = getNMRTime(dsets{ds},expnos,time0); % time = getNMRTime(datasetName,experiments,time0)
+        time0 = get_time0(nmr_data_path, dsets{ds});
+        time{ds} = getNMRTime_02(dset_full_paths{ds},expnos,time0); % time = getNMRTime(datasetName,experiments,time0)
 
-    % TODO:
-    % expt_names - derive from TIME
-    expt_names = arrayfun(@num2str, expnos, 'unif', 0);
+        % TODO:
+        % expt_names - derive from TIME
+        expt_names{ds} = arrayfun(@num2str, expnos, 'unif', 0);
 
-    rbSpectra = cellfun(@(x) fullfile(nmr_data_path, dsets{ds},x,'pdata/1/1r'), ...
-        arrayfun(@num2str, expnos, 'un', 0), 'un', 0);
+        rbSpectra = cellfun(@(x) fullfile(nmr_data_path, dsets{ds},x,'pdata/1/1r'), ...
+            arrayfun(@num2str, expnos, 'un', 0), 'un', 0);
+        
+        S{ds} = rbnmr(rbSpectra);
+        if flag_save_spectra_to_scratch; save( fullfile(scratch_dir, sprintf('%s_sp.mat', scratchfile_prefix)), 'S', 'time', 'expt_names'); end;                                
+end;
+end; % flag_reload spectra
 
-    pkBounds = [iminoPPM+optns.fitWidth iminoPPM-optns.fitWidth];
+if flag_load_spectra_from_scratch; load(fullfile(scratch_dir, sprintf('%s_sp.mat', scratchfile_prefix))); end;
 
-    %% Import spectra
-    %==============================
-    n_spectra = numel(expnos);
+if flag_unittest_spectra
+    UT_ref = load(fullfile(scratch_dir,'a_fit_LW_sp_UT1.mat'));
+    UT_ref = UT_ref.S;
+    UT_struct_fields(UT_ref,S);
+end;
 
-    S = rbnmr(rbSpectra);
+%=====================
+if flag_refit_lw
+for ds=1:n_sets            
+    
+    n_spectra = numel(S{ds});    
+    fit_half_width = optns.fit_width/2;
+    
+    if optns.adjust_fitted_range_to_center_on_peak_max
+        pkBounds_0 = [imino_ppm+fit_half_width imino_ppm-fit_half_width];
+        % TODO: spin out below "ints" and "ppms" functions into anonymous / external
+        % functions - they are repeating.
+        cutIds_0 = cellfun(@(x) find(x.XAxis < pkBounds_0(1) & x.XAxis > pkBounds_0(2)), S{ds}, 'un', 0);
+        ints_0 = cellfun(@(source,extract) source.Data(extract), S{ds}, cutIds_0, 'un', 0);
+        ppms_0 = cellfun(@(source,extract) source.XAxis(extract), S{ds}, cutIds_0, 'un', 0);
 
-    % Cut out the part for fitting:
-    cutIds = cellfun(@(x) find(x.XAxis < pkBounds(1) & x.XAxis > pkBounds(2)), S, 'UniformOutput', false);
-    ints = cellfun(@(source,extract) source.Data(extract), S, cutIds, 'UniformOutput', false);
-    ppms = cellfun(@(source,extract) source.XAxis(extract), S, cutIds, 'UniformOutput', false);
+        [~,max_pos] = cellfun(@(x) max(x), ints_0, 'un', 0);
+        ppm_at_max_pos = cellfun(@(x,y) x(y), ppms_0, max_pos, 'un', 0);
+
+        % Below results in individual ppm range for fitting each peak.            
+        pkBounds_array = cellfun(@(pos) pos+[fit_half_width, -fit_half_width], ppm_at_max_pos, 'un', 0);
+        cutIds = cellfun(@(x,bounds) find(x.XAxis < bounds(1) & x.XAxis > bounds(2)), S{ds}, pkBounds_array, 'un', 0);
+        ints = cellfun(@(source,extract) source.Data(extract), S{ds}, cutIds, 'un', 0);
+        ppms = cellfun(@(source,extract) source.XAxis(extract), S{ds}, cutIds, 'un', 0);
+    else        
+        % Cut out the part for fitting:
+        % Below uses the same fitting range for all peaks.
+        pkBounds_array = repmat({[imino_ppm+fit_half_width imino_ppm-fit_half_width]},n_spectra,1);
+        cutIds = cellfun(@(x,bounds) find(x.XAxis < bounds(1) & x.XAxis > bounds(2)), S{ds}, pkBounds_array, 'un', 0);
+        ints = cellfun(@(source,extract) source.Data(extract), S{ds}, cutIds, 'un', 0);
+        ppms = cellfun(@(source,extract) source.XAxis(extract), S{ds}, cutIds, 'un', 0);
+    end;
 
 
     %% Fit Lorentzian and calc data stats
     %=====================================
 
     % [YPRIME PARAMS RESNORM RESIDUAL] = LORENTZFIT(X,Y,P0,BOUNDS,NPARAMS,OPTIONS)
-
     [yprime,params,resnorm,residual] = deal( cell(n_spectra,1) );
 
     % Pre-allocate for results
@@ -117,9 +212,7 @@ for ds=1:n_sets
 
     for i=1:n_spectra
         % Fit
-    %     [yprime{i} params{i} resnorm{i} residual{i}] = lorentzfit(ppms{i},intensities{i},[],[]);
-    %     [yprime{i} params{i} resnorm{i} residual{i}] = lorentzfit2(ppms{i},ints{i},P0,[]);
-        [yprime{i} params{i} resnorm{i} residual{i}] = lorentzfit2(ppms{i},ints{i},P0,[],'3'); % zero baseline (no constant term
+        [yprime{i} params{i} resnorm{i} residual{i}] = lorentzfit2(ppms{i},ints{i},P0,[],'3'); % zero baseline (no constant term)
 
         % Calc stats    
         ymin(i) = min(ints{i});
@@ -141,7 +234,6 @@ for ds=1:n_sets
         yATxc(i) = C(i)+A(i);
 
         %%% Post-regression statistics
-        %%% Simplified version of stuff from imino_kex_SMN210_WESF_full_v9f_new_SMN29_110_CUG.m
         ydata = ints{i};
         n = length(ydata);
         p = length(params{i});
@@ -159,67 +251,51 @@ for ds=1:n_sets
         R2adj(i) = 1 - (SSResid/SSTotal)*(n-1)/(n-p);
 
         %%% Chi2
-        %%% This part was redefined slightly now (compared to
-        %%% imino_kex_SMN210_WESF_full_v9f_new_SMN29_110_CUG.m)
         r = yresid;
         dof(i) = n-p;
         mse(i) = SSResid/dof(i);
         rmse = sqrt(mse(i)); % kind-of sigma (error) - since don't have actual sigma(error) for each point.
         chi2(i) = sum((yresid./rmse).^2);
         chi2red(i) = chi2(i)/dof(i); % In our case this == 1, since we don't have experimental errors.
-        %%% As in F.Geier's code:
-        % gofP(i) = 1 - gammainc(chi2(i)/2,dof(i)/2);
-        %%% MIT code
-        gofP(i) = 1-chi2cdf(chi2(i),dof(i));
+        % gofP(i) = 1 - gammainc(chi2(i)/2,dof(i)/2); % F.Geier code:
+        gofP(i) = 1-chi2cdf(chi2(i),dof(i)); % MIT code
         gofPred(i) = 1-chi2cdf(chi2red(i),dof(i));
 
         % GOF: P(X>=Chi2)
-
         clear ydata n p r yresid SSResid SSTotal rmse
     end
 
 
     %% Derive kex, Kop and dG
     %============================
-    BF = S{1}.Acqus.BF1;
+    BF = S{ds}{1}.Acqus.BF1;
     if isfield(optns, 'temperature') && ~isempty(optns.temperature)
         var_T = optns.temperature; % K    
     else % read temperature from the audita.txt
-        var_T = S{1}.Acqus.TE;
+        var_T = S{ds}{1}.Acqus.TE;
     end;
     
     FWHM(imag(FWHM)~=0) = nan; % replace all complex numbers with NaNs
     lw{ds} = FWHM.*BF;
-    kex{ds} = lw{ds}*pi; % k = LW*pi = (FWHM*B0 field)*pi
-    kex_base_flip_plus_R2 = 61.4; % Hz: STSL1 TTD 28mM Mg 303K (see lorentzian_v04a_SMN.m)
+    fitted_ppm_center{ds} = P2; % a_fit_LW_many
     
-    kex_unfold{ds} = kex{ds} - kex_base_flip_plus_R2;
+    kex{ds} = lw{ds}*pi; % k = LW*pi = (FWHM*B0 field)*pi
+    
+    kex_unfold{ds} = kex{ds} - optns.kex_base_flip_plus_R2;
 
-    % % TTRED - with 50mM Arg/Glu
-    % kex_int_Ura_TTRED = 2094645.5; 
-    % kex_int_Gua_TTRED = 1959861.5;
-    % TTD - w/o Arg/Glu
-    kex_int_Ura_TTD = 1042983.7;
-    kex_int_Gua_TTD = 956480.3;
-    kex_int = mean([kex_int_Ura_TTD, kex_int_Gua_TTD]);
-
-    % This should be an under-estimate of dG - because the LW of ST2 in PO4/KCl
-    % is narrower than it would have been in TTD
-    Kop{ds} = kex_unfold{ds} ./ kex_int;
+    Kop{ds} = kex_unfold{ds} ./ optns.kex_int;
     const_R = 1.9858775; % cal K-1 mol-1
     dG = -const_R .* var_T .* log(Kop{ds}) ./ 1000; % kcal/mol
     dG_folding{ds} = -dG;
     dG_folding_mean{ds} = mean(dG_folding{ds});
     
     kex_unfold_mean{ds} = mean(kex_unfold{ds});
-    
-    % Need to include removal of T2?!
-    
+        
     %% Plot and display fit results
     %============================
-    if optns.displayFits && ds==1
+    if optns.displayFits
         rows = 5;
-        columns = n_spectra_to_disp;
+        columns = min([optns.n_spectra_to_disp, n_spectra]);
         sb = @(x) subplot(rows,columns,x,'FontSize',fSize);
 
         FIG=FIG+1;
@@ -228,7 +304,10 @@ for ds=1:n_sets
 
         % xticks = linspace(pkBounds(2),pkBounds(1),4);
 
-        for i=1:n_spectra_to_disp
+        for i=1:columns
+            % columns here is a subset of n_spectra -- so columns(i) is
+            % correctly mapped to "spectra"(i) (i.e. all values FWHM, etc
+            % are correct.
 
             %%% Disp data and fit
             %========================    
@@ -242,8 +321,9 @@ for ds=1:n_sets
                 );
             axis tight;
 
-        %     titleString = sprintf('%s | %.1f Hz',expt_names{i},FWHM(i)*S{i}.Procs.SF);
-            titleString = {expt_names{i},sprintf('LW*pi=%.1f Hz', FWHM(i)*S{i}.Procs.SF*pi)}; % TODO: should be BF here?!
+        %     titleString = sprintf('%s | %.1f Hz',expt_names{ds}{i},FWHM(i)*S{i}.Procs.SF);
+%             titleString = {expt_names{ds}{i},sprintf('LW*pi=%.1f Hz', FWHM(i)*S{ds}{i}.Procs.SF*pi)}; % TODO: should be BF here?!
+            titleString = {sprintf('%s  /  %.2f ppm  /  %s', dset_id{ds}, fitted_ppm_center{ds}(i), expt_names{ds}{i}),sprintf('LW=%.1f Hz', FWHM(i)*S{ds}{i}.Procs.SF)}; % TODO: should be BF here?!
             title(titleString,'FontSize',fSize,'Interpreter','None');
 
             %%% Disp residual
@@ -262,13 +342,14 @@ for ds=1:n_sets
             axis off;
             hold on;
 
-            if ~display_fit_details
+            if ~flag_display_fit_details
                 results = strcat(...
-                    sprintf('fitRange = %.1f %.1f',pkBounds(1),pkBounds(2)),{char(10)},...
+                    sprintf('fitRange = %.1f %.1f',pkBounds_array{i}(1),pkBounds_array{i}(2)),{char(10)},...
                     sprintf('ymin | C = %.0f | %.0f',ymin(i),C(i)),{char(10)},...
                     sprintf('FWHM = %.3f | %.3f',man_FWHM,FWHM(i)),{char(10)},...
                     sprintf('kex (FWHM*BF*pi) = %.3f',kex{ds}(i)),{char(10)},...
                     sprintf('dG_folding = %.2f',dG_folding{ds}(i)),{char(10)},...
+                    sprintf('ppm center = %.3f',fitted_ppm_center{ds}(i)),{char(10)},...
                     {char(10)},...
                     sprintf('Chi2red = %.3g',chi2red(i)),{char(10)},...
                     sprintf('R2adj = %.3f',R2adj(i)),{char(10)},...
@@ -276,7 +357,7 @@ for ds=1:n_sets
                 );
             else        
                 results = strcat(...
-                    sprintf('fitRange = %.1f %.1f',pkBounds(1),pkBounds(2)),{char(10)},...
+                    sprintf('fitRange = %.1f %.1f',pkBounds_array{i}(1),pkBounds_array{i}(2)),{char(10)},...
                     sprintf('ymin | C = %.0f | %.0f',ymin(i),C(i)),{char(10)},...
                     sprintf('ymax | yATxc = %.2g | %.2g',ymax(i),yATxc(i)),{char(10)},...
                     sprintf('ymax-ymin | A = %.2g | %.2g',yspread(i),A(i)),{char(10)},...
@@ -284,6 +365,7 @@ for ds=1:n_sets
                     sprintf('FWHM = %.3f | %.3f',man_FWHM,FWHM(i)),{char(10)},...
                     sprintf('kex (FWHM*BF*pi) = %.3f',kex{ds}(i)),{char(10)},...
                     sprintf('dG (RTln(kunf/kint)) = %.2f',dG(i)),{char(10)},...
+                    sprintf('ppm center = %.3f',fitted_ppm_center{ds}(i)),{char(10)},...
                     {char(10)},...
                     sprintf('Chi2 = %.2g',chi2(i)),{char(10)},...
                     sprintf('P(X>=Chi2) = %.2g',gofP(i)),{char(10)},...
@@ -303,8 +385,23 @@ for ds=1:n_sets
         end
     end % optns.displayFits
     
-    
-end % fit datasets    
+end % fit linewidths for each dataset
+
+d.time = time;
+d.lw = lw;
+d.dG_folding = dG_folding;
+
+if flag_save_to_scratch; save( fullfile(scratch_dir, sprintf('%s.mat', scratchfile_prefix)), 'd'); end;
+
+end; % flag_refit_lw
+
+if flag_load_from_scratch; load(fullfile(scratch_dir, sprintf('%s.mat', scratchfile_prefix))); end;
+
+if flag_unittest_LW
+    UT_ref = load(fullfile(scratch_dir,'a_fit_LW_UT1.mat'));
+    UT_ref = UT_ref.d;    
+    UT_struct_fields(UT_ref,d);
+end;
 
 
 %% Display
@@ -317,15 +414,15 @@ fig_handle = figure(FIG); set(figure(FIG), 'Color', repmat(1,1,3), 'Position', [
 sb = @(x) subplot(rows,columns,x,'FontSize',fSize+4);
 
     
-%%% Display kex
+%%% Display Linewidth
 %==============
 if optns.display_lw
     SB = 1; % Reset numbering of subplots for new figure
     sb(SB);
 
-    data_to_plot = lw;
+    data_to_plot = d.lw;
     
-    plot(time{1}(1:end)./60,data_to_plot{1}(1:end), optns.plotSym, 'LineWidth', plotLW_list(1), 'Color', colors(1,:));
+    plot(d.time{1}(1:end)./60,data_to_plot{1}(1:end), optns.plotSym, 'LineWidth', plotLW_list(1), 'Color', colors(1,:));
 
     hold on;
     axis tight;
@@ -333,21 +430,31 @@ if optns.display_lw
     ylabel('Linewidth [Hz]', 'FontSize', fSize+4);
     xlabel('time [h]', 'FontSize', fSize+4);
     
-    ymax_for_all_sets = max(cell2mat(cellfun(@(x) max(x), lw, 'un', 0)));    
+    ymax_for_all_sets = max(cell2mat(cellfun(@(x) max(x), d.lw, 'un', 0)));    
     ylim([0 ymax_for_all_sets*1.2]);
 
-    xmax_for_all_sets = max(cell2mat(cellfun(@(x) max(x), time, 'un', 0)))./60;    
+    xmax_for_all_sets = max(cell2mat(cellfun(@(x) max(x), d.time, 'un', 0)))./60;    
+    if xmax_for_all_sets < optns.xaxis_start
+        disp('xmax_for_all_sets lower than optns.xaxis_start, shifting axis window by 2h.');
+        optns.xaxis_start = xmax_for_all_sets-2;
+    end
     xlim([optns.xaxis_start xmax_for_all_sets]);
 
     if n_sets > 1
         for ds=2:n_sets
-            plot(time{ds}(1:end)./60,data_to_plot{ds}(1:end), optns.plotSym, 'LineWidth', plotLW_list(ds), 'Color',colors(ds,:));
+            plot(d.time{ds}(1:end)./60,data_to_plot{ds}(1:end), optns.plotSym, 'LineWidth', plotLW_list(ds), 'Color',colors(ds,:));
         end
     else
     end
     hold off;
+    
+    if isfield(optns, 'legend') && ~isempty(optns.legend)
+        axP = get(gca,'Position'); 
+        legend(optns.legend, 'Location', 'SouthOutside', 'FontSize', fSize+1);
+        set(gca, 'Position', axP);
+    end
 
-end % 
+end % optns.display_lw
 
 
 if optns.display_dG
@@ -358,12 +465,14 @@ if optns.display_dG
     SB = 2; % Reset numbering of subplots for new figure
     sb(SB);
 
-    plot(time{1}(1:end)./60,dG_folding{1}(1:end), optns.plotSym,'Color',colors(1,:));
+    plot(d.time{1}(1:end)./60,d.dG_folding{1}(1:end), optns.plotSym,'Color',colors(1,:));
     hold on;
     axis tight;
 
-    yax = get(gca,'Ylim');
-    ylim([mean(yax)-0.5 mean(yax)+0.5]);
+    dG_ymax_for_all_sets = max(cell2mat(cellfun(@(x) max(x), d.dG_folding, 'un', 0)));
+    dG_ymin_for_all_sets = min(cell2mat(cellfun(@(x) min(x), d.dG_folding, 'un', 0)));
+        
+    ylim([dG_ymin_for_all_sets-0.5 dG_ymax_for_all_sets+0.5]);
     
     xax = get(gca,'XLim');
     xlim([optns.xaxis_start xax(2)]);
@@ -373,26 +482,22 @@ if optns.display_dG
 
     if n_sets > 1
         for ds=2:n_sets
-            plot(time{ds}(1:end)./60,dG_folding{ds}(1:end), optns.plotSym,'Color', colors(ds,:));
+            plot(d.time{ds}(1:end)./60,d.dG_folding{ds}(1:end), optns.plotSym,'Color', colors(ds,:));
         end
     else
         hold off;
     end
     
-%         title_text = sprintf('%s (%.3g ppm)\n dG mean=%.3g kcal/mol', expt_title, iminoPPM, dG_folding_mean);
-    title_text = sprintf('dG (imino %.2f ppm) for', iminoPPM);
+%         title_text = sprintf('%s (%.3g ppm)\n dG mean=%.3g kcal/mol', expt_title, imino_ppm, dG_folding_mean);
+    title_text = sprintf('dG (imino %.2f ppm) for', imino_ppm);
     title({title_text, '(GU)UA(UA), TTD-Mg pH7.7, 30nt RNA', 'see code: dG deriv depends', 'on buffer, RNA size,', 'basetype and neighbors'}, 'FontSize', fSize+1);
-
-    if isfield(optns, 'legend') && ~isempty(optns.legend)
-        legend(optns.legend, 'Location', 'Best', 'FontSize', fSize+3);
-    end
     
 %     disp(dG_folding_mean);
          
 end % display_dG
 
 if optns.save_figure
-    file_name = sprintf('%s_%.3f_ppm_%.2f_fit.pdf', dsets{ds}, iminoPPM, optns.fitWidth);
+    file_name = sprintf('%s_%.3f_ppm_%s.pdf', strjoin(dset_id,'_'), imino_ppm, datestr(now,'yymmdd'));
     save_figure(fig_handle,file_name);
 end;    
 
@@ -404,7 +509,9 @@ function time0 = get_time0(data_dir,dataset_name)
     % <time>2016-08-16 13:08:30</time0>
     filetext = fileread(notes_path);
     pattern = '<time0>(.*?)</time0>';
-    time0 = regexp(filetext,pattern,'tokens','once');
+    time0 = regexp(filetext,pattern,'tokens');
+    assert(numel(time0) == 1, 'Abort: more than one time0 matches found in notes.txt.');    
+    time0 = char(time0{:}); % convert from cell to a string % 2017-07-19: added char()
     clear filetext;
 end
 
@@ -419,5 +526,3 @@ function save_figure(fig_handle,file_name)
     if ~exist( figure_export_dir ,'dir'), mkdir(figure_export_dir), end;
     print(fig_handle,fullfile(figure_export_dir, file_name),'-dpdf','-r1200')
 end
-
-
