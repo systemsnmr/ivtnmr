@@ -15,15 +15,21 @@ function a_fit_LW(nmr_data_path, dsets, imino_ppm, optns)
 %
 % For details about setup and analysis protocol see github.com/systemsnmr/ivtnmr
 
+% TODO
+% - Yaxis scale adapt to the data defined with xaxis_start (i.e. initial
+% points not influencing scale much).
+
 %% Settings
 %=================
 if nargin == 0
     clear; close all;
     
+    %%% Relative path. Works with test dataset in github repository
     analysis_root = fullfile(pwd, '..');
     nmr_data_path = fullfile(analysis_root, '..', 'spectra');
+    %%% Absolute paths
 %     nmr_data_path = '/Volumes/Data/yar/_eth2/data_NMR/spectra/';
-    nmr_data_path = '/Volumes/Data/yar/scratch/SystemsNMR_data_2019';
+%     nmr_data_path = '/Volumes/Data/yar/scratch/SystemsNMR_data_2019';
                 
     dsets = {...
         '180314_IN72b_SMN214_co-NUP1_303K_600'
@@ -33,7 +39,6 @@ if nargin == 0
     };
     
     optns.fit_width = 0.2; % in ppm. (earlier was using half-width here and not /2 below).
-    optns.fit_width = 0.06; % in ppm. (earlier was using half-width here and not /2 below).
     imino_ppm_list = [13.22, 11.937, 13.197, 14.033, 13.518];
     imino_ppm = imino_ppm_list(1); % select the imino to fit.
 
@@ -56,8 +61,12 @@ if nargin == 0
     optns.display_lw = 1; % LW versus time
     optns.plotSym = 'o-';
         
-    dset_id = cellfun(@(x) x(8:13), dsets, 'un', 0);
-    optns.legend = cellfun(@(x) x(10:end-9), dsets, 'un', 0);
+    % takes the second underscore-separated element as the ID of expt.
+    dset_split_arr = cellfun(@(x) regexp(x, '_', 'split'), dsets, 'un', 0);    
+    dset_id = cellfun(@(x) x{2}, dset_split_arr, 'un', 0);
+    dset_id_long = cellfun(@(x) sprintf('%s_%s_%s', x{2}, x{3}, x{4}), dset_split_arr, 'un', 0);
+    clear dset_split_arr;
+    optns.legend = dset_id_long;
 
     %%% For Kop and deltaG derivation
     optns.display_dG = 1; %% -- better exclude?!! -- this should be a separate analysis!
@@ -450,7 +459,7 @@ if optns.display_lw
     
     if isfield(optns, 'legend') && ~isempty(optns.legend)
         axP = get(gca,'Position'); 
-        legend(optns.legend, 'Location', 'SouthOutside', 'FontSize', fSize+1);
+        legend(optns.legend, 'Location', 'SouthOutside', 'FontSize', fSize+1, 'Interpreter', 'None');
         set(gca, 'Position', axP);
     end
 

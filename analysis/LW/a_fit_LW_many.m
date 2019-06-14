@@ -53,11 +53,14 @@ if nargin == 0
     optns.save_figure = 1;
     optns.display_lw = 1; % LW versus time
     optns.plotSym = 'o-';
+        
+    % takes the second underscore-separated element as the ID of expt.
+    dset_split_arr = cellfun(@(x) regexp(x, '_', 'split'), dsets, 'un', 0);    
+    dset_id = cellfun(@(x) x{2}, dset_split_arr, 'un', 0);
+    dset_id_long = cellfun(@(x) sprintf('%s_%s_%s', x{2}, x{3}, x{4}), dset_split_arr, 'un', 0);
+    clear dset_split_arr;
+    optns.legend = dset_id_long;
     
-    dset_id = cellfun(@(x) x(8:13), dsets, 'un', 0);
-%     optns.legend = cellfun(@(x) x(10:end-9), dsets, 'un', 0);
-    optns.legend = dset_id;
-
 %     optns.save_to_global_ivtnmr
 end;
 
@@ -439,7 +442,7 @@ if optns.display_lw
 
         if isfield(optns, 'legend') && ~isempty(optns.legend) && iImino==1
             axP = get(gca,'Position'); 
-            legend(optns.legend, 'Location', 'SouthOutside', 'FontSize', fSize+1);
+            legend(optns.legend, 'Location', 'SouthOutside', 'FontSize', fSize+1,'Interpreter','None');
             set(gca, 'Position', axP);
         end;
                 
