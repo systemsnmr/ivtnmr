@@ -16,7 +16,7 @@ global FIG; %
 % addpath('/Volumes/Data/yar/Dropbox/Programming/Matlab/tests');
 % addpath(genpath('/local/home/allainkurs1203/Desktop/BK2019/code/lib/rbnmr'));
 % addpath(genpath('./lib'));
-addpath(genpath(fullfile(pwd,'lib')));
+% addpath(genpath(fullfile(pwd,'lib')));
 
 %% Settings
 %===========================
@@ -42,7 +42,7 @@ rna_length = 20*0.3+6*0.7; % average between 30% full RNA, and 70% ~6nt aborts.
 x_end = 1100;
 
 dset_list = {   
-%     '190415_IN115a_pA20_co-P50N525_100uM_298K_600'
+% %     '190415_IN115a_pA20_co-P50N525_100uM_298K_600'
     '190314_IN107i_pA9_free_ATP_BK'
     '190306_IN107a_pA9_free_BK'
     '190311_IN111a_pA20_free_BK'
@@ -107,13 +107,13 @@ for i=1:n_sets
     dset_name = dset_list{i};
     expnos = dset_exp_31P{i};
     nmr_data = arrayfun(@(x) fullfile(CURDIR, dset_name, num2str(x), 'pdata/1/1r'), expnos, 'un', 0);
-    integrals_31p = integrate1D(nmr_data,intrng); % uses RBNMR
+    integrals_31p = lib.integrate1D(nmr_data,intrng); % uses RBNMR
     aNTP_conc{i} = (integrals_31p./integrals_31p(1)).*init_NTP_conc; % mM
     NTP_consumed = init_NTP_conc-aNTP_conc{i};
     rna_conc{i} = NTP_consumed./rna_length;
     
     % Get time vector
-    time_31p{i} = getNMRTime_02(fullfile(CURDIR, dset_name), expnos, dset_time0{i});
+    time_31p{i} = lib.getNMRTime_02(fullfile(CURDIR, dset_name), expnos, dset_time0{i});
 %     % Interpolate
 %     time_hn = getNMRTime(fullfile(nmr_data_path,dset_name), 4000:4053, time0);
 %     rna_conc_hn_time = interp1(time_31p, rna_conc, time_hn, 'linear', 'extrap');    
