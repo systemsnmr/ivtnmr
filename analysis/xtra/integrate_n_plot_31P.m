@@ -16,7 +16,8 @@ global FIG; %
 % addpath('/Volumes/Data/yar/Dropbox/Programming/Matlab/tests');
 % addpath(genpath('/local/home/allainkurs1203/Desktop/BK2019/code/lib/rbnmr'));
 % addpath(genpath('./lib'));
-% addpath(genpath(fullfile(pwd,'lib')));
+addpath(genpath(fullfile(pwd,'utils')));
+
 
 %% Settings
 %===========================
@@ -42,10 +43,10 @@ rna_length = 20*0.3+6*0.7; % average between 30% full RNA, and 70% ~6nt aborts.
 x_end = 1100;
 
 dset_list = {   
-% %     '190415_IN115a_pA20_co-P50N525_100uM_298K_600'
-    '190314_IN107i_pA9_free_ATP_BK'
+%%%     '190415_IN115a_pA20_co-P50N525_100uM_298K_600'
+%     '190314_IN107i_pA9_free_ATP_BK'
     '190306_IN107a_pA9_free_BK'
-    '190311_IN111a_pA20_free_BK'
+%     '190311_IN111a_pA20_free_BK'
     };
 
 %     dset_names = {...
