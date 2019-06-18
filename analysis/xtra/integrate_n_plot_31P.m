@@ -29,7 +29,7 @@ datasave_dir = 'datasave';
 
 % scratchdir = '/scratch/polyx';
 scratchdir = 'datasave';
-scratchfile_prefix = strcat(mfilename,'_2')
+scratchfile_prefix = strcat(mfilename);
 
 %% Data variables
 %=======================================================
@@ -48,12 +48,20 @@ dset_list = {
     '190311_IN111a_pA20_free_BK'
     };
 
-dset_names = {...
-%     'A20 (ATP) + P50N525'; 
-    'A9 (ATP)';
-    'A9 (4 NTPs)';
-    'A20 (4 NTPs)';
-    };
+%     dset_names = {...
+% %     'A20 (ATP) + P50N525'; 
+%     'A9 (ATP)';
+%     'A9 (4 NTPs)';
+%     'A20 (4 NTPs)';
+%     };
+
+    % takes the second underscore-separated element as the ID of expt.
+    dset_split_arr = cellfun(@(x) regexp(x, '_', 'split'), dset_list, 'un', 0);    
+    dset_id = cellfun(@(x) x{2}, dset_split_arr, 'un', 0);
+    dset_id_long = cellfun(@(x) sprintf('%s_%s_%s', x{2}, x{3}, x{4}), dset_split_arr, 'un', 0);
+    clear dset_split_arr;
+
+    dset_names = dset_id;
 
 intrng = [-10.4 -11.2];
 
