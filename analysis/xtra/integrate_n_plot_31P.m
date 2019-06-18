@@ -39,22 +39,17 @@ CURDIR = '/Users/yar/_eth2/data_NMR/spectra';
 % CURDIR = '/local/home/allainkurs1203/Desktop/BK2019/nmr_spectra';
 
 init_NTP_conc = 20; % mM
-rna_length = 20*0.3+6*0.7; % average between 30% full RNA, and 70% ~6nt aborts.
+rna_length = 31*0.3+6*0.7; % average between 30% full RNA, and 70% ~6nt aborts.
 x_end = 1100;
 
 dset_list = {   
 %%%     '190415_IN115a_pA20_co-P50N525_100uM_298K_600'
 %     '190314_IN107i_pA9_free_ATP_BK'
-    '190306_IN107a_pA9_free_BK'
+%     '190306_IN107a_pA9_free_BK'
 %     '190311_IN111a_pA20_free_BK'
+    '180308_IN93a_SLH_co-NPR1_303K_600'
+    '180315_IN95a_SLHar3_co-NPR1_303K_600'
     };
-
-%     dset_names = {...
-% %     'A20 (ATP) + P50N525'; 
-%     'A9 (ATP)';
-%     'A9 (4 NTPs)';
-%     'A20 (4 NTPs)';
-%     };
 
     % takes the second underscore-separated element as the ID of expt.
     dset_split_arr = cellfun(@(x) regexp(x, '_', 'split'), dset_list, 'un', 0);    
