@@ -34,6 +34,8 @@ analyse_PTBRRM1_SLH = 1;
 flag_run_assignments = 1;
 flag_load_assignments = 1;
 
+f_run_kd_fits = 1;
+
 % Switching Y-data
 % 1,2 - will overlay data from all datasets.
 % 3 (CSP+intens) - forces plotting only of the first dataset!
@@ -42,17 +44,13 @@ optns.yaxis = 1; % 1-CSP; 2-intensity; 3-both
 % Switching X-Axis data
 xaxis = 1; % 1 - spectrum id; 2 - time; 3 - 31P(RNA)
 
-%%% Selecting subsets (if have a list of sets defined, but want to plot
-%%% only a few):
-% select_dsets = [1:2 4]; % 1:2 4 - compares 3rd nucleotide
+%%% Select subsets (if have many defined, but want to plot only a few):
 % select_dsets = [1 3 5]; % 1:2 4 - compares 4th nucleotide
 
-% select_residues = [39 5 19 27 30 35 65 5 19 27 30 35 65 5 19 27 30 35 65 5 19 27 30 35];
 % select_residues = [1:57 59:61];
-select_residues = [1:10];
+select_residues = [1:3];
 
 % "select_spectra" - in reverse - QnD solution to fix nc_proc
-% drop_timepoints = [2 3 6];
 % drop_timepoints = [2 3 6 22:35]; % tmp hack - to match MAPPER vector to P50N525 time
 
 optns.colors = [...
@@ -75,23 +73,14 @@ current_dir = fileparts(mfilename('fullpath'));
 
 if ~analyse_PTBRRM1_SLH
     nmr_dataset_dirs = {
-        fullfile(current_dir,'..')
-        fullfile(current_dir,'..')
+        '/Volumes/Data/yar/Dropbox/_eth2/project_Measles/NMR/spectra/190415_IN115a_pA20_co-P50N525_100uM_298K_600'
+        '/Volumes/Data/yar/Dropbox/_eth2/project_Measles/NMR/spectra/190415_IN115a_pA20_co-P50N525_100uM_298K_600'
         };
 
-    dset_names = {...
-    %     'XXX'
-        'P50N525 A20'
-        'P50N525 A21'
-        };
-
-    %%% Mapper data
-    %============
     mapper_data_dirs = {
-    %     'XXX'
     %     fullfile(fileparts(mfilename('fullpath')), '..', 'mapper_data')
-        fullfile(fileparts(mfilename('fullpath')), '..', 'IN115a_mapper')
-        fullfile(fileparts(mfilename('fullpath')), '..', 'IN115a_mapper')
+        fullfile(nmr_dataset_dirs{1}, 'IN115a_mapper')
+        fullfile(nmr_dataset_dirs{1}, 'IN115a_mapper')
         };
     % s3_tracking dir - also contains intensities
     mapper_data_paths = cellfun(@(x) fullfile(x,'s3_tracking','trajectories_filtered.csv'), mapper_data_dirs, 'un', 0);
@@ -104,7 +93,7 @@ if ~analyse_PTBRRM1_SLH
     %%% Peaklists. If different for each set - provide multiple entries here.
     % If same for all sets - leave just one.
     %============
-    peaklist_dirs = {fullfile( current_dir, '..', 'peaklists' )};
+    peaklist_dirs = {fullfile( nmr_dataset_dirs{1}, 'peaklists' )};
     peaklist_names = {'peaks_start_mapper.peaks'};
     peaklist_paths = cellfun(@(x,y) fullfile(x,y), peaklist_dirs, peaklist_names, 'un', 0);
 
@@ -127,12 +116,7 @@ if analyse_PTBRRM1_SLH
 	'/Volumes/Data/yar/Dropbox/_eth2/data_NMR/spectra/180308_IN93a_SLH_co-NPR1_303K_600'
 	'/Volumes/Data/yar/Dropbox/_eth2/data_NMR/spectra/180315_IN95a_SLHar3_co-NPR1_303K_600'
     };
-    
-    dset_names = {...
-        'IN93a'
-        'IN95a'
-        };    
-           
+               
     mapper_data_dirs = {
     '/Volumes/Data/yar/Dropbox/Science/Projects/2015_NMR_peak_tracking/site_mapper/190321_PR1_SLH_C11/IN93a'
     '/Volumes/Data/yar/Dropbox/Science/Projects/2015_NMR_peak_tracking/site_mapper/190321_PR1_SLH_C11/IN95a'        
@@ -172,13 +156,14 @@ flag_show_peak_CS = 1;
 
 %% Input preprocessing
 %=====================
-% % takes the second underscore-separated element as the ID of expt.
-% dset_split_arr = cellfun(@(x) regexp(x, '_', 'split'), dset_list, 'un', 0);    
-% dset_id = cellfun(@(x) x{2}, dset_split_arr, 'un', 0);
-% dset_id_long = cellfun(@(x) sprintf('%s_%s_%s', x{2}, x{3}, x{4}), dset_split_arr, 'un', 0);
-% clear dset_split_arr;
-% 
-% dset_names = dset_id;
+% takes the second underscore-separated element as the ID of expt.
+[~,dset_list] = cellfun(@(x) fileparts(x), nmr_dataset_dirs, 'un', 0);
+dset_split_arr = cellfun(@(x) regexp(x, '_', 'split'), dset_list, 'un', 0);    
+dset_id = cellfun(@(x) x{2}, dset_split_arr, 'un', 0);
+dset_id_long = cellfun(@(x) sprintf('%s_%s_%s', x{2}, x{3}, x{4}), dset_split_arr, 'un', 0);
+clear dset_split_arr;
+
+dset_names = dset_id;
 
 % Try getting expnos (if NMR paths are provided)
 if exist('nmr_dataset_dirs','var') && ~isempty(nmr_dataset_dirs);
@@ -395,7 +380,10 @@ end
 
 %% Run Kd fits
 %==========================================
-
+if f_run_kd_fits
+    
+    
+end; % f_run_kd_fits
 
 
 %% Plot and save
