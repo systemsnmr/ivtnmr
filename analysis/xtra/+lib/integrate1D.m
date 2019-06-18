@@ -26,7 +26,7 @@ f_find_ids = @(l,r,rbnmr_set)  find(rbnmr_set.XAxis < l & rbnmr_set.XAxis > r);
 % read nmr spectra
 % ref_expt = experiments(1);
 % spec = fullfile(datasetFolder,num2str(ref_expt),'pdata/1/1r');
-s = lib.rbnmr.rbnmr(nmr_data);
+s = rbnmr(nmr_data);
 
 n_spec = numel(s);
 n_int = size(intrng,1);
