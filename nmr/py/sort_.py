@@ -7,7 +7,9 @@
 #tt2 - could also invoke inproc2 after execution.
 
 # TODO:
-# - Implement reading time from audita.txt !!! (cannot rely on timestamp of file modification!!)
+# - Redefine python_dir -- use TopCmds or something to be not dependent on the path!
+
+# - Make script to save itself
 # - Add flags for automatic archiving before and deletion of 12--500 dirs after?
 # - DO NOT SKIP EXPTS 12-19 even if they are empty! (in case if skipped refs)
 #   (e.g. as when non-recording 17-18
@@ -209,7 +211,10 @@ def read_audita_times(expno_dir):
     # Go line by line - trying to find end-time and start-time (usually end is first)
     for line in f:
         # print line
-                
+        
+        ## TODO: might want to implement from MMayzel - check for "completed at"
+        
+        # Won't do this if already found end
         if not found_end:
             if "(   1,<" in line:
                 # print 'found end'
@@ -224,6 +229,7 @@ def read_audita_times(expno_dir):
                 # print end
             continue
             
+        # Won't do this if already found the start
         if not found_start:            
             if "started at" in line:
                 # print 'found start'
@@ -235,12 +241,16 @@ def read_audita_times(expno_dir):
                 start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
                 # print start
             continue
+            
+        if "acquisition in progress" in line:
+            start=0
+            end=0
+            break            
 
     f.close()
 
     center = start + (end-start)/2
-    return start, center, end
-
+    return start, center, end    
 
 def get_time0():
     notes_path = os.path.join(CURDIR,NAME,'notes.txt')
@@ -291,19 +301,24 @@ def get_time_difference(expno_dir,time0):
     """
     # ideas: stackoverflow - how-to-get-file-creation-modification-date-times-in-python; + stuff from MMayzel
 
-    _, time_center, _ = read_audita_times(expno_dir)
-    timeDiff = time_center-time0
+    try:
+        _, time_center, _ = read_audita_times(expno_dir)
+        timeDiff = time_center-time0
 
-    # 2015-05-11: added DAYS in the diffMin calculation:
-    diffMin = timeDiff.days*24*60 + (timeDiff.seconds / 60)
-    diffSec = timeDiff.seconds - diffMin*60
-    #return str(diffMin) + ':' + str(diffSec)
-    # Add zero in front, if diffMin is only two-digit number
-    if diffMin<100:
-        diffMin = "00"+str(diffMin)
-    elif diffMin<1000:
-        diffMin = "0"+str(diffMin)      
-    return str(diffMin)
+        # 2015-05-11: added DAYS in the diffMin calculation:
+        diffMin = timeDiff.days*24*60 + (timeDiff.seconds / 60)
+        diffSec = timeDiff.seconds - diffMin*60
+        #return str(diffMin) + ':' + str(diffSec)
+        # Add zero in front, if diffMin is only two-digit number
+        if diffMin<100:
+            diffMin = "00"+str(diffMin)
+        elif diffMin<1000:
+            diffMin = "0"+str(diffMin)      
+        return str(diffMin)
+        
+    except:
+        print ('Some Error in audita-time (e.g. acquisition still in progress), skipping')
+        return str(0)        
 
 def timeToTitle(experiment,time0):
     """

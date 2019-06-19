@@ -29,7 +29,7 @@ lock_expno = 3
 atma_1H_expno = 3 # where atma will be executed and wobb curves stored
 atma_31P_expno = 4 # where atma will be executed and wobb curves stored
 shim_expno = 3 #
-first_expno_after_addition_of_T7 = 22
+first_expno_after_addition_of_T7 = 22 # Not used currently anymore, cuz automatic execution of the first experiment is turned off.
 
 #############################################################################
 #############################################################################
@@ -215,11 +215,12 @@ def main():
 	lock(lock_expno, solvent)
 	
 	if UNEXACT_TUNE_MATCH:
-		tunematch2(atma_31P_expno,'f1',unexact_store_wobb=1,procno_to_store=107) # tune 31P # store f1@100, f2@200, ..
-		tunematch2(atma_1H_expno,'f1',unexact_store_wobb=1,procno_to_store=107) # tune 1H # store f1@100, f2@200, ..
+		### 2019-06-11 - removed ,procno_to_store=107 from all below
+		tunematch2(atma_31P_expno,'f1',unexact_store_wobb=1) # tune 31P # store f1@100, f2@200, ..
+		tunematch2(atma_1H_expno,'f1',unexact_store_wobb=1) # tune 1H # store f1@100, f2@200, ..
 	else:
-		tunematch2(atma_31P_expno,'f1',procno_to_store=107) # tune 31P # store f1@100, f2@200, ..
-		tunematch2(atma_1H_expno,'f1',procno_to_store=107) # tune 1H # store f1@100, f2@200, ..
+		tunematch2(atma_31P_expno,'f1') # tune 31P # store f1@100, f2@200, ..
+		tunematch2(atma_1H_expno,'f1') # tune 1H # store f1@100, f2@200, ..
 		
 	shim(shim_expno)
 	
@@ -242,6 +243,7 @@ def main():
 	if os.path.exists(os.path.join(CURDIR, target_set, str(first_expno_after_addition_of_T7))):
 		RE([target_set,str(first_expno_after_addition_of_T7),"1",CURDIR], show="y")
 		### Enable this one if want auto-start first expno!
+		### Disabled for now, because of TopSpin "qumulti over running queue" error.
 		#log.info('Recording experiment # '+str(first_expno_after_addition_of_T7)+' ...')
 		#XCPR('zg', WAIT_TILL_DONE)
 	else:

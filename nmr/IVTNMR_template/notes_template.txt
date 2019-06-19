@@ -5,7 +5,10 @@
 
 ## Quick procedure outline:
 ===================
-- create expt by copying temp calibration with edc
+(temperature) >>  (init setup)  >>   (create series)    >>   (start series)
+temp.yn       >>   in_v0xx      >>  createExpSeries.xx  >>   in_start0xx
+
+- create expt by copying temperature calibration with edc
 - temperature calibration ~5' (lock, shim, run) (at least once a week)
 - insert sample
 - setup using: edpy in_v03*
@@ -111,5 +114,5 @@ Time of addition:
 <time1>XXXX-XX-XX XX:XX:XX +0200</time1>
 
 After inserting the sample:
--  XX: lock, atmm check, topshim twice
--  XX: Start from 321 ..
+-  XX: lock, atmm check, topshim twice (either manually, or use in_start_0xx script).
+-  XX: Start - qumulti 321-..

@@ -5,5 +5,6 @@ EDIT_BETTER_z_EXAMPLE_not_git
 # Include others
 # except foo.html which is maintained by hand
 # !foo.html
+nmr_bak_from_ivtnmr_190619.zip
 .cp_files_and_git_sync.sh
 *original_source
