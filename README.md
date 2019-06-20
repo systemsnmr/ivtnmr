@@ -133,7 +133,7 @@ Notes:
 - We use an automated script `nmr/py/in_v0*` which makes tuning-matching, shimming, pulse calibrations and experiment setup.
 - The measured experiments are configured by this script based on the template experiments which are placed into an empty IVTNMR_template - template dataset (example in `nmr/IVTNMR_template`):
   - 1D1H calibration / tuning / o1 & shim check (expno 3, pp zg)
-  - 1D31P calibration / tuning (expno 4, pp zgig)
+  - 1D31P calibration / tuning (expno 4, pp zg)
   - 1D1H (expno 12, pp `nmr/pp/zg-wg001` or `nmr/pp/zgesgp001`) - full 1H spectrum - for DSS calibration, pH check from Tris position, and potential quantification of individual NTPs (A/U/G/C) consumption rates (all four nucleotides have some specific signals in the aromatic region of the spectrum).
   - 2D 1H1H TOCSY (expno 13, pp `nmr/pp/stocsy003`) - (not required for the setup described in the paper) - allows to observe RNA with higher resolution on certain signals, e.g. U/C H5-H6 correlations.
   - 1D31P (expno 14, pp `nmr/pp/zgig002`) - to observe 31P-containing molecules
