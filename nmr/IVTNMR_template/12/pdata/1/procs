@@ -1,12 +1,12 @@
-##TITLE= Parameter file, TopSpin 4.0.5
+##TITLE= Parameter file, TopSpin 4.0.6
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 6	$$ modification sequence number
+##NPOINTS= 1	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
-##OWNER= yaroslav
-$$ 2019-01-10 11:20:47.559 +0100  yaroslav@six
-$$ /home/yaroslav/data/IVTNMR_template/12/pdata/1/procs
-$$ process /opt/topspin4.0.5/prog/mod/dataserver
+##OWNER= elehmann
+$$ 2019-06-12 10:40:08.527 +0200  elehmann@six
+$$ /opt/topspin/data/elehmann/nmr/IVTNMR_template/112/pdata/1/procs
+$$ process /opt/topspin4.0.6/prog/mod/edparproc
 ##$ABSF1= 0
 ##$ABSF2= 0
 ##$ABSG= 0
@@ -26,8 +26,8 @@ $$ process /opt/topspin4.0.5/prog/mod/dataserver
 ##$AXUNIT= <>
 ##$AZFE= 0.1
 ##$AZFW= 0.1
-##$BCFW= 0.2
-##$BC_mod= 6
+##$BCFW= 0
+##$BC_mod= 0
 ##$BYTORDP= 0
 ##$COROFFS= 0
 ##$CY= 100
@@ -36,15 +36,15 @@ $$ process /opt/topspin4.0.5/prog/mod/dataserver
 ##$DFILT= <>
 ##$DTYPP= 0
 ##$ERETIC= no
-##$F1P= 10.7916297912598
-##$F2P= -1.2242078793548
+##$F1P= 11.0251300906008
+##$F2P= 11.0022683761953
 ##$FCOR= 0.5
-##$FTSIZE= 32768
+##$FTSIZE= 131072
 ##$FT_mod= 6
 ##$GAMMA= 0
 ##$GB= 0
 ##$INTBC= 1
-##$INTSCL= 1
+##$INTSCL= 1.756944e-11
 ##$ISEN= 128
 ##$LB= 2
 ##$LEV0= 0
@@ -53,7 +53,7 @@ $$ process /opt/topspin4.0.5/prog/mod/dataserver
 ##$MC2= 0
 ##$MEAN= 0
 ##$ME_mod= 0
-##$MI= 50
+##$MI= 0
 ##$MddCEXP= no
 ##$MddCT_SP= no
 ##$MddF180= no
@@ -70,19 +70,24 @@ $$ process /opt/topspin4.0.5/prog/mod/dataserver
 ##$Mdd_CsLAMBDA= 0
 ##$Mdd_CsNITER= 0
 ##$Mdd_CsNORM= 0
+##$Mdd_CsVE= yes
 ##$Mdd_CsZF= 0
+##$Mdd_LrLAMBDA= 0
+##$Mdd_LrNITER= 0
+##$Mdd_LrRANK= 0
+##$Mdd_LrZF= 0
 ##$Mdd_mod= 0
 ##$NCOEF= 0
-##$NC_proc= 0
+##$NC_proc= -4
 ##$NLEV= 6
 ##$NOISF1= 8.212492
 ##$NOISF2= 6.712502
 ##$NSP= 0
 ##$NTH_PI= 0
 ##$NZP= 0
-##$OFFSET= 15.72285
-##$PC= 4
-##$PHC0= -13.15691
+##$OFFSET= 16.71921
+##$PC= 1
+##$PHC0= 167.23
 ##$PHC1= 0
 ##$PH_mod= 1
 ##$PKNL= yes
@@ -94,19 +99,25 @@ $$ process /opt/topspin4.0.5/prog/mod/dataserver
 ##$PSCAL= 0
 ##$PSIGN= 0
 ##$PYNMP= <proc.py>
+##$RDF1= 0
+##$RDF2= 0
+##$RDFWHM= 0
+##$RDINT= 0
+##$RDPOS= 0
 ##$REVERSE= no
 ##$SF= 600.13
-##$SI= 32768
+##$SI= 131072
 ##$SIGF1= 5.6
 ##$SIGF2= 5.2
 ##$SINO= 400
-##$SIOLD= 32768
+##$SIOLD= 131072
 ##$SPECTYP= <>
+##$SREF_mod= 1
 ##$SREGLST= <1H.CDCl3>
 ##$SSB= 0
-##$STSI= 32768
+##$STSI= 131072
 ##$STSR= 0
-##$SW_p= 13227.5132275132
+##$SW_p= 14423.0769230769
 ##$SYMM= 0
 ##$S_DEV= 0
 ##$TDeff= 16384
@@ -123,6 +134,6 @@ $$ process /opt/topspin4.0.5/prog/mod/dataserver
 ##$USERP5= <user>
 ##$WDW= 1
 ##$XDIM= 8192
-##$YMAX_p= 337642817
-##$YMIN_p= -1568401
+##$YMAX_p= 516859399
+##$YMIN_p= -57930
 ##END=

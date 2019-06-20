@@ -1,12 +1,12 @@
-##TITLE= Parameter file, TOPSPIN		Version 3.2
+##TITLE= Parameter file, TopSpin 4.0.6
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
 ##NPOINTS= 1	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
-##OWNER= yaroslav
-$$ 2017-03-14 11:17:59.610 +0100  yaroslav@six
-$$ /opt/topspin/data/yaroslav/nmr/IVTNMR_template/12/acqum
-$$ process /opt/topspin/prog/mod/edparproc
+##OWNER= elehmann
+$$ 2019-06-12 10:40:08.526 +0200  elehmann@six
+$$ /opt/topspin/data/elehmann/nmr/IVTNMR_template/112/acqum
+$$ process /opt/topspin4.0.6/prog/mod/edparproc
 ##$COMMENT= <>
 ##$ECF= 1
 ##$ECHOLST= (0..15)
