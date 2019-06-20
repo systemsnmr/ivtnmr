@@ -130,63 +130,110 @@ To match the starting Tris-Triton-DTT (TTD) transcription buffer, transfer your 
 Notes:
 - :exclamation::warning::exclamation:<span style="color:red">WARNING: the TopSpin Python scripts and pulseprograms are provided here "as is" - merely as a guideline for automated setup. These were not thoroughly tested on different spectrometers and may contain bugs and incompatibilities with TopSpin and spectrometer console versions!:exclamation::warning::exclamation:</span>
 
-- We use an automated script `nmr/py/in_v02.yn.py` which makes tuning-matching, shimming, pulse calibrations and experiment setup.
+- We use an automated script `nmr/py/in_v0*` which makes tuning-matching, shimming, pulse calibrations and experiment setup.
 - The measured experiments are configured by this script based on the template experiments which are placed into an empty IVTNMR_template - template dataset (example in `nmr/IVTNMR_template`):
-  - 1D1H (expno 12, pp `nmr/pp/zg-wg001`) - full 1H spectrum - for DSS calibration, pH check from Tris position, and potential quantification of individual NTPs (A/U/G/C) consumption rates (all four nucleotides have some specific signals in the aromatic region of the spectrum).
+  - 1D1H calibration / tuning / o1 & shim check (expno 3, pp zg)
+  - 1D31P calibration / tuning (expno 4, pp zgig)
+  - 1D1H (expno 12, pp `nmr/pp/zg-wg001` or `nmr/pp/zgesgp001`) - full 1H spectrum - for DSS calibration, pH check from Tris position, and potential quantification of individual NTPs (A/U/G/C) consumption rates (all four nucleotides have some specific signals in the aromatic region of the spectrum).
   - 2D 1H1H TOCSY (expno 13, pp `nmr/pp/stocsy003`) - (not required for the setup described in the paper) - allows to observe RNA with higher resolution on certain signals, e.g. U/C H5-H6 correlations.
   - 1D31P (expno 14, pp `nmr/pp/zgig002`) - to observe 31P-containing molecules
   - 2DHN-sofast-hmqc (expno 15, pp `nmr/pp/sfhmqc01`) - to observe protein
   - 1D1H-sofast (expno 16, pp `nmr/pp/zg-sofast006`) - to observe RNA imino region with increased sensitivity
 
-Step-by-step procedure:
+##### Initial spectrometer setup (done once):
+- [Shell/FileManager] Copy contents of the `nmr/{au,mac,pp,par,py}` into corresponding folders on the spectrometer.
+
+- [Shell/FileManager] Copy `nmr/IVTNMR_template` folder into your datasets directory -- this will become template folder for automated setup of IVTNMR experiments later.
+
+- [TopSpin] Check/setup each individual experiment in the IVTNMR_template (expnos 3,4,12-16):
+  - rpar XX
+  - pulprog XX
+  - edasp - check wiring
+  - eda, ased - check experiment params
+
+- [TopSpin] Follow the below procedure to test that `in_v0*, createExpSeries*, in_start_0*` scripts are working correctly.
+
+##### Step-by-step procedure (for each run):
+Very quick outline (see also `notes_template.txt`):
+```
+(temperature) >>  (init setup)  >>   (create series)    >>   (start series)
+temp.yn       >>   in_v0xx      >>  createExpSeries.xx  >>   in_start0xx
+```
+
 1. Create new dataset, including main information in its name, for simplification of automated analysis: `YYMMDD_INXXX_RNANAME_PROTEINNAME_TEMPERATURE_MAGNET` (e.g. `180914_IN71b_SMN1_coNUP1_303K_600`). Here, INXXX (IN71b) - is the experiment ID, implying same ID for the same RNA and protein combination. Replicate experiments are denoted with lowercase letter (IN71a, IN71b, ..) - so its easy to find similar experiments programmatically from shell, Matlab, etc.
 
 2. Make temperature calibration (we use expno 1 consistently).
 
-3. Insert the sample into magnet. Wait 1 min for temperature equilibration. Run `nmr/py/in_v02.yn.py` script for the setup of series. Check and test this script carefully before doing real runs.
+3. Insert the sample into magnet. Wait 1 min for temperature equilibration. Run `nmr/py/in_v0*` script for the setup of series. !! Check and test this script carefully before doing real runs !!.
 
 4. After the automation script has finished:
     - In 2DHN spectrum - set the SW / carrier / TD / etc parameters to the values optimal for your protein
-    - Check the 90-degree 31P pulse value (script runs `paropt` procedure, storing results in expno 4 999) - and enter it into 1D31P experiment.
-    - (If expect drift of tune-matching system): check the tune-match of channels of interest.
+    - Check the 90-degree 31P pulse value, and enter it into 1D31P experiment (in_v0* script runs `paropt` procedure, storing results in expno 4 999)
+    - If expect drift of tune-matching system: check the tune-match of channels of interest.
     - Start reference (time0) experiments.
 
     - **NOTE**: The key reference spectra required at this stage are 1D31P (as a reference for initial NTP concentration) and 2DHN (as a reference for initial protein peak positions / intensities). If the same batches of protein / NTPs are used - one can potentially start directly without recording new time0 references, and for downstream data analysis just make a copy of the references recorded in earlier days.
 
-5. Check that Autoshim is turned off (in our experience Autoshim can introduce variation in lineshapes between individual 1D/2D spectra, which is later hard to distinguish from real changes in the network / molecule dynamics).
+5. Above script turns Autoshim off. In our experience Autoshim can introduce variation in lineshapes between individual 1D/2D spectra, which is later hard to distinguish from real changes in the network / molecule dynamics.
 
-6. While references are running: use `nmr/py/createExpSeries.py` to generate time-series of repeating experiments for required time-period from the reference spectra. See the header of the script for details.
+6. While acquisition of reference (time0) spectra is running, use `nmr/py/createExpSeries.py` to generate time-series of repeating experiments for required time-period from the reference spectra. See the header of the script for details.
 
 7. If some tuning-matching was done during setup (if not doing consecutive measurements in the same buffer): check the probe did not detune on the channels of interest while references were running.
 
 8. Take sample out of the magnet, then:
     - (2 min) add T7 RNA Pol, mix the sample, spin if need to remove bubbles, insert sample back to the magnet.
-    - (2 min) lock, temperature equilibration, check tune-match.
-    - (1 min) topshim, twice!.
-    - **NOTE**: remember/write down the time at which the RNA Pol was added. Later insert the exact time into the `notes.txt` file in the dataset directory. This file and time0 tag is automatically created by the `in_v02.xx.py` script. The <time0> tag gives the downstream analysis scripts info on when reaction was started:
-    `<time0>YYYY-MM-DD HH:MM:SS</time0>`
-    **Currently the analysis scripts assume the time zone is set identical on the spectrometer computer and the spectrometer console and don't check GMT zone. So be careful if the GMT setting of your spectrometer station is different from the GMT setting written by console into audita.txt file (these settings m/b different on NEO consoles)**
+    - Set the 'time0' tag in notes.txt (see below).
+    - run in_start_0* script - it will lock, check tune-match and do topshim twice.
+
+    - **NOTE**: remember/write down the time at which the RNA Pol was added. Later insert the exact time into the `notes.txt` file in the dataset directory. This file and time0 tag is automatically created by the `in_v0**` script. The <time0> tag gives the downstream analysis scripts info on when reaction was started, e.g.
+    `<time0>YYYY-MM-DD HH:MM:SS +0200</time0>`
+    **The analysis scripts can handle the time0 tag without timezone, but better include it for proper compatibility with NEO consoles (which write times in audita.txt in the UTC format -- not necessarily matching your timezone.**
 
 9. Start experiment series (`qumulti ##-##`).
 
 <a name="data_processing"></a>
 ### (C) Data processing (>= 1 hour per sample)
+Procedure outline:
+```
+(sort)    >>    (process)  >>  (analysis)
+sort.py   >>   inproc2.py  >>  ...
+```
 
-TopSpin may show errors "Can't display data" or "NullPointerExceptions" during execution of the below automated python scripts. In most cases these two errors can be ignored. The log/comments of these script operations are output into TopSpin shell/console window and also into processing.log file inside the project directory.
+TopSpin may show errors "Can't display data" or "NullPointerExceptions" during execution of the below automated python scripts. In most cases these two errors can be ignored. The log/comments of these script operations are output into TopSpin shell/console window and also into processing.log file inside the dataset directory.
 
-1. Sort experiments: `sort.py`. This script sorts data by experiment type, adds rough experiment time to the title, creates cara repository with linked 2DHN spectra and `integr_datasets_31P.txt` file for 31P integration. See script header for details. For auto-generation of cara repository, two fragments of final repository (`180917_INx_blank_1top.cara`, `180917_INx_blank_2bottom.cara`) need to be present in the py/user directory.
+#### Initial setup
 
-2. For quick visualization / comparison of data in TopSpin - see helper scripts: `res.py` (reading data by giving only parts of dataset name), `md.py` (overlaying series), `zim.py` and `zh33.py` (zooming on specific regions of spectra).
+1. Add these to your python scripts:
+```
+  180917_INx_blank_1top.cara
+  180917_INx_blank_2bottom.cara
+  inproc2_.py
+  md.py
+  res.py
+  sort_.py
+  zh33.py
+  zim.py
+```
 
-3. Except for 31P spectra - the phases of 1D1H, 1D1H-iminos and 2DHN spectra need to be detemined manually for optimal results. For 1D1H and 2DHN - ideally the common phase for time-resolved series is determined not on the first (time0) spectrum, but on the second ("time1") spectrum - after T7 addition. One might want to check the phases of 2DHN and 1D1H time0 spectra then (these might be slightly different from "time1" spectra).
+2. Check that `sort.py` script has a listing of all pulseprogram names you used in your data (it needs to know which programs correspond to which type of spectra (1D1H, 1D31P, 2DHN, ...)).
 
-4. Automated processing of all spectra is done by `inproc2.py` - see its header for details.
+##### Step-by-step procedure (for each run):
+1. **Sort experiments**: `sort.py`. This script sorts data by experiment type, adds rough experiment time to the title, creates cara repository with linked 2DHN spectra and `integr_datasets_31P.txt` file for 31P integration. See script header for details. For auto-generation of cara repository, two fragments of final repository (`180917_INx_blank_1top.cara`, `180917_INx_blank_2bottom.cara`) need to be present in the TopSpin python (`py/user`) directory.
+
+2. For quick visualization / comparison of data in TopSpin - see helper scripts: `res.py` (reading data by giving only parts of dataset name, e.g. res IN01a 2001), `md.py` (overlaying series), `zim.py` and `zh33.py` (zooming on specific regions of spectra).
+
+3. Except for 31P spectra - the phases of 1D1H, 1D1H-iminos and 2DHN spectra need to be determined manually for optimal results. For 1D1H and 2DHN - ideally the common phase for time-resolved series is determined not on the first (time0) spectrum, but on the second ("time1") spectrum - after T7 addition. One might want to check the phases of 2DHN and 1D1H time0 spectra then (these might be slightly different from "time1" spectra).
+
+4. **Automatically process spectra**: Automated processing of all spectra is done by `inproc2.py` - see its header for details. Rough outline:
+  - Phase 2001 (1D1H), 4001 (2DHN) and the last of the 1D-imino 6xxx spectra. Phases of these spectra will be propagated to all other corresponding spectra. For imino spectrum the last one is used because there are no imino signals in the first one :)
+  - Calibrate the ppm frequency of 2001 spectrum (1D1H) - its SR/SFO value will be used to set correct frequencies of all spectra.
+  - Set desired SI / STSI / STSR values in 4001 (2DHN) spectrum - these will be propagated to all other 2DHN spectra.
 
 5. If using "manual" processing:
   * 1D31P:
     - `qumulti 5000-5500`
     - example of processing command (check only SR corrections, in our setup phase seems determined robustly enough by `apks` routine):
-    - `SR -139; si 64k; wdw EM; lb 2; efp; apks; absf1 14; absf2 -26; absg 5; absn`
+    - `SR -10.1; si 64k; wdw EM; lb 2; efp; apks; absf1 14; absf2 -26; absg 5; absn`
 
   * 2DHN:
       - `qumulti 4000-4500`
@@ -279,7 +326,6 @@ Run `analysis/LW/a_fit_LW.m` to fit and visualize imino linewidths. This fitting
 <a name="acknowledgements"></a>
 ## Acknowledgements
 We thank J. Vollmer and G. Fengos for the help with network modeling. We acknowledge G. Wider and all members of the ETH BNSP platform for excellent maintenance of the NMR infrastructure. We thank all members of the Allain Lab, in particular F. Damberger, and the Parpan retreat participants for helpful discussions. This work was supported by the Promedica Stiftung, Chur (Grant 1300/M to Y.N.), Novartis Foundation and Krebsliga Zurich (Y.N.), NCCR RNA and Disease by the Swiss National Science Foundation (F.A.).
-
 
 <a name="liability"></a>
 ## Disclaimer: Limitations of Liability for the code
