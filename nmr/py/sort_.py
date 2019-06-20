@@ -89,7 +89,7 @@ zgPulprogs = ["zg-wg001.yn", "zg-wg.eth", "zg-wg3919-dec.eth", "zgesgp001.yn"]
 tocsyPulprogs = ["stocsy003.yn", "stocsy-v.yn", "stocsy002.yn"]
 hsqcPulprogs = ["hsqc15N.all", "sfhmqc01.yn", "hsqcetgpsi_02.yn"]
 phosPulprogs = ["zgig002.yn", "zgig"]
-iminoPulprogs = ["zg-sofast006.yn", "WESF_008g.yn", "zg-sofast004.yn", "IBS_1D_HETSOFAST_007e.yn", "IBS_1D_HETSOFAST_008ec.yn"]
+iminoPulprogs = ["zg-sofast006.yn", "WESF_008g.yn", "zg-sofast004.yn"]
 
 ## Set the starting expnos to where the series will be copied
 zgStart, tocsyStart, hsqcStart, phosStart, iminoStart = 2000, 3000, 4000, 5000, 6000
