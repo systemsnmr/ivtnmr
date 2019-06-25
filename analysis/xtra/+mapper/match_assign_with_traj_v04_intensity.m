@@ -49,7 +49,7 @@ datasave_folder = 'datasave';
 % assign = import_NMR_peaklist_v02(peaklist_filepath, prot_seq_filepath);
 % assign = import_NMR_peaklist_v02b(peaklist_filepath, prot_seq_filepath); % v02b - SORTS the peaklist by AA
 % what mapper
-assign = mapper.import_NMR_peaklist_v03b(peaklist_filepath, prot_seq_filepath); % v02b - SORTS the peaklist by AA
+assign = mapper.import_NMR_peaklist_v03c(peaklist_filepath, prot_seq_filepath); % v02b - SORTS the peaklist by AA
 traj = mapper.import_trajectories(traj_filepath);
 if exist(intens_filepath, 'file')
     intens = mapper.import_intensities(intens_filepath);

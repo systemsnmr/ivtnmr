@@ -1,52 +1,52 @@
-function viz_prot_perturb3b()
+function viz_prot_perturb_and_fit_kd()
+% viz_prot_perturb_and_fit_kd (multi-option tool): 
+% -- uses MAPPER data to visualize protein CSP and/or intensity
+% perturbations - as a function of spectrum id, time or [RNA] concentration.
+% -- Can fit protein [CSP data] + [RNA] concentrations to get Kd estimates.
+% !!! Consider Kds only "apparent" - because multiple parameters of the 
+% system are perturbed at the same time (NTP, aborts, etc). Also if
+% [RNA]/[protein] ratio < 1.5 -- protein cannot be saturated. 
+% -- For Kd fitting - can potentially provide known (from alternative
+% experiments) Chem.Shift values of Protein(Target) under saturation conditions.
 
-% TODO:
-% - Automatically? find out which expnos used for the mapper?!? (Is this possible?)
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Versions:
-% viz_prot_perturb:   initial version, based on 
-%   Projects/2015_NMR_peak_tracking/site_mapper/190411_TDP_FUS_SMN2_LLPS/analysis/runall_TDP_190411.m
-
-% viz_prot_perturb2:
-%   - includes 31P data import and plotting against it
-%   - partially based on CUG / MBNL analysis /Volumes/Data/yar/Dropbox/_eth2/project_CUG_MBNL/code/180926_mapper_with_31P/analysis/runall_var_MBNL_31P_v180930_f_report.m
-%   - option to plot both CSP and Intensity
-%   - option to plot chemical shifts of peaks
-%   - fixed opt_to_duplicate
-
-% viz_prot_perturb3:
-%   - simultaneous plot of several mapper sets - with CSP and traj
-%   - assumes xaxis has to be defined for each set (i.e. not just duplicating!)
-%   - uses folder-namespace for '+lib'; (instead of genpath...)
-%   - Testing with SLH datasets.
-
+% ....
 % viz_prot_perturb3b:
 %   - Moved to github repo - made work with +lib and utils/rbnmr.
 %   - Includes Kd fits ...
+% viz_prot_perturb_and_fit_kd: 
+%   - includes caching of spectra
+%   - includes caching of Kds
 
 %% Settings
 %=================================
-clear; close all;
-tic;
-addpath(genpath(fullfile(pwd,'utils')));
+clear; close all; tic;
 
-analyse_PTBRRM1_SLH = 1;
+scratch_dir = 'datasave'; % for intermediate data
+datasave_dir = 'datasave'; % for final data
 
 % Sections to run:
-flag_run_assignments = 0;
-flag_load_assignments = 1;
+optns.run_or_load_assignments = num2cell([1 1]); % Two parameters: [run, load]
+optns.refit_or_load_kd = num2cell([1 1]); % Two parameters: [refit, load]
+optns.plot_results = 1;
 
-f_run_kd_fits = 1;
-optns.conc_units = 'mM';
+% "Save" functionality is automatically encapsulated in the first flag
+[flag_run_and_save_assignments, flag_load_assignments] = optns.run_or_load_assignments{:};
+[f_run_and_save_kd_fits, f_load_kd_fits] = optns.refit_or_load_kd{:};
 
-% Switching Y-data
+%%% Choose what to plot on X and Y
+%%%===========================
+% Y-data
 % 1,2 - will overlay data from all datasets.
 % 3 (CSP+intens) - forces plotting only of the first dataset!
 optns.yaxis = 1; % 1-CSP; 2-intensity; 3-both
 
-% Switching X-Axis data
-xaxis = 3; % 1 - spectrum id; 2 - time; 3 - 31P(RNA)
+% X-Axis data
+optns.xaxis = 3; % 1 - spectrum id; 2 - time; 3 - 31P(RNA)
 
+%%% Selecting datasets / residues / timepoints
+%%%===========================
 %%% Select subsets (if have many defined, but want to plot only a few):
 % select_dsets = [1 3 5]; % 1:2 4 - compares 4th nucleotide
 % select_dsets = [2];
@@ -57,68 +57,18 @@ select_residues = [1:40]; % 5
 % "select_spectra" - in reverse - QnD solution to fix nc_proc
 % drop_timepoints = [2 3 6 22:35]; % tmp hack - to match MAPPER vector to P50N525 time
 
-optns.colors = [...
-        [0, 0, 0]; % black
-        [0.7, 0, 0]; % dark red
-        [0, 0.6, 0]; % dark green
-        [1, 0, 0]; % red
-        [0, 0.9, 0]; % green        
-        ];
-
+%%% Data normalization options
+%%%===========================
 if any(optns.yaxis == [2 3]) % If plotting intensity or both
-    optns.normalize_intensity = 1; 
+    optns.normalize_intensity = 1;
 end;
 optns.same_yscale = 0; % scales INTENSITY!?!
-    
-%============================================================
+
 %%% Inputs: mapper data, peaklists, RNA integration, protein sequences
-%============================================================
-current_dir = fileparts(mfilename('fullpath'));
-
-if ~analyse_PTBRRM1_SLH
-    nmr_dataset_dirs = {
-        '/Volumes/Data/yar/Dropbox/_eth2/project_Measles/NMR/spectra/190415_IN115a_pA20_co-P50N525_100uM_298K_600'
-        '/Volumes/Data/yar/Dropbox/_eth2/project_Measles/NMR/spectra/190415_IN115a_pA20_co-P50N525_100uM_298K_600'
-        };
-
-    mapper_data_dirs = {
-    %     fullfile(fileparts(mfilename('fullpath')), '..', 'mapper_data')
-        fullfile(nmr_dataset_dirs{1}, 'IN115a_mapper')
-        fullfile(nmr_dataset_dirs{1}, 'IN115a_mapper')
-        };
-    % s3_tracking dir - also contains intensities
-    mapper_data_paths = cellfun(@(x) fullfile(x,'s3_tracking','trajectories_filtered.csv'), mapper_data_dirs, 'un', 0);
-
-    % Can provide specific expnos, if not all experiments used in tracking!
-    % This is primarily needed if need to read TIME or RNA concentration - for xaxis.
-    % If note provided - script tries to read ALL expnos from the nmr_dataset_dir.
-    mapper_expnos = {
-        [4003 4008 4013 4018 4023 4028 4033 4038 4043 4078 4083 4088]
-        [4003 4008 4013 4018 4023 4028 4033 4038 4043 4078 4083 4088]
-        };
-
-    %%% Peaklists. If different for each set - provide multiple entries here.
-    % If same for all sets - leave just one.
-    %============
-    peaklist_dirs = {fullfile( nmr_dataset_dirs{1}, 'peaklists' )};
-    peaklist_names = {'peaks_start_mapper.peaks'};
-    peaklist_paths = cellfun(@(x,y) fullfile(x,y), peaklist_dirs, peaklist_names, 'un', 0);
-
-    %%% RNA data (optional, if not trying to plot time/RNA on xaxis)
-    %============
-    RNA_data_dirs = {...
-        'datasave'
-        'datasave'
-        };
-    RNA_data_filenames = {...
-        'RNA_A20_P50N525.csv'
-        'RNA_A20_P50N525.csv'
-        };
-    RNA_data_paths = cellfun(@(x,y) fullfile(x,y), RNA_data_dirs, RNA_data_filenames, 'un', 0);
-
-end % ~analyse_PTBRRM1_SLH
-
-if analyse_PTBRRM1_SLH
+%%%============================================================
+analysis_set = 1; % can define several test analysis
+switch analysis_set
+case 1
     nmr_dataset_dirs = {
 	'/Volumes/Data/yar/Dropbox/_eth2/data_NMR/spectra/180308_IN93a_SLH_co-NPR1_303K_600'
 	'/Volumes/Data/yar/Dropbox/_eth2/data_NMR/spectra/180315_IN95a_SLHar3_co-NPR1_303K_600'
@@ -136,7 +86,10 @@ if analyse_PTBRRM1_SLH
     peaklist_paths = {
         '/Volumes/Data/yar/Dropbox/Science/Projects/2015_NMR_peak_tracking/site_mapper/190321_PR1_SLH_C11/analysis/data_test/PR1_peaklist.peaks'
         };    
-    
+%     peaklist_paths = {
+%         '/Volumes/Data/yar/Dropbox/Science/Projects/2015_NMR_peak_tracking/site_mapper/190321_PR1_SLH_C11/analysis/data_test/PR1_header_and_peaknames.peaks'
+%         };
+
     %%% RNA data (optional, if not trying to plot time/RNA on xaxis)
     %============
     RNA_data_dirs = {...
@@ -149,19 +102,19 @@ if analyse_PTBRRM1_SLH
         };
     RNA_data_paths = cellfun(@(x,y) fullfile(x,y), RNA_data_dirs, RNA_data_filenames, 'un', 0);
 
-    protein_conc = 0.15; % mM - for Kd fits    
+    kd.protein_conc = 0.15; % mM - for Kd fits    
+    optns.conc_units = 'mM';
     
-    rna_aborts_fraction = 0.3;
-    
+    rna_aborts_fraction = 0.3;    
 end
 
 %%
 %================================================================
 %%%% EDITING BELOW THIS LINE IS NORMALLY NOT REQUIRED
 %================================================================
+addpath(genpath(fullfile(pwd,'utils')));
 n_sets = numel(mapper_data_paths);
-
-flag_show_peak_CS = 1;
+flag_show_peak_CS = 1; % in the title
 
 %% Input preprocessing
 %=====================
@@ -186,7 +139,7 @@ if nmr_dataset_dirs_exist
     dset_exp_2DHN = lib.getNMRExpnos(nmr_dataset_dirs, 4000, 4995);
 end;
 
-need_to_access_expnos = xaxis > 1;
+need_to_access_expnos = optns.xaxis > 1;
 mapper_expnos_provided = exist('mapper_expnos','var') && ~isempty(mapper_expnos);
 if need_to_access_expnos
     % Repeat mapper expno lists if needed
@@ -214,15 +167,11 @@ if need_to_access_expnos
 end; % need_to_access_expnos
 
 % Repeat peaklists if needed.
-if numel(peaklist_paths)==1 && n_sets>1
-    peaklist_paths = repmat(peaklist_paths, n_sets, 1);
-end;
-if numel(protein_conc)==1 && n_sets>1
-    protein_conc = repmat({protein_conc}, n_sets, 1);
-end;
+if numel(peaklist_paths)==1 && n_sets>1; peaklist_paths = repmat(peaklist_paths, n_sets, 1); end;
+if numel(kd.protein_conc)==1 && n_sets>1; kd.protein_conc = repmat({kd.protein_conc}, n_sets, 1); end;
 
 % Select only some datasets
-if exist('select_dsets','var') && ~isempty(select_dsets)    
+if exist('select_dsets','var') && ~isempty(select_dsets)
 %     arrays_to_trim = {'dset_names', 'mapper_data_paths', 'peaklist_paths', 'RNA_data_paths',...
 %         'nmr_dataset_dirs', 'mapper_expnos', 'dsets_time0'};
 %     for iArr=1:numel(arrays_to_trim)        
@@ -238,7 +187,7 @@ if exist('select_dsets','var') && ~isempty(select_dsets)
     nmr_dataset_dirs = nmr_dataset_dirs(select_dsets);
     mapper_expnos = mapper_expnos(select_dsets);
     dsets_time0 = dsets_time0(select_dsets);
-    protein_conc = protein_conc(select_dsets);
+    kd.protein_conc = kd.protein_conc(select_dsets);
     
     n_sets = numel(mapper_data_paths);
 end
@@ -247,7 +196,7 @@ end
 
 %% Assign trajectories to peaks
 %=================================
-if flag_run_assignments
+if flag_run_and_save_assignments
     assign = cell(n_sets,1);
     for iSet=1:n_sets                        
         assign{iSet} = mapper.match_assign_with_traj_v04_intensity(dset_names{iSet},...
@@ -256,9 +205,8 @@ if flag_run_assignments
             ''... % prot_seq_paths{iSet}
             );
     end; clear iSet;
+    % fprintf('\n= Run assign: %.2f s\n', toc); tic;
 end
-
-% fprintf('\n= Run assign: %.2f s\n', toc); tic;
 
 if flag_load_assignments
     assign = cell(n_sets,1);
@@ -273,7 +221,7 @@ end
 
 %% Import RNA conc and time. Interpolate RNA conc to mapper 2DHN times.
 %======================================================================
-if xaxis > 1 
+if optns.xaxis > 1 
     f_rna_data_exists = (exist('RNA_data_paths','var') && ~isempty(RNA_data_paths));
     assert(f_rna_data_exists, 'Abort: file with RNA & time data seems missing.');    
     
@@ -301,43 +249,43 @@ end;
 
 %% Data to use for x-axis
 %================
-switch xaxis
+switch optns.xaxis
     case 1
         optns.xaxis_label = 'spectrum id';        
-        optns.xaxis = cellfun(@(x) [1:size(x.traj_HNcsp, 2)]', assign, 'un', 0);
+        optns.xaxis_data = cellfun(@(x) [1:size(x.traj_HNcsp, 2)]', assign, 'un', 0);
     case 2
         optns.xaxis_label = 'time [min]';        
-%         optns.xaxis = repmat(HN_time, n_sets, 1); % Needs to be a CELL ARRAY (if have many datasets!)
-        optns.xaxis = HN_time;
+%         optns.xaxis_data = repmat(HN_time, n_sets, 1); % Needs to be a CELL ARRAY (if have many datasets!)
+        optns.xaxis_data = HN_time;
     case 3
         optns.xaxis_label = 'RNA conc [mM]';
-%         optns.xaxis = repmat(RNA_in_HN_time, n_sets, 1);
-        optns.xaxis = RNA_in_HN_time;
+%         optns.xaxis_data = repmat(RNA_in_HN_time, n_sets, 1);
+        optns.xaxis_data = RNA_in_HN_time;
 end;
 
 
 %% Visualization
 %=================================
-optns.plotLW = 2;
+optns.plotLW = 1;
 optns.plotSym = '-';
 optns.markerSize = 4;
 optns.same_min_xscale = 1;
 optns.legend = dset_names;
 
 % Select what is plotted.
-base_name = [sprintf('%s_',dset_names{1:end-1}),dset_names{end}];
+cat_names_of_all_sets = [sprintf('%s_',dset_names{1:end-1}),dset_names{end}];
 switch optns.yaxis
     case 1
         optns.yaxis_label = 'CSP';
-        figure_name = sprintf('%s_csp', base_name);
+        figure_name = sprintf('%s_csp', cat_names_of_all_sets);
         traj_select = cellfun(@(x) x.traj_HNcsp, assign, 'unif', 0);        
     case 2        
         optns.yaxis_label = 'peak amplitude';
-        figure_name = sprintf('%s_intens', base_name);
+        figure_name = sprintf('%s_intens', cat_names_of_all_sets);
         traj_select = cellfun(@(x) x.intens, assign, 'unif', 0);
     case 3
         optns.yaxis_label = 'CSP / amplitude';
-        figure_name = sprintf('%s_csp_intens', base_name);
+        figure_name = sprintf('%s_csp_intens', cat_names_of_all_sets);
 
         traj_select{1} = assign{1}.traj_HNcsp;
     %     traj_select{2} = assign{1}.traj_HNcsp;
@@ -350,20 +298,19 @@ switch optns.yaxis
         traj_select{2} = bsxfun(@rdivide, traj_select{2}, max(traj_select{2},[],1));
         traj_select{2} = traj_select{2} .* max(max(traj_select{1},[],2)); % max value of all CSPs.    
 
-        optns.xaxis = repmat(optns.xaxis(1), n_sets, 1);
+        optns.xaxis_data = repmat(optns.xaxis_data(1), n_sets, 1);
         
     otherwise
         error('Abort: unrecognized Yaxis type');
 end;
 
 % Add info about xaxis type to the figure
-switch xaxis
+switch optns.xaxis
     case 2
         figure_name = sprintf('%s_time', figure_name);
     case 3
         figure_name = sprintf('%s_RNA', figure_name);
 end;
-
 
 % arrayfun(@(x) find([8 9]==x,1), assign{1}.ids, 'unif', 0)
 % [tf, idx] = ismember([8,12], assign{1}.ids)    
@@ -386,11 +333,8 @@ end;
 
 name_already_has_ppm_digits = any(strfind(assign{1}.names{1},'.'));
 if flag_show_peak_CS && ~name_already_has_ppm_digits
-    optns.titles = arrayfun(@(name,H,N) {name{:}, sprintf('%.2f-%.1f', H, N)}, optns.titles, assign{1}.traj_H(:,1), assign{1}.traj_N(:,1), 'un', 0);
+    optns.titles = arrayfun(@(name,H,N) sprintf('%s: %.2f-%.1f', name{:}, H, N), optns.titles, assign{1}.traj_H(:,1), assign{1}.traj_N(:,1), 'un', 0);
 end;
-
-%%% TMP TMP
-optns.plotLW{2} = 1;
 
 % fprintf('\n= Prepare traj: %.2f s\n', toc); tic;
 
@@ -417,65 +361,63 @@ if exist('drop_timepoints','var') && ~isempty(drop_timepoints)
     % TODO - vectorize this
     for iSet = 1:n_sets
         traj_select{iSet}(:,drop_timepoints) = [];
-        optns.xaxis{iSet}(drop_timepoints) = [];
+        optns.xaxis_data{iSet}(drop_timepoints) = [];
     end;
 end
 
 % fprintf('\n= Filter traj: %.2f s\n', toc); tic;
 
-%%% TMP
-
 
 %% Run Kd fits
 %==========================================
-if f_run_kd_fits
-    assert(optns.yaxis==1 && xaxis==3,'Abort: for Kd fits expecting Yaxis as CSP, Xaxis as RNA conc.');
-%     kds = lib.fit_Kd_05a2(optns.xaxis{1}', traj_select{1}, protein_conc, 1, '');
+kd_scratch_file = fullfile(scratch_dir, sprintf('kd_%s.mat', cat_names_of_all_sets));
+if f_run_and_save_kd_fits
+    assert(optns.yaxis==1 && optns.xaxis==3,'Abort: for Kd fits expecting Yaxis as CSP, Xaxis as RNA conc.');
+%     kds = lib.fit_Kd_05a2(optns.xaxis_data{1}', traj_select{1}, kd.protein_conc, 1, '');
 %     kd_values_array = cell2mat(arrayfun(@(x) x.popt(2), kds, 'un', 0));
         
-    p = cell2mat(protein_conc);
-    maxr = cell2mat(cellfun(@(x) max(x), optns.xaxis, 'un', 0));
+    p = cell2mat(kd.protein_conc);
+    maxr = cell2mat(cellfun(@(x) max(x), optns.xaxis_data, 'un', 0));
     if any(maxr<(p.*1.5)); warning('RNA(ligand) concentration lower than 1.5xProtein(target). Kds in this case only APPROXIMATE LOWER BOUNDARIES!!!'); end;
     
-    [optns.xaxis, traj_select] = lib.nans_interpolate(optns.xaxis, traj_select); % interpolate datapoints with NaNs
+    [optns.xaxis_data, traj_select] = lib.nans_interpolate(optns.xaxis_data, traj_select); % interpolate datapoints with NaNs
         
     % Fit kds - each dataset - each peak
-    kdfit_cell = cellfun(@(xdat,ydat,prot)...
+    kd.fit_cell = cellfun(@(xdat,ydat,prot)...
         lib.fit_Kd_05a2(xdat', ydat, prot, '', ''),... 
-        optns.xaxis, traj_select, protein_conc, 'un', 0);
+        optns.xaxis_data, traj_select, kd.protein_conc, 'un', 0);
     
     % Extract kds - each dataset - each peak
-    kd_values = cellfun(@(kdfc)...
+    kd.values = cellfun(@(kdfc)...
         cell2mat(arrayfun(@(x) x.popt(2), kdfc, 'un', 0)),...
-        kdfit_cell, 'un', 0);
+        kd.fit_cell, 'un', 0);
     % Extract errors
-    kd_sd_values = cellfun(@(kdfc)...
+    kd.sd_values = cellfun(@(kdfc)...
         cell2mat(arrayfun(@(x) x.sd(2), kdfc, 'un', 0)),...
-        kdfit_cell, 'un', 0);
+        kd.fit_cell, 'un', 0);
 
     % Extract kds fits
-    kd_fits_ydata = cellfun(@(kdfc)...
+    kd.fits_ydata = cellfun(@(kdfc)...
         cell2mat(arrayfun(@(x) x.csp_fit, kdfc, 'un', 0)),...
-        kdfit_cell, 'un', 0);
+        kd.fit_cell, 'un', 0);
    
     % Add Kd values to display in title (only first dataset at the moment!)
-    kd_display_arr = cell(n_peaks,1);
-    kd_values_mat = cell2mat(kd_values(:)');
+    kd.display_arr = cell(n_peaks,1);
+    kd.values_mat = cell2mat(kd.values(:)');
     for iPeak=1:n_peaks
-        kd_display_arr{iPeak} = sprintf('%.2f / ', kd_values_mat(iPeak,:));
+        kd.display_arr{iPeak} = sprintf('%.2f / ', kd.values_mat(iPeak,:));
     end;
         
 %     optns.titles = cellfun(@(name,kdval)...
 %         {name, sprintf('K=%s%s', kdval, optns.conc_units)},...
-%         optns.titles, kd_display_arr,...
+%         optns.titles, kd.display_arr,...
 %         'un', 0);    
     
     %%%% Three lines
     optns.titles = cellfun(@(name,kdval)...
         {name, 'Kdapp', sprintf('%s%s', kdval(1:end-2), optns.conc_units)},...
-        optns.titles, kd_display_arr,...
+        optns.titles, kd.display_arr,...
         'un', 0);    
-    
     
     % First use RGB colors, then add more if needed.
     rgb_col = [...
@@ -486,21 +428,25 @@ if f_run_kd_fits
     if n_sets>3; rgb_col = [rgb_col; lines(n_sets-3)]; end;
     
     % Append fits to the data
-    traj_select = [traj_select; kd_fits_ydata];
-    optns.xaxis = [optns.xaxis; optns.xaxis];
+    traj_select = [traj_select; kd.fits_ydata];
+    optns.xaxis_data = [optns.xaxis_data; optns.xaxis_data];
     optns.legend = [optns.legend; repmat({'fit'},n_sets,1)];
     optns.plotLW = [repmat({1},n_sets,1); repmat({1},n_sets,1)];
     optns.plotSym = [repmat({'o'},n_sets,1); repmat({'-'},n_sets,1)];
     optns.colors = [rgb_col(1:n_sets,:); repmat([1, 0, 0], n_sets,1)];          
     
-    figure_name = sprintf('%s_Kd', base_name);    
-end; % f_run_kd_fits
+    figure_name = sprintf('%s_Kd', cat_names_of_all_sets);
+            
+    save( kd_scratch_file, 'traj_select', 'optns', 'kd');
+end; % f_run_and_save_kd_fits
+
+if f_load_kd_fits; load(kd_scratch_file); end;
 
 %% Plot and save
 %==========================================
-% fig_handle = plot_traj3(traj_select, optns);
-% fig_handle = mapper.plot_traj3b(traj_select, optns);
-fig_handle = mapper.plot_traj4b(traj_select, optns);
-mapper.save_figure(fig_handle, figure_name);
+if optns.plot_results
+    fig_handle = mapper.plot_traj4c(traj_select, optns);
+    mapper.save_figure(fig_handle, figure_name);
+end;
 
 end

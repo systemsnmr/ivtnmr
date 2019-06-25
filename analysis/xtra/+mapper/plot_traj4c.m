@@ -1,4 +1,4 @@
-function fig_handle = plot_traj4b(peak_traj, optns)
+function fig_handle = plot_traj4c(peak_traj, optns)
 % Plots trajectories (rows) on individual sub-plots.
 % Uses common y-max scale for all plots.
 % Automatically decides on the optimal number of rows/columns.
@@ -17,6 +17,8 @@ function fig_handle = plot_traj4b(peak_traj, optns)
 % plot_traj4b 
 % - slightly modified version of plot_traj4_report
 % - title is treated as CELL - so can plot multi-line titles (including CS data).
+% plot_traj4c
+% - optns.xaxis is now optns.xaxis_data
 
 % TODO:
 % - Modify ymax - so that the one MAX FOR ALL SETS is taken!
@@ -117,9 +119,9 @@ end
 y_max = max( cellfun(@(x) max(max(abs(x),[],2)), peak_traj) ); % get max y-value to use common y-lim
 
 
-if isfield(optns, 'xaxis') && ~isempty(optns.xaxis)
+if isfield(optns, 'xaxis') && ~isempty(optns.xaxis_data)
     xaxis_provided = 1;
-    x_max = min( cell2mat( cellfun(@(x) max(x), optns.xaxis, 'unif', 0) ) );
+    x_max = min( cell2mat( cellfun(@(x) max(x), optns.xaxis_data, 'unif', 0) ) );
 else
     xaxis_provided = 0;
     x_max = min( cell2mat( cellfun(@(x) size(x, 2), peak_traj, 'unif', 0) ) );
@@ -135,7 +137,7 @@ for i=1:n_plots
     if ~xaxis_provided
         plot(peak_traj{1}(i,:), optns.plotSym{1}, 'Color', colors(1,:), 'LineWidth', optns.plotLW{1}, 'MarkerSize', optns.markerSize);
     else
-        plot(optns.xaxis{1}, peak_traj{1}(i,:), optns.plotSym{1}, 'Color', colors(1,:), 'LineWidth', optns.plotLW{1}, 'MarkerSize', optns.markerSize);
+        plot(optns.xaxis_data{1}, peak_traj{1}(i,:), optns.plotSym{1}, 'Color', colors(1,:), 'LineWidth', optns.plotLW{1}, 'MarkerSize', optns.markerSize);
     end;
     if n_sets > 1   
         hold on;
@@ -143,7 +145,7 @@ for i=1:n_plots
             if ~xaxis_provided
                 plot(peak_traj{iSet}(i,:), optns.plotSym{iSet}, 'Color', colors(iSet,:), 'LineWidth', optns.plotLW{iSet}, 'MarkerSize', optns.markerSize);
             else
-                plot(optns.xaxis{iSet}, peak_traj{iSet}(i,:), optns.plotSym{iSet}, 'Color', colors(iSet,:), 'LineWidth', optns.plotLW{iSet}, 'MarkerSize', optns.markerSize);
+                plot(optns.xaxis_data{iSet}, peak_traj{iSet}(i,:), optns.plotSym{iSet}, 'Color', colors(iSet,:), 'LineWidth', optns.plotLW{iSet}, 'MarkerSize', optns.markerSize);
             end;            
         end
     end
