@@ -1,0 +1,16 @@
+##TITLE= Audit trail, TopSpin 4.0.5
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= root
+$$ /root/.topspin-BladeEpu/local_acqu/IVTNMR_template/12/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2018-12-07 12:57:52.963 +0000>,<root>,<BladeEpu>,<go4>,<TopSpin 4.0.5>,
+      <
+	started at 2018-12-07 12:57:33.113 +0000, POWCHK enabled, PULCHK disabled,
+       terminated by command 'stop'
+       configuration hash MD5:
+       3A F4 91 9A 74 A3 A4 B0 8F 69 F5 C6 D2 99 DE 24>)
+##END=
+
+$$ hash MD5
+$$ B5 6F 84 68 26 E9 C3 F3 D9 37 92 78 BD 99 32 B4

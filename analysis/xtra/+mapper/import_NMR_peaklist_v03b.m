@@ -54,6 +54,7 @@ if ~exist('datasave', 'dir')
 end
 datasave_folder = 'datasave';
 
+fprintf(1,'\n== CHECK import_NMR_peaklist_v03c - more robust in distinguish peaklist structure\n\n');
 
 %% Import data
 %===========================

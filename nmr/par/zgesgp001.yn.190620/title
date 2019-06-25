@@ -1,0 +1,8 @@
+zgesgp001.yn
+---
+set p1, o1. all other pulses auto-calculated in pp
+---
+ns=128  rg=101
+td=16384  sw=21.9
+aq=622 ms
+d1=1

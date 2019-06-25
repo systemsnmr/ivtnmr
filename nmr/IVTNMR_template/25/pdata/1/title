@@ -1,0 +1,8 @@
+hsqcetgpsi_02.yn
+HSQC with gradient selection: lower sensitivity than in SF-HMQC, but removes t1 noise from strong NTP signals.
+(useful at low protein concentration and/or high NTP concentration (e.g. if individual NTPs are >= 7-10mM)
+---
+ns=16  rg=203
+td=2048/100  sw=16.0/20
+aq=106/41 ms
+d1=0.7

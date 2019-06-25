@@ -1,0 +1,25 @@
+##TITLE= Parameter file, TopSpin 4.0.5
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= elehmann
+$$ 2019-05-17 16:31:58.942 +0200  elehmann@six
+$$ /opt/topspin/data/elehmann/nmr/IVTNMR_template/25/acqu2
+$$ process /opt/topspin4.0.5/prog/mod/edparproc
+##$ACQT0= 0
+##$BF1= 60.810645
+##$FnILOOP= 0
+##$FnMODE= 6
+##$NUC1= <15N>
+##$NusJSP= 0
+##$NusT2= 1
+##$NusTD= 0
+##$O1= 7175.66
+##$PULPROG= <zg30>
+##$ProjAngle= 0
+##$SFO1= 60.81782066
+##$SW= 19.9999929995467
+##$SW_h= 1216.35598744769
+##$TD= 100
+##END=
