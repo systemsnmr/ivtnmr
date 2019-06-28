@@ -229,10 +229,10 @@ def main():
 	tdelta = datetime.datetime.now()-time0
 	log.info('Finished lock-tune-shim after %s min (%s seconds)' % (str(tdelta.seconds/60),str(tdelta.seconds)))
 	if tdelta.seconds >= 5*60:
-		log.info('More than 5min after T7 addition - CAN START DIRECTLY!')
+		log.info('More than 5min after T7 addition - can launch qumulti DIRECTLY!')
 	else:
 		seconds_till_start = 5*60-tdelta.seconds
-		log.info('Still  %s  seconds until 5min (default start).' % str(seconds_till_start))
+		log.info('Still  %s  seconds until 5min (default time to qumulti the expts).' % str(seconds_till_start))
 		## Make "if 1" below if want to use auto-start of the first expno.
 		if 0:
 			log.info('Waiting until 5min dead time after T7 addition ...')
