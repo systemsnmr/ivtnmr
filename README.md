@@ -134,7 +134,7 @@ Notes:
 - The measured experiments are configured by this script based on the template experiments which are placed into an empty IVTNMR_template - template dataset (example in `nmr/IVTNMR_template`):
   - 1D1H calibration / tuning / o1 & shim check (expno 3, pp zg)
   - 1D31P calibration / tuning (expno 4, pp zg)
-  - 1D1H (expno 12, pp `nmr/pp/zg-wg001` or `nmr/pp/zgesgp001`) - full 1H spectrum - for DSS calibration, pH check from Tris position, and potential quantification of individual NTPs (A/U/G/C) consumption rates (all four nucleotides have some specific signals in the aromatic region of the spectrum).
+  - 1D1H (expno 12, pp `nmr/pp/zg-wg001` or `nmr/pp/zgesgp001`) - full 1H spectrum - for DSS calibration, pH check from Tris position, and potential quantification of individual NTPs (A/U/G/C) consumption rates (all four nucleotides have some specific signals in the aromatic region of the spectrum). Excitation sculpting (zgesgp) gives a better baseline, but is slightly less sensitive than basic watergate (zg-wg).
   - 2D 1H1H TOCSY (expno 13, pp `nmr/pp/stocsy003`) - (not required for the setup described in the paper) - allows to observe RNA with higher resolution on certain signals, e.g. U/C H5-H6 correlations.
   - 1D31P (expno 14, pp `nmr/pp/zgig002`) - to observe 31P-containing molecules
   - 2DHN-sofast-hmqc (expno 15, pp `nmr/pp/sfhmqc01`) - to observe protein
@@ -146,8 +146,9 @@ Notes:
 - [Shell/FileManager] Copy `nmr/IVTNMR_template` folder into your datasets directory -- this will become template folder for automated setup of IVTNMR experiments later.
 
 - [TopSpin] Check/setup each individual experiment in the IVTNMR_template (expnos 3,4,12-16):
-  - rpar XX
-  - pulprog XX
+  - Our datasets were saved in TopSpin4 and Avance NEO console. Digitization mode was "digmod DRX". If you have older TopSpin/console setup - probably need to set "digmod DRU" for each experiment.
+  - digmod xx
+  - pulprog xx
   - edasp - check wiring
   - eda, ased - check experiment params
 
