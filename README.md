@@ -9,7 +9,7 @@ Supplementary protocol for:
 
 Corresponding authors: yaroslav.v.nikolaev__gmail.com or allain__mol.biol.ethz.ch
 
-Publication version of the protocol at [Protocol Exchange](https://doi. org/10.21203/rs.2.9160/v1).
+Publication version of the protocol at [Protocol Exchange](https://doi.org/10.21203/rs.2.9160/v1).  
 Continuously-updated version of the protocol: [github.com/systemsnmr/ivtnmr](github.com/systemsnmr/ivtnmr)
 
 **Note:** This is not a software distribution package. Code provided with the protocol serves primarily as an example/guideline - it may require adjustment to your particular setup, and may not function properly in your environment.
