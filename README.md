@@ -67,6 +67,7 @@ This particular protocol describes the reconstruction of an 8-reaction co-transc
 <a name="sample_prep"></a>
 ### (A) Design and preparation of RNA transcription template(s), and protein (~8 days)
 
+<a name="RNA_sequence_design"></a>
 #### 1. RNA sequence design (~0.5 day)
 Because substantial fraction (30-70%) of transcription products are short abortive RNA products, an ~8nt-long 5'-overhang nucleotide sequence needs to be prepended to the main RNA, to minimize interference of these short abortive RNAs with specific protein-RNA interactions and RNA folding. This sequence is designed algorithmically and can be used as a separate control to identify specific RNA effects from the other network perturbations.
 
