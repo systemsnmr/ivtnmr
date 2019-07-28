@@ -9,7 +9,8 @@ Supplementary protocol for:
 
 Corresponding authors: yaroslav.v.nikolaev__gmail.com or allain__mol.biol.ethz.ch
 
-The most up-to-date version of the protocol (including example code and data): [github.com/systemsnmr/ivtnmr](github.com/systemsnmr/ivtnmr)
+Publication version of the protocol at [Protocol Exchange](https://doi. org/10.21203/rs.2.9160/v1).
+Continuously-updated version of the protocol: [github.com/systemsnmr/ivtnmr](github.com/systemsnmr/ivtnmr)
 
 **Note:** This is not a software distribution package. Code provided with the protocol serves primarily as an example/guideline - it may require adjustment to your particular setup, and may not function properly in your environment.
 
@@ -266,6 +267,9 @@ TopSpin may show errors "Can't display data" or "NullPointerExceptions" during e
 
 <a name="data_analysis"></a>
 ### (D) Data analysis and model fitting (≈ 0.5 day)
+
+**Note:** Below protocol is for the fitting of the full ODE model. Often its more efficient to initially analyse only sub-parts of the network, e.g. RNA stability, RNA transcription, RNA-protein interactions. The scripts for this are provided in [ivtnmr/analysis](https://github.com/systemsnmr/ivtnmr/tree/master/analysis).
+
 Unless stated otherwise, most below procedures are done in Matlab (`*.m` files).
 #### 1. Generate data structure for ODE model fit.
 Run `analysis/ODE/v01/model_and_data/gen_ivtnmr.m` - this script will read 31P integrals from above 31P integration file, and 2DHN chemical shifts from cara repository, and then create the data structure used by the ODE model fitting procedure in `ODE/v01/model_and_data/data_for_fit` folder. It will also generate "ivtnmr" data object in `ODE/v01/model_and_data/data_ivtnmr_full/` - which contains main information about IVTNMR experiment in one Matlab structure (names, number of time-points, integrals, chemical shifts, etc). The code in `v01` folder is largely self-contained - so its convenient to just duplicate and rename it (e.g. `v02_test`) to keep track of different versions when you're making adjustments to data analysis / model structure / etc.
